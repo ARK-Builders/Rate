@@ -44,9 +44,15 @@ def fetch_all_data():
     for n in range(1, 70):
         page_file = os.path.join(data_dir, f"coin_data_{n}.json")
         with open(page_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            merged_data.extend(data)
-    
+            try:
+                data = json.load(f)
+                if isinstance(data, list):
+                    merged_data.extend(data)
+                else:
+                    print(f"Warning: {page_file} did not contain a list. Skipping.")
+            except json.JSONDecodeError:
+                print(f"Warning: {page_file} could not be decoded. Skipping.")
+
     merged_data = [item for item in merged_data if item.get('current_price') is not None]
 
     with open(full_rates_file, "w", encoding="utf-8") as f:
