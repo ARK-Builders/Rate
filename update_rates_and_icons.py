@@ -3,10 +3,9 @@
 update_crypto_data.py
 
 1. Fetches top N cryptocurrencies from CoinGecko API
-2. Cleans existing icons and old rate data
-3. Downloads icons as .imageset into Assets.xcassets
-4. Saves market rates (price, cap, rank) to crypto-rates.json
-5. Fetches fiat rates from OpenExchangeRates and saves to fiat-rates.json
+2. Saves market rates (price, cap, rank) to crypto-rates.json
+3. Fetches fiat rates from OpenExchangeRates and saves to fiat-rates.json
+4. Optionally downloads icons for iOS or Android into platform-specific folders
 """
 
 import os
@@ -14,6 +13,8 @@ import sys
 import json
 import shutil
 import time
+import argparse
+import re
 import urllib.request
 import urllib.error
 
@@ -21,12 +22,13 @@ import urllib.error
 
 PROJECT_ROOT = os.environ.get(
     "CI_PROJECT_ROOT",
-    os.path.expanduser("~/Desktop/Rate-iOS/ARK Rate")
+    os.path.dirname(os.path.abspath(__file__))
 )
-
-ASSETS_CRYPTO_DIR = os.path.join(PROJECT_ROOT, "Assets.xcassets", "cryptoicons")
-# New: Resources directory for JSON data
-RESOURCES_DIR = os.path.join(PROJECT_ROOT, "Resources")
+OPENEXCHANGERATES_API_KEY = os.environ.get("OPENEXCHANGERATES_API_KEY", "")
+IOS_ICONS_DIR = os.path.join(PROJECT_ROOT, "Assets.xcassets", "cryptoicons")
+IOS_RATES_DIR = os.path.join(PROJECT_ROOT, "Resources")
+ANDROID_ICONS_DIR = os.path.join(PROJECT_ROOT, "cryptoicons", "src", "main", "res", "drawable")
+ANDROID_RATES_DIR = os.path.join(PROJECT_ROOT, "core", "data", "src", "main", "assets")
 CRYPTO_RATES_FILENAME = "crypto-rates.json"
 FIAT_RATES_FILENAME = "fiat-rates.json"
 
@@ -34,21 +36,46 @@ FIAT_RATES_FILENAME = "fiat-rates.json"
 ICON_COUNT = 200          # Top 200 as requested
 
 # ── CoinGecko safe delays ─────────────────────────────────────────────────────
-COINGECKO_LIST_DELAY   = 2.0  
-DOWNLOAD_DELAY         = 0.3  
+COINGECKO_LIST_DELAY   = 2.0
+DOWNLOAD_DELAY         = 0.3
 MAX_RETRIES            = 5
-BACKOFF_BASE           = 2    
+BACKOFF_BASE           = 2
 
 COINGECKO_MARKETS_URL  = (
     "https://api.coingecko.com/api/v3/coins/markets"
     "?vs_currency=usd&order=market_cap_desc"
     "&sparkline=false&per_page={per_page}&page={page}"
 )
-PER_PAGE               = 250   
+PER_PAGE               = 250
 
 OPENEXCHANGERATES_URL  = "https://openexchangerates.org/api/latest.json?app_id={app_id}"
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Update crypto and fiat rates for iOS or Android."
+    )
+    parser.add_argument(
+        "--platform",
+        choices=("ios", "android"),
+        required=True,
+        help="Target platform to update paths for.",
+    )
+    parser.add_argument(
+        "--download-icons",
+        action="store_true",
+        help="Download crypto icons for the selected platform.",
+    )
+    return parser.parse_args()
+
+
+def get_platform_paths(platform: str) -> tuple[str, str, str]:
+    if platform == "ios":
+        return PROJECT_ROOT, IOS_ICONS_DIR, IOS_RATES_DIR
+
+    return PROJECT_ROOT, ANDROID_ICONS_DIR, ANDROID_RATES_DIR
+
 
 def clean_directory(path: str) -> None:
     if os.path.exists(path):
@@ -59,7 +86,7 @@ def clean_directory(path: str) -> None:
 
 
 def fetch_with_retry(url: str, label: str = "") -> bytes:
-    headers = {"User-Agent": "XcodeCryptoIconUpdater/1.0"}
+    headers = {"User-Agent": "UpdateDataScript/1.0"}
     for attempt in range(1, MAX_RETRIES + 1):
         try:
             req = urllib.request.Request(url, headers=headers)
@@ -120,7 +147,7 @@ def fetch_coin_list(total: int | None) -> list[dict]:
     return coins
 
 
-def create_imageset(parent_dir: str, asset_name: str, image_bytes: bytes) -> None:
+def create_ios_imageset(parent_dir: str, asset_name: str, image_bytes: bytes) -> None:
     imageset_dir = os.path.join(parent_dir, f"{asset_name}.imageset")
     os.makedirs(imageset_dir, exist_ok=True)
     image_filename = f"{asset_name}.png"
@@ -138,21 +165,36 @@ def create_imageset(parent_dir: str, asset_name: str, image_bytes: bytes) -> Non
         json.dump(contents, f, indent=2)
 
 
-def fetch_fiat_rates() -> None:
-    app_id = os.environ.get("APP_ID", "")
-    if not app_id:
-        print("  ⚠️  APP_ID env variable not set — skipping fiat rates.")
+def create_android_drawable(parent_dir: str, asset_name: str, image_bytes: bytes) -> None:
+    image_filename = f"{asset_name}.png"
+    with open(os.path.join(parent_dir, image_filename), "wb") as f:
+        f.write(image_bytes)
+
+
+def android_resource_name(symbol: str) -> str:
+    resource_name = re.sub(r"[^a-z0-9_]", "_", symbol.lower())
+    resource_name = re.sub(r"_+", "_", resource_name).strip("_")
+    if not resource_name:
+        return "coin_unknown"
+    if not resource_name[0].isalpha():
+        return f"coin_{resource_name}"
+    return resource_name
+
+
+def fetch_fiat_rates(rates_dir: str) -> None:
+    if not OPENEXCHANGERATES_API_KEY:
+        print("  ⚠️  OPENEXCHANGERATES_API_KEY env variable not set — skipping fiat rates.")
         return
 
     print(f"\n[2/5] Updating {FIAT_RATES_FILENAME} …")
-    os.makedirs(RESOURCES_DIR, exist_ok=True)
-    fiat_file_path = os.path.join(RESOURCES_DIR, FIAT_RATES_FILENAME)
+    os.makedirs(rates_dir, exist_ok=True)
+    fiat_file_path = os.path.join(rates_dir, FIAT_RATES_FILENAME)
 
     if os.path.exists(fiat_file_path):
         os.remove(fiat_file_path)
         print(f"  🗑  Deleted old {FIAT_RATES_FILENAME}")
 
-    url = OPENEXCHANGERATES_URL.format(app_id=app_id)
+    url = OPENEXCHANGERATES_URL.format(app_id=OPENEXCHANGERATES_API_KEY)
     try:
         raw = fetch_with_retry(url, label="OpenExchangeRates")
     except Exception as e:
@@ -166,15 +208,88 @@ def fetch_fiat_rates() -> None:
     print(f"  ✅ Saved fiat rates to {fiat_file_path}")
 
 
+def download_ios_icons(coins: list[dict], icons_dir: str) -> int:
+    print(f"\n[4/5] Downloading icons …")
+    tmp_dir = icons_dir + ".tmp"
+    clean_directory(tmp_dir)
+
+    downloaded = 0
+    for i, coin in enumerate(coins, start=1):
+        ticker    = coin.get("symbol", "").upper()
+        image_url = coin.get("image", "")
+        progress  = f"[{i}/{len(coins)}]"
+
+        if not image_url:
+            continue
+
+        try:
+            image_data = fetch_with_retry(image_url, label=ticker)
+            create_ios_imageset(tmp_dir, ticker, image_data)
+            downloaded += 1
+            print(f"  {progress} ✅ {ticker:<10}")
+        except Exception as e:
+            print(f"  {progress} ❌ {ticker:<10} → {e}")
+
+        if i < len(coins):
+            time.sleep(DOWNLOAD_DELAY)
+
+    print("\n[5/5] Finalizing Asset Catalog …")
+    clean_directory(icons_dir)
+
+    # Re-add the main Contents.json for the cryptoicons folder
+    with open(os.path.join(icons_dir, "Contents.json"), "w") as f:
+        json.dump({"info": {"author": "xcode", "version": 1}}, f, indent=2)
+
+    for item in os.listdir(tmp_dir):
+        if item.endswith(".imageset"):
+            shutil.move(os.path.join(tmp_dir, item), os.path.join(icons_dir, item))
+
+    shutil.rmtree(tmp_dir, ignore_errors=True)
+    print(f"  ✅ Icons installed to: {icons_dir}")
+    return downloaded
+
+
+def download_android_icons(coins: list[dict], icons_dir: str) -> int:
+    print(f"\n[4/5] Downloading icons …")
+    clean_directory(icons_dir)
+
+    downloaded = 0
+    for i, coin in enumerate(coins, start=1):
+        ticker = coin.get("symbol", "")
+        resource_name = android_resource_name(ticker)
+        image_url = coin.get("image", "")
+        progress = f"[{i}/{len(coins)}]"
+
+        if not image_url:
+            continue
+
+        try:
+            image_data = fetch_with_retry(image_url, label=resource_name)
+            create_android_drawable(icons_dir, resource_name, image_data)
+            downloaded += 1
+            print(f"  {progress} ✅ {resource_name:<14}")
+        except Exception as e:
+            print(f"  {progress} ❌ {resource_name:<14} → {e}")
+
+        if i < len(coins):
+            time.sleep(DOWNLOAD_DELAY)
+
+    print(f"  ✅ Icons installed to: {icons_dir}")
+    return downloaded
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    args = parse_args()
+    project_root, icons_dir, rates_dir = get_platform_paths(args.platform)
+
     print("=" * 60)
-    print("  Xcode Crypto Icon & Rate Updater")
+    print(f"  Crypto Data Updater ({args.platform})")
     print("=" * 60)
 
-    if not os.path.isdir(PROJECT_ROOT):
-        print(f"\n❌  Project root not found: {PROJECT_ROOT}")
+    if not os.path.isdir(project_root):
+        print(f"\n❌  Project root not found: {project_root}")
         sys.exit(1)
 
     # 1. Fetch data
@@ -183,14 +298,13 @@ def main() -> None:
     print(f"  ✅ {len(coins)} assets retrieved.")
 
     # 2. Fetch fiat rates
-    fetch_fiat_rates()
+    fetch_fiat_rates(rates_dir)
 
     # 3. Handle Crypto Rates JSON
     print(f"\n[3/5] Updating {CRYPTO_RATES_FILENAME} …")
-    # Ensure Resources directory exists
-    os.makedirs(RESOURCES_DIR, exist_ok=True)
-    rates_file_path = os.path.join(RESOURCES_DIR, CRYPTO_RATES_FILENAME)
-    
+    os.makedirs(rates_dir, exist_ok=True)
+    rates_file_path = os.path.join(rates_dir, CRYPTO_RATES_FILENAME)
+
     # Delete old file if it exists
     if os.path.exists(rates_file_path):
         os.remove(rates_file_path)
@@ -210,50 +324,22 @@ def main() -> None:
 
     with open(rates_file_path, "w") as f:
         json.dump(rates_data, f, indent=2)
-    print(f"  ✅ Saved {len(rates_data)} rates to {RESOURCES_DIR}")
-
-    # 4. Download icons
-    print(f"\n[4/5] Downloading icons …")
-    tmp_dir = ASSETS_CRYPTO_DIR + ".tmp"
-    clean_directory(tmp_dir)
+    print(f"  ✅ Saved {len(rates_data)} rates to {rates_dir}")
 
     downloaded = 0
-    for i, coin in enumerate(coins, start=1):
-        ticker    = coin.get("symbol", "").upper()
-        image_url = coin.get("image", "")
-        progress  = f"[{i}/{len(coins)}]"
-
-        if not image_url:
-            continue
-
-        try:
-            image_data = fetch_with_retry(image_url, label=ticker)
-            create_imageset(tmp_dir, ticker, image_data)
-            downloaded += 1
-            print(f"  {progress} ✅ {ticker:<10}")
-        except Exception as e:
-            print(f"  {progress} ❌ {ticker:<10} → {e}")
-
-        if i < len(coins):
-            time.sleep(DOWNLOAD_DELAY)
-
-    # 5. Replace live icons
-    print("\n[5/5] Finalizing Asset Catalog …")
-    clean_directory(ASSETS_CRYPTO_DIR)
-    
-    # Re-add the main Contents.json for the cryptoicons folder
-    with open(os.path.join(ASSETS_CRYPTO_DIR, "Contents.json"), "w") as f:
-        json.dump({"info": {"author": "xcode", "version": 1}}, f, indent=2)
-
-    for item in os.listdir(tmp_dir):
-        if item.endswith(".imageset"):
-            shutil.move(os.path.join(tmp_dir, item), os.path.join(ASSETS_CRYPTO_DIR, item))
-
-    shutil.rmtree(tmp_dir, ignore_errors=True)
-    print(f"  ✅ Icons installed to: {ASSETS_CRYPTO_DIR}")
+    if args.download_icons:
+        if args.platform == "ios":
+            downloaded = download_ios_icons(coins, icons_dir)
+        else:
+            downloaded = download_android_icons(coins, icons_dir)
+    else:
+        print("\n[4/5] Skipping icons. Use --download-icons to update crypto icons.")
 
     print("\n" + "=" * 60)
-    print(f"  Done! Rates saved and {downloaded} icons updated.")
+    if args.download_icons:
+        print(f"  Done! Rates saved and {downloaded} icons updated.")
+    else:
+        print("  Done! Rates saved.")
     print("=" * 60)
 
 
