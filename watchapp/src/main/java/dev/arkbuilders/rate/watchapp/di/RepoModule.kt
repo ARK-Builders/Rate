@@ -39,6 +39,9 @@ import dev.arkbuilders.rate.core.domain.repo.Prefs
 import dev.arkbuilders.rate.core.domain.repo.TimestampRepo
 import dev.arkbuilders.rate.core.domain.usecase.DefaultGroupNameProvider
 import dev.arkbuilders.rate.core.presentation.utils.DefaultGroupNameProviderImpl
+import dev.arkbuilders.rate.feature.quick.data.QuickRepoImpl
+import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
+import dev.arkbuilders.rate.core.db.dao.QuickPairDao
 import javax.inject.Singleton
 
 @Module
@@ -162,4 +165,11 @@ class RepoModule {
             analyticsManager,
             buildConfigFieldsProvider.provide(),
         )
+
+    @Singleton
+    @Provides
+    fun provideQuickRepo(
+        quickPairDao: QuickPairDao,
+        groupRepo: GroupRepo
+    ): QuickRepo = QuickRepoImpl(quickPairDao, groupRepo)
 }
