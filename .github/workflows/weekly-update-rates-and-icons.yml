@@ -1,0 +1,54 @@
+name: Weekly Update Rates And Icons
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 1"
+
+env:
+  OPENEXCHANGERATES_API_KEY: ${{ secrets.OPENEXCHANGERATES_API_KEY }}
+
+jobs:
+  update-rates-and-icons:
+    runs-on: ubuntu-latest
+  
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          ref: automation/rates-and-icons
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+
+      - name: Update Android rates and icons
+        run: python update_rates_and_icons.py --platform android --download-icons
+
+      - name: Check if OPENEXCHANGERATES_API_KEY secret is set
+        run: |
+          if [ -z "${{ secrets.OPENEXCHANGERATES_API_KEY }}" ]; then
+            echo "OPENEXCHANGERATES_API_KEY is NOT set"
+          else
+            echo "OPENEXCHANGERATES_API_KEY is set (value is masked)"
+          fi
+
+      - name: Push into Git
+        run: |-
+          git config --global user.email "bot@ark-builders.dev"
+          git config --global user.name "ARK Builders Bot"
+          git add core/data/src/main/assets/fiat-rates.json
+          git add core/data/src/main/assets/crypto-rates.json
+          git add -A cryptoicons/src/main/res/drawable
+
+          git commit -m "Automatic weekly update of rates and icons" || echo "Nothing to commit"
+          git pull origin automation/rates-and-icons --no-edit
+          git push origin automation/rates-and-icons
