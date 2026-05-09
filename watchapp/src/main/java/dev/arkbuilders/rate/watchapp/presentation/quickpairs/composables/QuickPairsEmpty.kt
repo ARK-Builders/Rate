@@ -15,44 +15,61 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.Text
+import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.Text
 import dev.arkbuilders.rate.core.presentation.CoreRDrawable
+
+import androidx.compose.ui.res.stringResource
+import dev.arkbuilders.rate.core.presentation.CoreRString
+import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 
 @Composable
 fun QuickPairsEmpty(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAddClick: () -> Unit
 ) {
-    Column(
+    androidx.wear.compose.foundation.lazy.ScalingLazyColumn(
+        modifier = modifier.fillMaxSize().background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 24.dp)
     ) {
-        Icon(
-            painter = painterResource(id = CoreRDrawable.ic_empty_quick),
-            contentDescription = "",
-            tint = Color.Unspecified,
-        )
-        Text(
-            modifier = modifier
-                .padding(horizontal = 8.dp)
-                .fillMaxWidth(),
-            text = "Empty Here, But Full of Possibilities!",
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-        )
-        Text(
-            modifier = modifier.fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            text = "Calculate currency from Rate App",
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center,
-        )
-
+        item {
+            Icon(
+                painter = painterResource(id = CoreRDrawable.ic_empty_quick),
+                contentDescription = null,
+                tint = Color.Unspecified,
+            )
+        }
+        item {
+            Text(
+                modifier = Modifier.padding(top = 8.dp),
+                text = stringResource(CoreRString.quick_empty_title),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                color = ArkColor.TextPrimary,
+                textAlign = TextAlign.Center,
+            )
+        }
+        item {
+            Text(
+                modifier = Modifier.padding(top = 4.dp),
+                text = stringResource(CoreRString.quick_empty_desc),
+                fontSize = 12.sp,
+                color = ArkColor.TextTertiary,
+                textAlign = TextAlign.Center,
+            )
+        }
+        item {
+            Spacer(modifier = Modifier.height(12.dp))
+        }
     }
 }
 
 @Preview(device = Devices.WEAR_OS_LARGE_ROUND, showSystemUi = true)
 @Composable
 fun QuickPairEmptyPreview() {
-    QuickPairsEmpty()
+    QuickPairsEmpty(onAddClick = {})
 }

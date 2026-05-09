@@ -1,13 +1,18 @@
 package dev.arkbuilders.rate.watchapp.presentation.quickpairs.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,18 +25,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.wear.compose.material.Card
-import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.Text
+import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.Text
 import dev.arkbuilders.rate.core.domain.CurrUtils
 import dev.arkbuilders.rate.core.domain.model.Amount
 import dev.arkbuilders.rate.core.domain.model.CurrencyCode
 import dev.arkbuilders.rate.core.domain.model.Group
+import dev.arkbuilders.rate.core.presentation.CoreRDrawable
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.core.presentation.utils.IconUtils
 import dev.arkbuilders.rate.feature.quick.domain.model.QuickPair
@@ -44,89 +48,116 @@ fun QuickPairItem(
     quick: QuickPair,
     onClick: () -> Unit,
 ) {
-    var isExpanded by remember {
-        mutableStateOf(true)
-    }
-    Card(
-        onClick = onClick,
+    var isExpanded by remember { mutableStateOf(false) }
+
+    Column(
         modifier = modifier
-            .padding(horizontal =  12.dp, vertical = 4.dp)
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .background(Color.White)
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        // Top row: Flags and "2 mins ago"
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(modifier = modifier.align(Alignment.Start)) {
-                CurrIcon(
-                    modifier = modifier.size(16.dp),
-                    code = quick.from
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                CurrIcon(modifier = Modifier.size(24.dp), code = quick.from)
                 if (quick.to.size > 1) {
                     Box(
-                        modifier =
-                        modifier
-                            .size(16.dp)
+                        modifier = Modifier
+                            .size(24.dp)
+                            .offset(x = (-8).dp)
+                            .border(1.dp, Color.White, CircleShape)
                             .background(ArkColor.BGTertiary, CircleShape),
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            modifier = Modifier.align(Alignment.Center),
-                            text = "+ ${quick.to.size}",
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 8.sp,
+                            text = "+${quick.to.size}",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 10.sp,
                             color = ArkColor.TextTertiary,
                         )
                     }
-                } else {
+                } else if (quick.to.isNotEmpty()) {
                     CurrIcon(
-                        modifier = modifier.size(16.dp),
+                        modifier = Modifier
+                            .size(24.dp)
+                            .offset(x = (-8).dp)
+                            .border(1.dp, Color.White, CircleShape),
                         code = quick.to.first().code
                     )
                 }
+            }
+            Text(
+                text = "2 mins ago",
+                color = ArkColor.TextTertiary,
+                fontSize = 10.sp
+            )
+        }
 
-
-                Text(
-                    text = "2 mins ago",
-                    modifier = modifier.fillMaxWidth(),
-                    textAlign = TextAlign.End
+        // Title Row: "EUR to USD" and Chevron
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val titleText = if (quick.to.size > 1) {
+                "${quick.from} to ${quick.to.first().code}, and ${quick.to.size - 1}+"
+            } else {
+                "${quick.from} to ${quick.to.firstOrNull()?.code ?: ""}"
+            }
+            Text(
+                text = titleText,
+                color = ArkColor.TextPrimary,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+            if (quick.to.size > 1) {
+                Icon(
+                    painter = painterResource(if (isExpanded) CoreRDrawable.ic_chevron_up else CoreRDrawable.ic_chevron),
+                    contentDescription = "Expand",
+                    tint = ArkColor.FGSecondary,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .clickable { isExpanded = !isExpanded }
                 )
             }
-            if (isExpanded) {
-                Text(
-                    modifier = modifier.fillMaxWidth(),
-                    text = "${CurrUtils.prepareToDisplay(quick.amount)} ${quick.from} = ",
-                )
-                quick.to.forEach {
+        }
+
+        // Subtitle: Base amount
+        val baseAmountText = if (quick.to.size == 1) {
+            "${CurrUtils.prepareToDisplay(quick.amount)} ${quick.from} = ${CurrUtils.prepareToDisplay(quick.to.first().value)} ${quick.to.first().code}"
+        } else {
+            "${CurrUtils.prepareToDisplay(quick.amount)} ${quick.from} = ${CurrUtils.prepareToDisplay(quick.to.first().value)} ${quick.to.first().code}"
+        }
+        Text(
+            text = baseAmountText,
+            color = ArkColor.TextTertiary,
+            fontSize = 12.sp,
+            modifier = Modifier.padding(top = 2.dp)
+        )
+
+        // Expanded view
+        if (isExpanded && quick.to.size > 1) {
+            Column(modifier = Modifier.padding(top = 8.dp)) {
+                quick.to.forEach { target ->
                     Row(
-                        modifier = Modifier.padding(top = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        CurrIcon(
-                            modifier = Modifier.size(20.dp),
-                            code = it.code
-                        )
+                        CurrIcon(modifier = Modifier.size(16.dp), code = target.code)
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .padding(start = 8.dp),
-                            text = "${CurrUtils.prepareToDisplay(it.value)} ${it.code}",
+                            text = "${CurrUtils.prepareToDisplay(target.value)} ${target.code}",
+                            color = ArkColor.TextPrimary,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 12.sp
                         )
                     }
                 }
-            } else {
-                Text(
-                    modifier = modifier.fillMaxWidth(),
-                    text = "${quick.from} to ${
-                        quick.to.joinToString(
-                            separator = ", ",
-                        ) { it.code }
-                    }",
-                )
-                Text(
-                    modifier = modifier.fillMaxWidth(),
-                    text =
-                    "${CurrUtils.prepareToDisplay(quick.amount)} ${quick.from} = " +
-                        "${CurrUtils.prepareToDisplay(quick.to.first().value)} ${quick.to.first().code}",
-                )
             }
         }
     }
