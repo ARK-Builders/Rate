@@ -1,4 +1,4 @@
-name: Fetch Exchange Rates
+name: Daily Update Rates
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ env:
   OPENEXCHANGERATES_API_KEY: ${{ secrets.OPENEXCHANGERATES_API_KEY }}
 
 jobs:
-  build:
+  update-rates:
     runs-on: ubuntu-latest
   
     permissions:
@@ -29,14 +29,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests
+      
+      - name: Run Android rates update
+        run: python update_rates_and_icons.py --platform android
           
-      - name: Run fetch-rates.py script
-        run: python fetch-rates.py
-        
-      - name: Fetch fiat
-        run: curl -X GET "https://openexchangerates.org/api/latest.json?app_id=$OPENEXCHANGERATES_API_KEY" --output core/data/src/main/assets/fiat-rates.json
-
       - name: Check if OPENEXCHANGERATES_API_KEY secret is set
         run: |
           if [ -z "${{ secrets.OPENEXCHANGERATES_API_KEY }}" ]; then
@@ -44,9 +40,6 @@ jobs:
           else
             echo "OPENEXCHANGERATES_API_KEY is set (value is masked)"
           fi
-
-      - name: Move JSON file to assets directory
-        run: mv crypto-rates.json core/data/src/main/assets/
        
       - name: Push into Git
         run: |-
