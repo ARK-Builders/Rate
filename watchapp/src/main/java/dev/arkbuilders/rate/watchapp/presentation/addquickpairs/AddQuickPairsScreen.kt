@@ -1,124 +1,283 @@
 package dev.arkbuilders.rate.watchapp.presentation.addquickpairs
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.MenuItemColors
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
-import dev.arkbuilders.rate.watchapp.presentation.addquickpairs.composables.CurrencyInputField
+import dev.arkbuilders.rate.watchapp.presentation.quickpairs.composables.CurrIcon
 
 @Composable
-fun AddQuickPairsScreen(modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
+fun AddQuickPairsScreen(
+    modifier: Modifier = Modifier,
+    viewModel: AddQuickPairsViewModel = hiltViewModel(),
+    navController: NavHostController,
+    onNavigateToSearch: (String) -> Unit,
+    onNavigateBack: () -> Unit
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val selectedCurrency = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<String?>("selected_currency", null)
+        ?.collectAsStateWithLifecycle()
+
+    val targetField = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<String?>("target_field", null)
+        ?.collectAsStateWithLifecycle()
+
+    LaunchedEffect(selectedCurrency?.value) {
+        val code = selectedCurrency?.value ?: return@LaunchedEffect
+        val field = targetField?.value ?: return@LaunchedEffect
+
+        if (field == "from") {
+            viewModel.onBaseCurrencyChanged(code)
+        } else if (field == "to") {
+            viewModel.onTargetCurrencyChanged(code)
+        }
+
+        // Clear the result after processing
+        navController.currentBackStackEntry?.savedStateHandle?.remove<String>("selected_currency")
+        navController.currentBackStackEntry?.savedStateHandle?.remove<String>("target_field")
+    }
+
+    if (state.isSaved) {
+        onNavigateBack()
+    }
 
     ScalingLazyColumn(
-        modifier = modifier.fillMaxSize().background(ArkColor.BGSecondaryAlt),
-        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Text(
-                modifier = modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 text = "Add",
                 textAlign = TextAlign.Center,
-                color = ArkColor.TextPrimary
+                fontWeight = FontWeight.Bold,
+                color = ArkColor.TextPrimary,
+                fontSize = 16.sp
             )
         }
 
         item {
-            CurrencyInputField(
-                label = "To",
-                currencyCode = "EUR",
-                value = "0.92",
-                onValueChange = {  },
-                onCurrencyClick = {
-
-                },
-                showLabel = true,
-                showDeleteButton = false,
-                onDeleteClick = {}
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp),
+                text = "From",
+                textAlign = TextAlign.Start,
+                color = ArkColor.TextSecondary,
+                fontSize = 12.sp
             )
         }
 
         item {
-            CurrencyInputField(
-                label = "To",
-                currencyCode = "EUR",
-                value = "0.92",
-                onValueChange = {  },
-                onCurrencyClick = {},
-                showLabel = false,
-                showDeleteButton = false,
-                onDeleteClick = {}
-            )
-        }
-
-        item {
-            Box(
-                modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.TopStart)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(ArkColor.UtilitySuccess50) // Light greenish background
+                    .border(1.dp, ArkColor.UtilitySuccess200, RoundedCornerShape(8.dp))
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = { expanded = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "Localized description")
+                // Removed Edit icon as per request
+
+                // Currency Selector
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable { onNavigateToSearch("from") }
+                ) {
+                    CurrIcon(modifier = Modifier.size(20.dp), code = state.baseCurrency)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = state.baseCurrency,
+                        color = ArkColor.TextPrimary,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp
+                    )
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "Select Currency",
+                        tint = ArkColor.Primary,
+                        modifier = Modifier.size(16.dp)
+                    )
                 }
-                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    DropdownMenuItem(
-                        text = { Text("Edit") },
-                        onClick = { /* Handle edit! */ },
-                        leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Settings") },
-                        onClick = { /* Handle settings! */ },
-                        leadingIcon = { Icon(Icons.Outlined.Settings, contentDescription = null) }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Send Feedback") },
-                        onClick = { /* Handle send feedback! */ },
-                        leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null) },
-                        trailingIcon = { Text("F11", textAlign = TextAlign.Center) }
+
+                // Amount
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    if (state.baseAmount.isEmpty()) {
+                        Text(
+                            text = "0",
+                            color = ArkColor.TextPlaceHolder,
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.End
+                        )
+                    }
+                    BasicTextField(
+                        value = state.baseAmount,
+                        onValueChange = { viewModel.onAmountInput(it) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        textStyle = TextStyle(
+                            color = ArkColor.TextPrimary,
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.End
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
         }
 
-    }
-}
+        item {
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .size(24.dp)
+                    .clip(CircleShape)
+                    .background(Color.White)
+                    .border(1.dp, ArkColor.BorderSecondary, CircleShape)
+                    .clickable { viewModel.onSwap() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Swap",
+                    tint = ArkColor.Primary,
+                    modifier = Modifier.size(14.dp)
+                )
+            }
+        }
 
-@Composable
-@Preview
-fun AddQuickPairsScreenPreview() {
-    AddQuickPairsScreen()
+        item {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp),
+                text = "To",
+                textAlign = TextAlign.Start,
+                color = ArkColor.TextSecondary,
+                fontSize = 12.sp
+            )
+        }
+
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.White)
+                    .border(1.dp, ArkColor.BorderSecondary, RoundedCornerShape(8.dp))
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable { onNavigateToSearch("to") }
+                ) {
+                    CurrIcon(modifier = Modifier.size(20.dp), code = state.targetCurrency)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = state.targetCurrency,
+                        color = ArkColor.TextPrimary,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp
+                    )
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "Select Currency",
+                        tint = ArkColor.Primary,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    if (state.targetAmount.isEmpty()) {
+                        Text(
+                            text = "0",
+                            color = ArkColor.TextPlaceHolder,
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.End
+                        )
+                    }
+                    BasicTextField(
+                        value = state.targetAmount,
+                        onValueChange = { viewModel.onTargetAmountInput(it) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        textStyle = TextStyle(
+                            color = ArkColor.TextPrimary,
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.End
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        }
+
+        item {
+            Button(
+                onClick = { viewModel.savePair() },
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 8.dp)
+                    .fillMaxWidth(0.8f)
+                    .height(36.dp),
+                colors = ButtonDefaults.primaryButtonColors(backgroundColor = ArkColor.Primary)
+            ) {
+                Text("Save Pair", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            }
+        }
+    }
 }
