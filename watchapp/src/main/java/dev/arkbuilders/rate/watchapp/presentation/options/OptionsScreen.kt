@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -21,16 +22,20 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun OptionsScreen(
     modifier: Modifier = Modifier,
+    viewModel: OptionsViewModel = hiltViewModel(),
     onUpdateClick: () -> Unit = {},
     onPinClick: () -> Unit = {},
-    onEditClick: () -> Unit = {},
+    onSearchClick: () -> Unit = {},
     onReuseClick: () -> Unit = {},
-    onDeleteClick: () -> Unit = {}
+    onDeleteSuccess: () -> Unit = {}
 ) {
+    val quickPair by viewModel.quickPair.collectAsStateWithLifecycle()
     val listState = rememberScalingLazyListState()
 
     Scaffold(
@@ -63,6 +68,7 @@ fun OptionsScreen(
                 WearOptionButton(
                     text = "Update",
                     icon = WearOptionButtonIcon.Refresh,
+                    buttonType = WearOptionButtonType.Success,
                     onClick = onUpdateClick
                 )
             }
@@ -77,9 +83,9 @@ fun OptionsScreen(
 
             item {
                 WearOptionButton(
-                    text = "Edit",
-                    icon = WearOptionButtonIcon.Edit,
-                    onClick = onEditClick
+                    text = "Search",
+                    icon = WearOptionButtonIcon.Search,
+                    onClick = onSearchClick
                 )
             }
 
@@ -96,7 +102,9 @@ fun OptionsScreen(
                     text = "Delete",
                     icon = WearOptionButtonIcon.Delete,
                     buttonType = WearOptionButtonType.Destructive,
-                    onClick = onDeleteClick
+                    onClick = {
+                        viewModel.deletePair(onDeleted = onDeleteSuccess)
+                    }
                 )
             }
         }
