@@ -9,6 +9,11 @@ android {
     namespace = "dev.arkbuilders.rate.watchapp"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "dev.arkbuilders.rate.watchapp"
         minSdk = libs.versions.minSdk.get().toInt()
@@ -18,6 +23,37 @@ android {
             useSupportLibrary = true
         }
 
+        val cryptoRatesLastModified =
+            rootProject.file("core/data/src/main/assets/crypto-rates.json").lastModified()
+        val fiatRatesLastModified =
+            rootProject.file("core/data/src/main/assets/fiat-rates.json").lastModified()
+
+        buildConfigField(
+            "long",
+            "CRYPTO_LAST_MODIFIED",
+            cryptoRatesLastModified.toString(),
+        )
+        buildConfigField(
+            "long",
+            "FIAT_LAST_MODIFIED",
+            fiatRatesLastModified.toString(),
+        )
+
+        val cryptoIcons = collectCurrencyIcons(project.rootDir.resolve("cryptoicons"))
+        val fiatIcons = collectCurrencyIcons(project.rootDir.resolve("fiaticons"))
+        val allIcons = (cryptoIcons + fiatIcons).distinct()
+
+        buildConfigField(
+            "String[]",
+            "ICON_CODES",
+            allIcons.joinToString(
+                prefix = "new String[] {",
+                postfix = "}",
+                separator = ", ",
+            ) {
+                "\"$it\""
+            },
+        )
     }
 
     buildTypes {
@@ -30,23 +66,23 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "17"
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
+        jvmTarget = "21"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+fun collectCurrencyIcons(moduleDir: File): List<String> {
+    val drawableDir = moduleDir.resolve("src/main/res/drawable")
+    return drawableDir.listFiles()?.map { it.nameWithoutExtension.uppercase() }
+        ?.map { if (it == "curr_try") "try" else it } ?: emptyList()
 }
 
 dependencies {
@@ -74,6 +110,7 @@ dependencies {
 //    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation (libs.androidx.compose.navigation )// Or the latest version
+    implementation("androidx.wear.compose:compose-material3:1.6.1") // Or current version
 
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.compose.material)
