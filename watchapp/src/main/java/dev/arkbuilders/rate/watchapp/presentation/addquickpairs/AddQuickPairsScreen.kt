@@ -33,6 +33,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import dev.arkbuilders.rate.watchapp.presentation.theme.WearSnackbar
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -50,7 +55,8 @@ fun AddQuickPairsScreen(
     viewModel: AddQuickPairsViewModel = hiltViewModel(),
     navController: NavHostController,
     onNavigateToSearch: (String) -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToSuccess: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -80,7 +86,10 @@ fun AddQuickPairsScreen(
     }
 
     if (state.isSaved) {
-        onNavigateBack()
+        val message = if (state.editId != null) "Updated Successfully" else "Added Successfully"
+        LaunchedEffect(Unit) {
+            onNavigateToSuccess(message)
+        }
     }
 
     ScalingLazyColumn(

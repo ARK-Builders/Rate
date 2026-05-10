@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun SuccessScreen(
     modifier: Modifier = Modifier,
-    message: String = "Delete Successful",
+    message: String = "Success",
     onTimeout: () -> Unit
 ) {
     LaunchedEffect(Unit) {

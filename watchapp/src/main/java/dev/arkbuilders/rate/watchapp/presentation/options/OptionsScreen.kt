@@ -30,20 +30,22 @@ import dev.arkbuilders.rate.watchapp.presentation.theme.WearInfoDialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
+import dev.arkbuilders.rate.watchapp.presentation.theme.WearSnackbar
+
 @Composable
 fun OptionsScreen(
     modifier: Modifier = Modifier,
     viewModel: OptionsViewModel = hiltViewModel(),
     onUpdateClick: (Long) -> Unit = {},
-    onPinClick: () -> Unit = {},
-    onSearchClick: () -> Unit = {},
-    onDeleteSuccess: () -> Unit = {},
+    onPinClick: (String) -> Unit = {},
+    onDeleteSuccess: (String) -> Unit = {},
     onDismiss: () -> Unit = {}
 ) {
     val quickPair by viewModel.quickPair.collectAsStateWithLifecycle()
     val showPinLimitDialog by viewModel.showPinLimitDialog.collectAsStateWithLifecycle()
     val listState = rememberScalingLazyListState()
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var snackbarMessage by remember { mutableStateOf<String?>(null) }
 
     if (showDeleteDialog) {
         WearConfirmationDialog(
@@ -51,7 +53,9 @@ fun OptionsScreen(
             message = "Are you sure you want to delete this pair?",
             onConfirm = {
                 showDeleteDialog = false
-                viewModel.deletePair(onDeleted = onDeleteSuccess)
+                viewModel.deletePair(onDeleted = {
+                    onDeleteSuccess("Deleted Successfully")
+                })
             },
             onDismiss = {
                 showDeleteDialog = false
@@ -67,6 +71,18 @@ fun OptionsScreen(
             message = "You can only pin up to 4 pairs. Please unpin another pair first.",
             onDismiss = { viewModel.dismissPinLimitDialog() },
             dismissText = "Ok got it"
+        )
+    }
+
+    snackbarMessage?.let { msg ->
+        WearSnackbar(
+            message = msg,
+            onDismiss = { 
+                snackbarMessage = null
+                if (msg == "Unpinned") {
+                    onDismiss()
+                }
+            }
         )
     }
 
@@ -110,16 +126,14 @@ fun OptionsScreen(
                     text = if (isPinned) "Unpin" else "Pin",
                     icon = WearOptionButtonIcon.Pin,
                     onClick = {
-                        viewModel.togglePin(onSuccess = onPinClick)
+                        viewModel.togglePin(onSuccess = { pinned ->
+                            if (pinned) {
+                                onPinClick("Pinned Successfully")
+                            } else {
+                                snackbarMessage = "Unpinned"
+                            }
+                        })
                     }
-                )
-            }
-
-            item {
-                WearOptionButton(
-                    text = "Search",
-                    icon = WearOptionButtonIcon.Search,
-                    onClick = onSearchClick
                 )
             }
 

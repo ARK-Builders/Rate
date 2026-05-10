@@ -67,6 +67,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateBack = { 
                                     navController.popBackStack("list", inclusive = false) 
+                                },
+                                onNavigateToSuccess = { message ->
+                                    navController.navigate("success?message=$message")
                                 }
                             )
                         }
@@ -75,12 +78,15 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument("id") { type = NavType.LongType })
                         ) {
                             OptionsScreen(
-                                onSearchClick = { navController.navigate("search") },
-                                onDeleteSuccess = { navController.navigate("success") },
+                                onDeleteSuccess = { message -> 
+                                    navController.navigate("success?message=$message") 
+                                },
                                 onUpdateClick = { id -> 
                                     navController.navigate("addquickpairs?id=$id") 
                                 },
-                                onPinClick = { navController.popBackStack() },
+                                onPinClick = { message -> 
+                                    navController.navigate("success?message=$message") 
+                                },
                                 onDismiss = { navController.popBackStack() }
                             )
                         }
@@ -104,8 +110,17 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        composable("success") {
+                        composable(
+                            route = "success?message={message}",
+                            arguments = listOf(navArgument("message") { 
+                                type = NavType.StringType 
+                                nullable = true
+                                defaultValue = "Success"
+                            })
+                        ) { backStackEntry ->
+                            val message = backStackEntry.arguments?.getString("message") ?: "Success"
                             SuccessScreen(
+                                message = message,
                                 onTimeout = {
                                     navController.popBackStack("list", inclusive = false)
                                 }

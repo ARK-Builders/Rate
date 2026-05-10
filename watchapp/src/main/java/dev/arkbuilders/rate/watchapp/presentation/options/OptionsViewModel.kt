@@ -38,7 +38,7 @@ class OptionsViewModel @Inject constructor(
         }
     }
 
-    fun togglePin(onSuccess: () -> Unit) {
+    fun togglePin(onSuccess: (Boolean) -> Unit) {
         viewModelScope.launch {
             val pair = _quickPair.value ?: return@launch
             if (pair.isPinned()) {
@@ -46,7 +46,7 @@ class OptionsViewModel @Inject constructor(
                 val updated = pair.copy(pinnedDate = null)
                 quickRepo.insert(updated)
                 WatchRefreshManager.refreshComplications(application)
-                onSuccess()
+                onSuccess(false)
             } else {
                 // Check limit
                 val pinnedCount = quickRepo.getAll().count { it.isPinned() }
@@ -57,7 +57,7 @@ class OptionsViewModel @Inject constructor(
                     val updated = pair.copy(pinnedDate = java.time.OffsetDateTime.now())
                     quickRepo.insert(updated)
                     WatchRefreshManager.refreshComplications(application)
-                    onSuccess()
+                    onSuccess(true)
                 }
             }
         }

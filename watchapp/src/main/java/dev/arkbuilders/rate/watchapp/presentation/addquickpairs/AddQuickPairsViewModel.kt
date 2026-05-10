@@ -28,7 +28,8 @@ data class AddQuickState(
     val targetCurrency: String = "EUR",
     val targetAmount: String = "",
     val isSaved: Boolean = false,
-    val editId: Long? = null
+    val editId: Long? = null,
+    val pinnedDate: OffsetDateTime? = null
 )
 
 @HiltViewModel
@@ -55,7 +56,8 @@ class AddQuickPairsViewModel @Inject constructor(
                             baseAmount = CurrUtils.roundOff(pair.amount),
                             targetCurrency = pair.to.firstOrNull()?.code ?: "EUR",
                             targetAmount = CurrUtils.roundOff(pair.to.firstOrNull()?.value ?: java.math.BigDecimal.ZERO),
-                            editId = id
+                            editId = id,
+                            pinnedDate = pair.pinnedDate
                         )
                     }
                 }
@@ -135,7 +137,7 @@ class AddQuickPairsViewModel @Inject constructor(
                 amount = s.baseAmount.toBigDecimalArk(),
                 to = listOf(Amount(s.targetCurrency, s.targetAmount.toBigDecimalArk())),
                 calculatedDate = OffsetDateTime.now(),
-                pinnedDate = null,
+                pinnedDate = s.pinnedDate,
                 group = group
             )
             quickRepo.insert(quick)

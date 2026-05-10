@@ -12,7 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import kotlinx.coroutines.delay
 import androidx.wear.compose.material.Text
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 
@@ -136,24 +141,34 @@ fun WearInfoDialog(
     }
 }
 
-@Preview(device = Devices.WEAR_OS_LARGE_ROUND, showSystemUi = true)
 @Composable
-fun WearConfirmationDialogPreview() {
-    WearConfirmationDialog(
-        title = "Delete Item",
-        message = "Are you sure you want to delete this item? This action cannot be undone.",
-        onConfirm = {},
-        onDismiss = {},
-        isDestructive = true
-    )
-}
+fun WearSnackbar(
+    message: String,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LaunchedEffect(message) {
+        delay(2000L)
+        onDismiss()
+    }
 
-@Preview(device = Devices.WEAR_OS_LARGE_ROUND, showSystemUi = true)
-@Composable
-fun WearInfoDialogPreview() {
-    WearInfoDialog(
-        title = "Success",
-        message = "Your changes have been saved successfully.",
-        onDismiss = {}
-    )
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(bottom = 20.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Text(
+            text = message,
+            modifier = Modifier
+                .background(
+                    color = Color.DarkGray.copy(alpha = 0.9f),
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            color = Color.White,
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center
+        )
+    }
 }
