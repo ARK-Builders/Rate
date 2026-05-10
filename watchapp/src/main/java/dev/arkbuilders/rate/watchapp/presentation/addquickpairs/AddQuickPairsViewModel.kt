@@ -1,5 +1,6 @@
 package dev.arkbuilders.rate.watchapp.presentation.addquickpairs
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,48 +8,71 @@ import dev.arkbuilders.rate.core.domain.CurrUtils
 import dev.arkbuilders.rate.core.domain.model.Amount
 import dev.arkbuilders.rate.core.domain.usecase.ConvertWithRateUseCase
 import dev.arkbuilders.rate.core.domain.usecase.GetGroupByIdOrCreateDefaultUseCase
+import java.time.OffsetDateTime
+import androidx.lifecycle.SavedStateHandle
 import dev.arkbuilders.rate.core.domain.model.GroupFeatureType
 import dev.arkbuilders.rate.feature.quick.domain.model.QuickPair
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
 import dev.arkbuilders.rate.core.domain.toBigDecimalArk
 import dev.arkbuilders.rate.core.domain.toDoubleArk
+import dev.arkbuilders.rate.watchapp.watchface.WatchRefreshManager
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
 
 data class AddQuickState(
     val baseCurrency: String = "USD",
-    val targetCurrency: String = "EUR",
     val baseAmount: String = "",
+    val targetCurrency: String = "EUR",
     val targetAmount: String = "",
-    val isSaved: Boolean = false
+    val isSaved: Boolean = false,
+    val editId: Long? = null
 )
 
 @HiltViewModel
 class AddQuickPairsViewModel @Inject constructor(
+    private val application: Application,
     private val quickRepo: QuickRepo,
     private val convertUseCase: ConvertWithRateUseCase,
-    private val getGroupByIdOrCreateDefaultUseCase: GetGroupByIdOrCreateDefaultUseCase
+    private val getGroupByIdOrCreateDefaultUseCase: GetGroupByIdOrCreateDefaultUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AddQuickState())
     val state: StateFlow<AddQuickState> = _state.asStateFlow()
 
     init {
-        calculate()
+        val idStr: String? = savedStateHandle["id"]
+        val id = idStr?.toLongOrNull()
+        if (id != null) {
+            viewModelScope.launch {
+                quickRepo.allFlow().collect { pairs ->
+                    pairs.find { it.id == id }?.let { pair ->
+                        _state.value = _state.value.copy(
+                            baseCurrency = pair.from,
+                            baseAmount = CurrUtils.roundOff(pair.amount),
+                            targetCurrency = pair.to.firstOrNull()?.code ?: "EUR",
+                            targetAmount = CurrUtils.roundOff(pair.to.firstOrNull()?.value ?: java.math.BigDecimal.ZERO),
+                            editId = id
+                        )
+                    }
+                }
+            }
+        } else {
+            calculate(fromBase = true)
+        }
     }
 
     fun onBaseCurrencyChanged(code: String) {
         _state.value = _state.value.copy(baseCurrency = code)
-        calculate()
+        calculate(fromBase = true)
     }
 
     fun onTargetCurrencyChanged(code: String) {
         _state.value = _state.value.copy(targetCurrency = code)
-        calculate()
+        calculate(fromBase = true)
     }
 
     fun onAmountInput(input: String) {
@@ -67,36 +91,36 @@ class AddQuickPairsViewModel @Inject constructor(
         val currentState = _state.value
         _state.value = currentState.copy(
             baseCurrency = currentState.targetCurrency,
-            targetCurrency = currentState.baseCurrency
+            targetCurrency = currentState.baseCurrency,
+            baseAmount = currentState.targetAmount,
+            targetAmount = currentState.baseAmount
         )
         calculate(fromBase = true)
     }
 
-    private fun calculate(fromBase: Boolean = true) {
+    private fun calculate(fromBase: Boolean) {
         viewModelScope.launch {
             val s = _state.value
-            val sourceAmount = if (fromBase) s.baseAmount else s.targetAmount
-            val sourceCurrency = if (fromBase) s.baseCurrency else s.targetCurrency
-            val destCurrency = if (fromBase) s.targetCurrency else s.baseCurrency
-
-            if (sourceAmount.isEmpty() || sourceAmount.toDoubleArk() == 0.0) {
-                if (fromBase) {
-                    _state.value = s.copy(targetAmount = "")
-                } else {
-                    _state.value = s.copy(baseAmount = "")
-                }
-                return@launch
-            }
-            
-            val (amount, _) = convertUseCase.invoke(
-                Amount(sourceCurrency, sourceAmount.toBigDecimalArk()), 
-                destCurrency
-            )
-            val roundValue = CurrUtils.roundOff(amount.value)
             if (fromBase) {
-                _state.value = _state.value.copy(targetAmount = roundValue)
+                if (s.baseAmount.isEmpty() || s.baseAmount.toDoubleArk() == 0.0) {
+                    _state.value = s.copy(targetAmount = "")
+                    return@launch
+                }
+                val (amount, _) = convertUseCase.invoke(
+                    Amount(s.baseCurrency, s.baseAmount.toBigDecimalArk()),
+                    s.targetCurrency
+                )
+                _state.value = _state.value.copy(targetAmount = CurrUtils.roundOff(amount.value))
             } else {
-                _state.value = _state.value.copy(baseAmount = roundValue)
+                if (s.targetAmount.isEmpty() || s.targetAmount.toDoubleArk() == 0.0) {
+                    _state.value = s.copy(baseAmount = "")
+                    return@launch
+                }
+                val (amount, _) = convertUseCase.invoke(
+                    Amount(s.targetCurrency, s.targetAmount.toBigDecimalArk()),
+                    s.baseCurrency
+                )
+                _state.value = _state.value.copy(baseAmount = CurrUtils.roundOff(amount.value))
             }
         }
     }
@@ -106,7 +130,7 @@ class AddQuickPairsViewModel @Inject constructor(
             val s = _state.value
             val group = getGroupByIdOrCreateDefaultUseCase(null, GroupFeatureType.Quick)
             val quick = QuickPair(
-                id = 0,
+                id = s.editId ?: 0,
                 from = s.baseCurrency,
                 amount = s.baseAmount.toBigDecimalArk(),
                 to = listOf(Amount(s.targetCurrency, s.targetAmount.toBigDecimalArk())),
@@ -115,6 +139,9 @@ class AddQuickPairsViewModel @Inject constructor(
                 group = group
             )
             quickRepo.insert(quick)
+            if (quick.isPinned()) {
+                WatchRefreshManager.refreshComplications(application)
+            }
             _state.value = s.copy(isSaved = true)
         }
     }

@@ -95,7 +95,7 @@ fun AddQuickPairsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
-                text = "Add",
+                text = if (state.editId != null) "Update" else "Add",
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 color = ArkColor.TextPrimary,
@@ -118,7 +118,7 @@ fun AddQuickPairsScreen(
         item {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
+                    .fillMaxWidth(0.95f)
                     .clip(RoundedCornerShape(8.dp))
                     .background(ArkColor.UtilitySuccess50) // Light greenish background
                     .border(1.dp, ArkColor.UtilitySuccess200, RoundedCornerShape(8.dp))
@@ -126,8 +126,6 @@ fun AddQuickPairsScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Removed Edit icon as per request
-
                 // Currency Selector
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -212,7 +210,7 @@ fun AddQuickPairsScreen(
         item {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
+                    .fillMaxWidth(0.95f)
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.White)
                     .border(1.dp, ArkColor.BorderSecondary, RoundedCornerShape(8.dp))
@@ -271,12 +269,12 @@ fun AddQuickPairsScreen(
             Button(
                 onClick = { viewModel.savePair() },
                 modifier = Modifier
-                    .padding(top = 16.dp, bottom = 8.dp)
+                    .padding(top = 16.dp, bottom = 12.dp)
                     .fillMaxWidth(0.8f)
                     .height(36.dp),
                 colors = ButtonDefaults.primaryButtonColors(backgroundColor = ArkColor.Primary)
             ) {
-                Text("Save Pair", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(if (state.editId != null) "Update Pair" else "Save Pair", fontSize = 14.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
