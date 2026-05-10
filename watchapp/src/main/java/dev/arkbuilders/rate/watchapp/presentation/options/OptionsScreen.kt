@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +25,8 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import dev.arkbuilders.rate.watchapp.presentation.theme.WearConfirmationDialog
+import dev.arkbuilders.rate.watchapp.presentation.theme.WearInfoDialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -29,14 +34,41 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 fun OptionsScreen(
     modifier: Modifier = Modifier,
     viewModel: OptionsViewModel = hiltViewModel(),
-    onUpdateClick: () -> Unit = {},
+    onUpdateClick: (Long) -> Unit = {},
     onPinClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
-    onReuseClick: () -> Unit = {},
-    onDeleteSuccess: () -> Unit = {}
+    onDeleteSuccess: () -> Unit = {},
+    onDismiss: () -> Unit = {}
 ) {
     val quickPair by viewModel.quickPair.collectAsStateWithLifecycle()
+    val showPinLimitDialog by viewModel.showPinLimitDialog.collectAsStateWithLifecycle()
     val listState = rememberScalingLazyListState()
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        WearConfirmationDialog(
+            title = "Delete Pair",
+            message = "Are you sure you want to delete this pair?",
+            onConfirm = {
+                showDeleteDialog = false
+                viewModel.deletePair(onDeleted = onDeleteSuccess)
+            },
+            onDismiss = {
+                showDeleteDialog = false
+                onDismiss()
+            },
+            isDestructive = true
+        )
+    }
+
+    if (showPinLimitDialog) {
+        WearInfoDialog(
+            title = "Pin Limit Reached",
+            message = "You can only pin up to 4 pairs. Please unpin another pair first.",
+            onDismiss = { viewModel.dismissPinLimitDialog() },
+            dismissText = "Ok got it"
+        )
+    }
 
     Scaffold(
         positionIndicator = {
@@ -68,16 +100,18 @@ fun OptionsScreen(
                 WearOptionButton(
                     text = "Update",
                     icon = WearOptionButtonIcon.Refresh,
-                    buttonType = WearOptionButtonType.Success,
-                    onClick = onUpdateClick
+                    onClick = { onUpdateClick(viewModel.pairId) }
                 )
             }
 
             item {
+                val isPinned = quickPair?.isPinned() == true
                 WearOptionButton(
-                    text = "Pin",
+                    text = if (isPinned) "Unpin" else "Pin",
                     icon = WearOptionButtonIcon.Pin,
-                    onClick = onPinClick
+                    onClick = {
+                        viewModel.togglePin(onSuccess = onPinClick)
+                    }
                 )
             }
 
@@ -91,19 +125,11 @@ fun OptionsScreen(
 
             item {
                 WearOptionButton(
-                    text = "Re-Use",
-                    icon = WearOptionButtonIcon.Reuse,
-                    onClick = onReuseClick
-                )
-            }
-
-            item {
-                WearOptionButton(
                     text = "Delete",
                     icon = WearOptionButtonIcon.Delete,
                     buttonType = WearOptionButtonType.Destructive,
                     onClick = {
-                        viewModel.deletePair(onDeleted = onDeleteSuccess)
+                        showDeleteDialog = true
                     }
                 )
             }
