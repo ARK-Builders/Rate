@@ -119,6 +119,15 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.material3)
     implementation(libs.navigation.compose)
+
+    implementation(libs.androidx.wear.watchface)
+    implementation(libs.androidx.wear.watchface.complications.data)
+    implementation(libs.androidx.wear.watchface.complications.data.source)
+    implementation(libs.androidx.wear.watchface.complications.data.source.ktx)
+    implementation(libs.androidx.wear.watchface.complications.rendering)
+    implementation(libs.androidx.wear.watchface.editor)
+    implementation(libs.androidx.wear.watchface.style)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)

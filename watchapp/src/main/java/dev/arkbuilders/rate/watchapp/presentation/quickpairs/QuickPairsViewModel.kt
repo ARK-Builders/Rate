@@ -1,11 +1,13 @@
 package dev.arkbuilders.rate.watchapp.presentation.quickpairs
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.arkbuilders.rate.core.domain.usecase.ConvertWithRateUseCase
 import dev.arkbuilders.rate.feature.quick.domain.model.QuickPair
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
+import dev.arkbuilders.rate.watchapp.watchface.WatchRefreshManager
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class QuickPairsViewModel @Inject constructor(
+    private val application: Application,
     private val quickRepo: QuickRepo,
     private val convertUseCase: ConvertWithRateUseCase,
 ) : ViewModel() {
@@ -27,7 +30,10 @@ class QuickPairsViewModel @Inject constructor(
                     convertedAmt
                 }
                 pair.copy(to = actualTo)
-            }.sortedByDescending { it.calculatedDate }
+            }.sortedWith(
+                compareByDescending<QuickPair> { it.isPinned() }
+                    .thenByDescending { it.calculatedDate }
+            )
         }
         .stateIn(
             scope = viewModelScope,
@@ -37,7 +43,12 @@ class QuickPairsViewModel @Inject constructor(
 
     fun deletePair(pair: QuickPair) {
         viewModelScope.launch {
-            quickRepo.delete(pair.id)
+            if (pair.isPinned()) {
+                quickRepo.delete(pair.id)
+                WatchRefreshManager.refreshComplications(application)
+            } else {
+                quickRepo.delete(pair.id)
+            }
         }
     }
 }
