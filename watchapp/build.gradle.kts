@@ -57,11 +57,23 @@ android {
     }
 
     buildTypes {
+        debug {
+            addManifestPlaceholders(
+                mapOf(
+                    "appLabel" to "@string/app_name_debug",
+                ),
+            )
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
+            )
+            addManifestPlaceholders(
+                mapOf(
+                    "appLabel" to "@string/app_name",
+                ),
             )
         }
     }
