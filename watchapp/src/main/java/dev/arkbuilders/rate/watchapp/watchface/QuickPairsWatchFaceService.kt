@@ -17,7 +17,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -50,17 +52,23 @@ class QuickPairsWatchFaceService : WatchFaceService() {
         scope.launch {
             Log.d("QuickPairsWatchFace", "Starting data collection")
             quickRepo.allFlow()
+                .map { pairs -> pairs.filter { it.isPinned() } }
+                .distinctUntilChanged { old, new ->
+                    old.size == new.size && old.all { oldPair ->
+                        new.any { it.id == oldPair.id && it.amount == oldPair.amount && it.from == oldPair.from && it.to == oldPair.to }
+                    }
+                }
                 .flowOn(Dispatchers.IO)
-                .collectLatest { pairs ->
-                    Log.d("QuickPairsWatchFace", "Received ${pairs.size} pairs")
+                .collectLatest { pinnedPairs ->
+                    Log.d("QuickPairsWatchFace", "Received ${pinnedPairs.size} pinned pairs")
                     val processedPairs = withContext(Dispatchers.IO) {
-                        pairs.map { pair ->
+                        pinnedPairs.map { pair ->
                             val actualTo = pair.to.map { toAmount ->
                                 val (convertedAmt, _) = convertUseCase.invoke(pair.from, pair.amount, toAmount.code)
                                 Amount(convertedAmt.code, convertedAmt.value)
                             }
                             pair.copy(to = actualTo)
-                        }.sortedByDescending { it.calculatedDate }
+                        }.sortedByDescending { it.pinnedDate }
                     }
                     Log.d("QuickPairsWatchFace", "Updating renderer with ${processedPairs.size} processed pairs")
                     renderer.updateQuickPairs(processedPairs)

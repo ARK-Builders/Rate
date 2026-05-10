@@ -4,9 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.RadialGradient
 import android.graphics.Rect
-import android.graphics.Shader
 import android.graphics.Typeface
 import android.view.SurfaceHolder
 import androidx.wear.watchface.CanvasType
@@ -14,9 +12,9 @@ import androidx.wear.watchface.DrawMode
 import androidx.wear.watchface.Renderer
 import androidx.wear.watchface.WatchState
 import androidx.wear.watchface.style.CurrentUserStyleRepository
-import dev.arkbuilders.rate.feature.quick.domain.model.QuickPair
-import dev.arkbuilders.rate.core.presentation.utils.IconUtils
 import dev.arkbuilders.rate.core.domain.CurrUtils
+import dev.arkbuilders.rate.core.presentation.utils.IconUtils
+import dev.arkbuilders.rate.feature.quick.domain.model.QuickPair
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -46,13 +44,6 @@ class QuickPairsRenderer(
         isAntiAlias = true
     }
 
-    private val titlePaint = Paint().apply {
-        color = Color.parseColor("#101828") // ArkColor.TextPrimary
-        textSize = 20f
-        textAlign = Paint.Align.CENTER
-        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-        isAntiAlias = true
-    }
 
     private val itemTitlePaint = Paint().apply {
         color = Color.parseColor("#101828") // ArkColor.TextPrimary
@@ -69,6 +60,7 @@ class QuickPairsRenderer(
 
     private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
+
     fun updateQuickPairs(pairs: List<QuickPair>) {
         quickPairs = pairs
         invalidate()
@@ -76,7 +68,7 @@ class QuickPairsRenderer(
 
     override fun render(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime) {
         val isAmbient = renderParameters.drawMode == DrawMode.AMBIENT
-        
+
         val centerX = bounds.centerX().toFloat()
         val centerY = bounds.centerY().toFloat()
 
@@ -95,15 +87,14 @@ class QuickPairsRenderer(
         val timeText = zonedDateTime.format(timeFormatter)
         canvas.drawText(timeText, centerX, 60f, timePaint)
 
-        // Draw "Quick" title
-        canvas.drawText("Quick", centerX, 100f, titlePaint)
-
         // Draw Quick Pairs
-        var currentY = 140f
-        val pairsToShow = quickPairs.take(2)
-        
+        var currentY = 110f
+        val pairsToShow = quickPairs
+
         if (pairsToShow.isNotEmpty()) {
-            pairsToShow.forEach { pair ->
+            for (pair in pairsToShow) {
+                val toAmount = pair.to.firstOrNull() ?: continue
+
                 // Draw Icons
                 val fromIconId = IconUtils.iconForCurrCode(context, pair.from)
                 val fromIcon = context.getDrawable(fromIconId)
@@ -112,31 +103,28 @@ class QuickPairsRenderer(
                     it.draw(canvas)
                 }
 
-                val toAmount = pair.to.firstOrNull()
-                if (toAmount != null) {
-                    val toIconId = IconUtils.iconForCurrCode(context, toAmount.code)
-                    val toIcon = context.getDrawable(toIconId)
-                    toIcon?.let {
-                        it.setBounds(50, currentY.toInt() - 20, 90, currentY.toInt() + 20)
-                        it.draw(canvas)
-                    }
-
-                    // Draw Title: "EUR to USD"
-                    val titleText = "${pair.from} to ${toAmount.code}"
-                    canvas.drawText(titleText, 100f, currentY, itemTitlePaint)
-                    
-                    // Draw Subtitle: "1 USD = 0.92 EUR"
-                    currentY += 25f
-                    val baseAmountStr = CurrUtils.prepareToDisplay(pair.amount)
-                    val targetAmountStr = CurrUtils.prepareToDisplay(toAmount.value)
-                    val subtitleText = "$baseAmountStr ${pair.from} = $targetAmountStr ${toAmount.code}"
-                    canvas.drawText(subtitleText, 100f, currentY, itemSubtitlePaint)
-                    
-                    currentY += 45f
+                val toIconId = IconUtils.iconForCurrCode(context, toAmount.code)
+                val toIcon = context.getDrawable(toIconId)
+                toIcon?.let {
+                    it.setBounds(50, currentY.toInt() - 20, 90, currentY.toInt() + 20)
+                    it.draw(canvas)
                 }
+
+                // Draw Title: "EUR to USD"
+                val titleText = "${pair.from} to ${toAmount.code}"
+                canvas.drawText(titleText, 100f, currentY, itemTitlePaint)
+
+                // Draw Subtitle: "1 USD = 0.92 EUR"
+                currentY += 25f
+                val baseAmountStr = CurrUtils.prepareToDisplay(pair.amount)
+                val targetAmountStr = CurrUtils.prepareToDisplay(toAmount.value)
+                val subtitleText = "$baseAmountStr ${pair.from} = $targetAmountStr ${toAmount.code}"
+                canvas.drawText(subtitleText, 100f, currentY, itemSubtitlePaint)
+
+                currentY += 45f
             }
         } else {
-            canvas.drawText("No pairs added", centerX, centerY + 20f, itemSubtitlePaint)
+            canvas.drawText("No pinned pairs", centerX, centerY + 20f, itemSubtitlePaint)
         }
     }
 
