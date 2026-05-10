@@ -44,6 +44,7 @@ composeBom = "2023.08.00"
 composeMaterial = "1.2.1"
 composeFoundation = "1.2.1"
 coreSplashscreen = "1.0.1"
+watchface = "1.2.1"
 
 [libraries]
 androidx-compose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "composeNavigation" }
@@ -104,6 +105,13 @@ androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", versi
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
 androidx-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-wear-watchface = { module = "androidx.wear.watchface:watchface", version.ref = "watchface" }
+androidx-wear-watchface-complications-data = { module = "androidx.wear.watchface:watchface-complications-data", version.ref = "watchface" }
+androidx-wear-watchface-complications-data-source = { module = "androidx.wear.watchface:watchface-complications-data-source", version.ref = "watchface" }
+androidx-wear-watchface-complications-data-source-ktx = { module = "androidx.wear.watchface:watchface-complications-data-source-ktx", version.ref = "watchface" }
+androidx-wear-watchface-complications-rendering = { module = "androidx.wear.watchface:watchface-complications-rendering", version.ref = "watchface" }
+androidx-wear-watchface-editor = { module = "androidx.wear.watchface:watchface-editor", version.ref = "watchface" }
+androidx-wear-watchface-style = { module = "androidx.wear.watchface:watchface-style", version.ref = "watchface" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
