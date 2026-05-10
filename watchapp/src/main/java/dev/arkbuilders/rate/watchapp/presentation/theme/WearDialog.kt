@@ -5,11 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
@@ -44,14 +43,11 @@ fun WearConfirmationDialog(
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier = modifier
-                .fillMaxWidth()
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(16.dp),
+                .fillMaxSize()
+                .background(color = Color.White)
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = title,
@@ -61,6 +57,8 @@ fun WearConfirmationDialog(
                 color = ArkColor.TextPrimary
             )
 
+            Spacer(modifier = Modifier.height(12.dp))
+
             Text(
                 text = message,
                 fontSize = 14.sp,
@@ -68,7 +66,7 @@ fun WearConfirmationDialog(
                 color = ArkColor.TextSecondary
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -103,14 +101,11 @@ fun WearInfoDialog(
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier = modifier
-                .fillMaxWidth()
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(16.dp),
+                .fillMaxSize()
+                .background(color = Color.White)
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = title,
@@ -120,6 +115,8 @@ fun WearInfoDialog(
                 color = ArkColor.TextPrimary
             )
 
+            Spacer(modifier = Modifier.height(12.dp))
+
             Text(
                 text = message,
                 fontSize = 14.sp,
@@ -127,12 +124,12 @@ fun WearInfoDialog(
                 color = ArkColor.TextSecondary
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             WearCompactButton(
                 text = dismissText,
                 onClick = onDismiss,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(0.8f),
                 style = WearButtonStyle.Primary
             )
         }

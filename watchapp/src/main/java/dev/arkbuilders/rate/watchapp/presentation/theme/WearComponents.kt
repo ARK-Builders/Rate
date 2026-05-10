@@ -188,7 +188,7 @@ fun WearFab(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.size(52.dp),
+        modifier = modifier.size(44.dp),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = backgroundColor,
             contentColor = contentColor
@@ -198,7 +198,7 @@ fun WearFab(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(20.dp)
         )
     }
 }

@@ -47,21 +47,27 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToAdd = {
                                     navController.navigate("addquickpairs")
                                 },
-                                onNavigateToSearch = {
-                                    navController.navigate("search")
-                                },
                                 onNavigateToOptions = { id ->
                                     navController.navigate("options/$id")
                                 }
                             )
                         }
-                        composable("addquickpairs") {
+                        composable(
+                            route = "addquickpairs?id={id}",
+                            arguments = listOf(navArgument("id") { 
+                                type = NavType.StringType 
+                                nullable = true
+                                defaultValue = null
+                            })
+                        ) {
                             AddQuickPairsScreen(
                                 navController = navController,
                                 onNavigateToSearch = { field -> 
                                     navController.navigate("search/$field") 
                                 },
-                                onNavigateBack = { navController.popBackStack() }
+                                onNavigateBack = { 
+                                    navController.popBackStack("list", inclusive = false) 
+                                }
                             )
                         }
                         composable(
@@ -71,9 +77,11 @@ class MainActivity : ComponentActivity() {
                             OptionsScreen(
                                 onSearchClick = { navController.navigate("search") },
                                 onDeleteSuccess = { navController.navigate("success") },
-                                onUpdateClick = { navController.popBackStack() },
+                                onUpdateClick = { id -> 
+                                    navController.navigate("addquickpairs?id=$id") 
+                                },
                                 onPinClick = { navController.popBackStack() },
-                                onReuseClick = { navController.popBackStack() }
+                                onDismiss = { navController.popBackStack() }
                             )
                         }
                         composable(
