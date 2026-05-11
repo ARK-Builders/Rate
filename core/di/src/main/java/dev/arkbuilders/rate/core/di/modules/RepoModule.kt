@@ -20,8 +20,11 @@ import dev.arkbuilders.rate.core.data.repo.currency.FallbackRatesProvider
 import dev.arkbuilders.rate.core.data.repo.currency.FiatCurrencyDataSource
 import dev.arkbuilders.rate.core.data.repo.currency.LocalCurrencyDataSource
 import dev.arkbuilders.rate.core.db.dao.CodeUseStatDao
+import dev.arkbuilders.rate.core.db.dao.CurrencyRateDao
 import dev.arkbuilders.rate.core.db.dao.GroupDao
 import dev.arkbuilders.rate.core.db.dao.TimestampDao
+import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
+import dev.arkbuilders.rate.core.data.network.api.FiatAPI
 import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
@@ -119,6 +122,30 @@ class RepoModule {
     @Provides
     fun defaultGroupNameProvider(context: Context): DefaultGroupNameProvider =
         DefaultGroupNameProviderImpl(context)
+
+    @Singleton
+    @Provides
+    fun fiatCurrencyDataSource(
+        fiatAPI: FiatAPI,
+        fiatRateResponseMapper: FiatRateResponseMapper,
+    ): FiatCurrencyDataSource = FiatCurrencyDataSource(fiatAPI, fiatRateResponseMapper)
+
+    @Singleton
+    @Provides
+    fun cryptoCurrencyDataSource(
+        cryptoAPI: CryptoAPI,
+        cryptoRateResponseMapper: CryptoRateResponseMapper,
+    ): CryptoCurrencyDataSource = CryptoCurrencyDataSource(cryptoAPI, cryptoRateResponseMapper)
+
+    @Singleton
+    @Provides
+    fun localCurrencyDataSource(dao: CurrencyRateDao): LocalCurrencyDataSource =
+        LocalCurrencyDataSource(dao)
+
+    @Singleton
+    @Provides
+    fun currencyInfoDataSource(context: Context): CurrencyInfoDataSource =
+        CurrencyInfoDataSource(context)
 
     @Singleton
     @Provides

@@ -1,5 +1,6 @@
 package dev.arkbuilders.rate.core.di.modules
 
+import android.content.Context
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -12,6 +13,12 @@ import javax.inject.Singleton
 
 @Module
 class ApiModule {
+    @Singleton
+    @Provides
+    fun okHttpClientBuilder(context: Context): OkHttpClientBuilder {
+        return OkHttpClientBuilder(context)
+    }
+
     @Singleton
     @Provides
     fun cryptoAPI(clientBuilder: OkHttpClientBuilder): CryptoAPI {
