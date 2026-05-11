@@ -4,16 +4,16 @@ import android.content.Context
 import android.content.Intent
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import dev.arkbuilders.rate.feature.quickwidget.presentation.QuickPairsWidgetReceiver
+import dev.arkbuilders.rate.feature.quickwidget.presentation.QuickCalculationsWidgetReceiver
 
-class QuickPairsWidgetRefreshWorker(
+class QuickCalculationsWidgetRefreshWorker(
     params: WorkerParameters,
     private val context: Context,
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         val intent =
-            Intent(applicationContext, QuickPairsWidgetReceiver::class.java).apply {
-                action = QuickPairsWidgetReceiver.PINNED_PAIRS_REFRESH
+            Intent(applicationContext, QuickCalculationsWidgetReceiver::class.java).apply {
+                action = QuickCalculationsWidgetReceiver.PINNED_CALCULATIONS_REFRESH
             }
         applicationContext.sendBroadcast(intent)
         return Result.success()

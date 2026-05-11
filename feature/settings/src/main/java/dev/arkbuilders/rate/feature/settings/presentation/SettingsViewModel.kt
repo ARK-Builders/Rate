@@ -14,6 +14,8 @@ import dev.arkbuilders.rate.core.domain.repo.PreferenceKey
 import dev.arkbuilders.rate.core.domain.repo.Prefs
 import dev.arkbuilders.rate.core.domain.repo.TimestampRepo
 import dev.arkbuilders.rate.feature.settings.di.SettingsScope
+import dev.arkbuilders.rate.feature.settings.domain.model.AppLanguage
+import dev.arkbuilders.rate.feature.settings.domain.repository.AppLanguageRepo
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -29,22 +31,27 @@ data class SettingsScreenState(
     val showCrashReports: Boolean = false,
     val crashReportsEnabled: Boolean = false,
     val analyticsEnabled: Boolean = false,
+    val language: AppLanguage = AppLanguage.SYSTEM,
+    val showLanguagePopup: Boolean = false,
 )
 
-sealed class SettingsScreenEffect()
+sealed class SettingsScreenEffect() {
+    data object NavigateToAbout : SettingsScreenEffect()
+
+    data object NavigateBack : SettingsScreenEffect()
+}
 
 class SettingsViewModel(
     private val prefs: Prefs,
     private val timestampRepo: TimestampRepo,
     private val analyticsManager: AnalyticsManager,
     private val buildConfigFields: BuildConfigFields,
+    private val languageRepo: AppLanguageRepo,
 ) : ViewModel(), ContainerHost<SettingsScreenState, SettingsScreenEffect> {
     override val container: Container<SettingsScreenState, SettingsScreenEffect> =
         container(SettingsScreenState(showCrashReports = buildConfigFields.isGooglePlayBuild.not()))
 
     init {
-        analyticsManager.trackScreen("SettingsScreen")
-
         intent {
             timestampRepo
                 .timestampFlow(TimestampType.FetchRates)
@@ -72,6 +79,7 @@ class SettingsViewModel(
                     latestPairAlertCheck = pairAlertCheck,
                     crashReportsEnabled = crashReports,
                     analyticsEnabled = analytics,
+                    language = languageRepo.getLanguage(),
                 )
             }
         }
@@ -88,11 +96,48 @@ class SettingsViewModel(
 
     fun onAnalyticsToggle(enabled: Boolean) =
         intent {
+            analyticsManager.logEvent(
+                if (enabled)
+                    "settings_analytics_enabled"
+                else
+                    "settings_analytics_disabled",
+            )
+
             Firebase.analytics.setAnalyticsCollectionEnabled(enabled)
             prefs.set(PreferenceKey.CollectAnalytics, enabled)
             reduce {
                 state.copy(analyticsEnabled = enabled)
             }
+        }
+
+    fun onToggleLanguagePopup(enabled: Boolean) =
+        intent {
+            reduce {
+                state.copy(
+                    showLanguagePopup = enabled,
+                )
+            }
+        }
+
+    fun onChangeLanguage(language: AppLanguage) =
+        intent {
+            analyticsManager.logEvent("settings_language_changed")
+            languageRepo.setLanguage(language)
+            reduce {
+                state.copy(language = language)
+            }
+        }
+
+    fun onAboutClick() =
+        intent {
+            analyticsManager.logEvent("settings_about_clicked")
+            postSideEffect(SettingsScreenEffect.NavigateToAbout)
+        }
+
+    fun onBackClick() =
+        intent {
+            analyticsManager.logEvent("settings_back_clicked")
+            postSideEffect(SettingsScreenEffect.NavigateBack)
         }
 }
 
@@ -102,6 +147,7 @@ class SettingsViewModelFactory @Inject constructor(
     private val timestampRepo: TimestampRepo,
     private val analyticsManager: AnalyticsManager,
     private val buildConfigFieldsProvider: BuildConfigFieldsProvider,
+    private val languageRepo: AppLanguageRepo,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return SettingsViewModel(
@@ -109,6 +155,7 @@ class SettingsViewModelFactory @Inject constructor(
             timestampRepo,
             analyticsManager,
             buildConfigFieldsProvider.provide(),
+            languageRepo,
         ) as T
     }
 }

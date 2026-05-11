@@ -57,6 +57,7 @@ dependencies {
 
     implementation(libs.orbit.compose)
     implementation(libs.orbit.viewmodel)
+    implementation(libs.androidx.appcompat)
 
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)

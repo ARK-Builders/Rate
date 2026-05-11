@@ -11,7 +11,7 @@ suspend fun handleAddQuickSideEffect(
 ) {
     when (effect) {
         is AddQuickScreenEffect.NavigateBackWithResult -> {
-            resultNavigator.navigateBack(effect.newPairId)
+            resultNavigator.navigateBack(effect.newCalculationId)
         }
 
         is AddQuickScreenEffect.NavigateSearchAdd ->
@@ -30,5 +30,7 @@ suspend fun handleAddQuickSideEffect(
                     prohibitedCodes = effect.prohibitedCodes.toTypedArray(),
                 ),
             )
+
+        AddQuickScreenEffect.NavigateBack -> navigator.popBackStack()
     }
 }

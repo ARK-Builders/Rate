@@ -2,6 +2,7 @@
 
 package dev.arkbuilders.rate.feature.search.presentation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -56,10 +57,16 @@ fun SearchCurrencyScreen(
         )
     val state by viewModel.collectAsState()
 
+    BackHandler {
+        viewModel.onBackClick()
+    }
+
     viewModel.collectSideEffect { effect ->
         when (effect) {
             is SearchScreenEffect.NavigateBackWithResult ->
                 resultNavigator.navigateBack(effect.result)
+
+            SearchScreenEffect.NavigateBack -> resultNavigator.navigateBack()
         }
     }
 
@@ -75,7 +82,7 @@ fun SearchCurrencyScreen(
         topBar = {
             AppTopBarBack(
                 title = title ?: stringResource(CoreRString.search_currency),
-                onBackClick = { resultNavigator.navigateBack() },
+                onBackClick = { viewModel.onBackClick() },
             )
         },
     ) {

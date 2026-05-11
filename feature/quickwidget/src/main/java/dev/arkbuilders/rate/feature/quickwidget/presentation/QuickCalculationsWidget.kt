@@ -35,24 +35,24 @@ import dev.arkbuilders.rate.core.presentation.CoreRDrawable
 import dev.arkbuilders.rate.core.presentation.CoreRString
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.feature.quickwidget.di.QuickWidgetComponentHolder
-import dev.arkbuilders.rate.feature.quickwidget.presentation.action.AddNewPairAction
+import dev.arkbuilders.rate.feature.quickwidget.presentation.action.AddNewCalculationAction
 import dev.arkbuilders.rate.feature.quickwidget.presentation.action.NextPageAction
 import dev.arkbuilders.rate.feature.quickwidget.presentation.action.OpenAppAction
 import dev.arkbuilders.rate.feature.quickwidget.presentation.action.PreviousPageAction
 
-class QuickPairsWidget : GlanceAppWidget() {
+class QuickCalculationsWidget : GlanceAppWidget() {
     override suspend fun provideGlance(
         context: Context,
         id: GlanceId,
     ) {
         val quickComponent = QuickWidgetComponentHolder.provide(context)
-        val getPinnedUseCase = quickComponent.getPinnedQuickPairUseCase()
+        val getPinnedUseCase = quickComponent.getPinnedQuickCalculationUseCase()
         val pinned = getPinnedUseCase.invoke()
         val groups = quickComponent.groupRepo().getAllSorted(GroupFeatureType.Quick)
         provideContent {
             val prefs = currentState<Preferences>()
-            val groupId = prefs[QuickPairsWidgetReceiver.currentGroupIdKey]
-            val quickPairsList = pinned.filter { it.pair.group.id == groupId }
+            val groupId = prefs[QuickCalculationsWidgetReceiver.currentGroupIdKey]
+            val quickCalculationsList = pinned.filter { it.calculation.group.id == groupId }
             val displayGroup = groups.find { it.id == groupId }
             displayGroup ?: return@provideContent
             Column(
@@ -67,7 +67,7 @@ class QuickPairsWidget : GlanceAppWidget() {
                     Image(
                         modifier =
                             GlanceModifier.size(24.dp).padding(4.dp)
-                                .clickable(actionRunCallback<AddNewPairAction>()),
+                                .clickable(actionRunCallback<AddNewCalculationAction>()),
                         provider = ImageProvider(CoreRDrawable.ic_app_logo),
                         contentDescription = null,
                     )
@@ -107,7 +107,7 @@ class QuickPairsWidget : GlanceAppWidget() {
                     Image(
                         modifier =
                             GlanceModifier.size(24.dp).padding(4.dp)
-                                .clickable(actionRunCallback<AddNewPairAction>()),
+                                .clickable(actionRunCallback<AddNewCalculationAction>()),
                         provider =
                             ImageProvider(
                                 CoreRDrawable.ic_add_circle,
@@ -130,9 +130,9 @@ class QuickPairsWidget : GlanceAppWidget() {
                     )
                 }
                 LazyColumn(modifier = GlanceModifier.fillMaxHeight()) {
-                    items(quickPairsList) { quick ->
+                    items(quickCalculationsList) { quick ->
                         Column {
-                            QuickPairItem(
+                            QuickCalculationItem(
                                 quick = quick,
                                 context = context,
                             )

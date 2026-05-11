@@ -185,7 +185,7 @@ private fun Content(
                 ) {
                     Popup(
                         offset = IntOffset(0, 0),
-                        properties = PopupProperties(),
+                        properties = PopupProperties(focusable = true),
                         onDismissRequest = { showGroupsPopup = false },
                     ) {
                         GroupSelectPopup(

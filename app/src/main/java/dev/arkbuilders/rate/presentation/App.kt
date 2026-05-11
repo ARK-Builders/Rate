@@ -17,7 +17,7 @@ import dev.arkbuilders.rate.core.di.DaggerCoreComponent
 import dev.arkbuilders.rate.core.domain.AppConfig
 import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.repo.PreferenceKey
-import dev.arkbuilders.rate.feature.quickwidget.worker.QuickPairsWidgetRefreshWorker
+import dev.arkbuilders.rate.feature.quickwidget.worker.QuickCalculationsWidgetRefreshWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +37,10 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
         instance = this
 
         initCrashlytics()
-        initWorker(QuickPairsWidgetRefreshWorker::class.java, QuickPairsWidgetRefreshWorker.NAME)
+        initWorker(
+            QuickCalculationsWidgetRefreshWorker::class.java,
+            QuickCalculationsWidgetRefreshWorker.NAME,
+        )
     }
 
     private fun initBuildConfigFields() {

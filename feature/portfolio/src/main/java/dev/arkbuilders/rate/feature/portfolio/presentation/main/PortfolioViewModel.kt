@@ -75,8 +75,6 @@ class PortfolioViewModel(
         container(PortfolioScreenState())
 
     init {
-        analyticsManager.trackScreen("PortfolioScreen")
-
         init()
     }
 
@@ -104,12 +102,14 @@ class PortfolioViewModel(
 
     fun onChangeBaseCurrency(baseCode: CurrencyCode) =
         intent {
+            analyticsManager.logEvent("portfolio_base_currency_changed")
             prefs.set(PreferenceKey.BaseCurrencyCode, baseCode)
             initPages()
         }
 
     fun onAssetRemove(asset: Asset) =
         intent {
+            analyticsManager.logEvent("portfolio_asset_removed")
             val deleted = assetsRepo.removeAsset(asset.id)
             if (deleted) {
                 postSideEffect(PortfolioScreenEffect.ShowRemovedSnackbar(asset))
@@ -118,6 +118,7 @@ class PortfolioViewModel(
 
     fun undoDelete(asset: Asset) =
         intent {
+            analyticsManager.logEvent("portfolio_asset_remove_undone")
             assetsRepo.setAsset(asset)
         }
 
@@ -129,10 +130,12 @@ class PortfolioViewModel(
     fun onBackClick() =
         intent {
             if (state.filter.isNotEmpty()) {
+                analyticsManager.logEvent("portfolio_filter_cleared_via_back")
                 reduce {
                     state.copy(filter = "")
                 }
             } else {
+                analyticsManager.logEvent("portfolio_back_clicked")
                 postSideEffect(PortfolioScreenEffect.NavigateBack)
             }
         }
@@ -179,6 +182,7 @@ class PortfolioViewModel(
 
     fun onShowGroupsReorder() =
         intent {
+            analyticsManager.logEvent("portfolio_group_reorder_opened")
             val groups = groupRepo.getAllSorted(GroupFeatureType.Portfolio)
             reduce {
                 state.copy(
@@ -191,6 +195,7 @@ class PortfolioViewModel(
         from: Int,
         to: Int,
     ) = intent {
+        analyticsManager.logEvent("portfolio_group_reordered")
         val newGroups =
             groupReorderSwapUseCase(
                 state.editGroupReorderSheetState!!.groups,
@@ -211,16 +216,19 @@ class PortfolioViewModel(
 
     fun onDismissGroupsReorder() =
         intent {
+            analyticsManager.logEvent("portfolio_group_reorder_closed")
             reduce { state.copy(editGroupReorderSheetState = null) }
         }
 
     fun onShowGroupOptions(group: Group) =
         intent {
+            analyticsManager.logEvent("portfolio_group_options_opened")
             reduce { state.copy(editGroupOptionsSheetState = EditGroupOptionsSheetState(group)) }
         }
 
     fun onGroupDelete(group: Group) =
         intent {
+            analyticsManager.logEvent("portfolio_group_deleted")
             groupRepo.delete(group.id)
             val groups = groupRepo.getAllSorted(GroupFeatureType.Portfolio)
             reduce {
@@ -237,11 +245,13 @@ class PortfolioViewModel(
 
     fun onDismissGroupOptions() =
         intent {
+            analyticsManager.logEvent("portfolio_group_options_closed")
             reduce { state.copy(editGroupOptionsSheetState = null) }
         }
 
     fun onShowGroupRename(group: Group) =
         intent {
+            analyticsManager.logEvent("portfolio_group_rename_opened")
             reduce { state.copy(editGroupRenameSheetState = EditGroupRenameSheetState(group)) }
         }
 
@@ -249,6 +259,7 @@ class PortfolioViewModel(
         group: Group,
         newName: String,
     ) = intent {
+        analyticsManager.logEvent("portfolio_group_renamed")
         val renamed = group.copy(name = newName)
         groupRepo.update(renamed, GroupFeatureType.Portfolio)
         val groups = groupRepo.getAllSorted(GroupFeatureType.Portfolio)
@@ -266,6 +277,7 @@ class PortfolioViewModel(
 
     fun onDismissGroupRename() =
         intent {
+            analyticsManager.logEvent("portfolio_group_rename_closed")
             reduce { state.copy(editGroupRenameSheetState = null) }
         }
 

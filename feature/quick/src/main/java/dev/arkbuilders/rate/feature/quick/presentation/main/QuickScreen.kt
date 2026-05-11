@@ -51,8 +51,8 @@ import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupOptionsBottomShe
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupRenameBottomSheet
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupReorderBottomSheet
 import dev.arkbuilders.rate.feature.quick.di.QuickComponentHolder
-import dev.arkbuilders.rate.feature.quick.domain.model.PinnedQuickPair
-import dev.arkbuilders.rate.feature.quick.domain.model.QuickPair
+import dev.arkbuilders.rate.feature.quick.domain.model.PinnedQuickCalculation
+import dev.arkbuilders.rate.feature.quick.domain.model.QuickCalculation
 import dev.arkbuilders.rate.feature.quick.presentation.QuickExternalNavigator
 import dev.arkbuilders.rate.feature.quick.presentation.ui.PinnedQuickSwipeItem
 import dev.arkbuilders.rate.feature.quick.presentation.ui.QuickDateFormatter
@@ -66,7 +66,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 @Composable
 fun QuickScreen(
     navigator: DestinationsNavigator,
-    // expect new pair id
+    // expect new calculation id
     resultRecipient: ResultRecipient<AddQuickScreenDestination, Long>,
     externalNavigator: QuickExternalNavigator,
 ) {
@@ -96,7 +96,7 @@ fun QuickScreen(
     val isEmpty = state.pages.isEmpty()
 
     val scope = rememberCoroutineScope()
-    val pairOptionsSheetState = rememberModalBottomSheetState()
+    val calculationOptionsSheetState = rememberModalBottomSheetState()
     val editGroupReorderSheetState = rememberModalBottomSheetState()
     val editGroupOptionsSheetState = rememberModalBottomSheetState()
     val editGroupRenameSheetState = rememberModalBottomSheetState()
@@ -109,6 +109,7 @@ fun QuickScreen(
         pagerState = pagerState,
         snackState = snackState,
         ctx = ctx,
+        navigator = navigator,
         externalNavigator = externalNavigator,
     )
 
@@ -151,6 +152,9 @@ fun QuickScreen(
                         onFilterChanged = viewModel::onFilterChanged,
                         onDelete = viewModel::onDelete,
                         onClick = {
+                            viewModel.onReuse(it)
+                        },
+                        onLongClick = {
                             viewModel.onShowGroupOptions(it)
                         },
                         onPin = viewModel::onPin,
@@ -167,33 +171,18 @@ fun QuickScreen(
                     )
             }
         }
-        state.pairOptionsData?.let {
+        state.calculationOptionsData?.let {
             QuickOptionsBottomSheet(
-                pairOptionsSheetState,
-                pair = it.pair,
+                calculationOptionsSheetState,
+                calculation = it.calculation,
                 onPin = viewModel::onPin,
                 onUnpin = viewModel::onUnpin,
-                onEdit = {
-                    navigator.navigate(
-                        AddQuickScreenDestination(
-                            quickPairId = it.id,
-                            reuseNotEdit = false,
-                            groupId = getCurrentGroup()?.id,
-                        ),
-                    )
-                },
-                onReuse = {
-                    navigator.navigate(
-                        AddQuickScreenDestination(
-                            quickPairId = it.id,
-                            groupId = getCurrentGroup()?.id,
-                        ),
-                    )
-                },
+                onEdit = viewModel::onEdit,
+                onReuse = viewModel::onReuse,
                 onDelete = viewModel::onDelete,
                 onDismiss = {
                     scope.launch {
-                        pairOptionsSheetState.hide()
+                        calculationOptionsSheetState.hide()
                         viewModel.onHideOptions()
                     }
                 },
@@ -254,10 +243,11 @@ private fun Content(
     pagerState: PagerState,
     onEditGroups: () -> Unit,
     onFilterChanged: (String) -> Unit,
-    onDelete: (QuickPair) -> Unit,
-    onClick: (QuickPair) -> Unit,
-    onPin: (QuickPair) -> Unit,
-    onUnpin: (QuickPair) -> Unit,
+    onDelete: (QuickCalculation) -> Unit,
+    onClick: (QuickCalculation) -> Unit,
+    onLongClick: (QuickCalculation) -> Unit = {},
+    onPin: (QuickCalculation) -> Unit,
+    onUnpin: (QuickCalculation) -> Unit,
     onNewCode: (CurrencyCode) -> Unit,
 ) {
     val groups = state.pages.map { it.group }
@@ -288,6 +278,7 @@ private fun Content(
                     notPinned = state.pages.first().notPinned,
                     onDelete = onDelete,
                     onClick = onClick,
+                    onLongClick = onLongClick,
                     onPin = onPin,
                     onUnpin = onUnpin,
                     onNewCode = onNewCode,
@@ -305,6 +296,7 @@ private fun Content(
                         notPinned = state.pages[index].notPinned,
                         onDelete = onDelete,
                         onClick = onClick,
+                        onLongClick = onLongClick,
                         onPin = onPin,
                         onUnpin = onUnpin,
                         onNewCode = onNewCode,
@@ -319,12 +311,13 @@ private fun Content(
 private fun GroupPage(
     frequent: List<CurrencyInfo>,
     currencies: List<CurrencyInfo>,
-    pinned: List<PinnedQuickPair>,
-    notPinned: List<QuickPair>,
-    onDelete: (QuickPair) -> Unit,
-    onPin: (QuickPair) -> Unit,
-    onUnpin: (QuickPair) -> Unit,
-    onClick: (QuickPair) -> Unit = {},
+    pinned: List<PinnedQuickCalculation>,
+    notPinned: List<QuickCalculation>,
+    onDelete: (QuickCalculation) -> Unit,
+    onPin: (QuickCalculation) -> Unit,
+    onUnpin: (QuickCalculation) -> Unit,
+    onClick: (QuickCalculation) -> Unit = {},
+    onLongClick: (QuickCalculation) -> Unit = {},
     onNewCode: (CurrencyCode) -> Unit,
 ) {
     val ctx = LocalContext.current
@@ -333,18 +326,23 @@ private fun GroupPage(
             item {
                 ListHeader(text = stringResource(CoreRString.quick_pinned_calculations))
             }
-            items(pinned, key = { it.pair.id }) {
+            items(pinned, key = { it.calculation.id }) {
                 PinnedQuickSwipeItem(
                     content = {
                         QuickItem(
-                            from = Amount(it.pair.from, it.pair.amount),
+                            from = Amount(it.calculation.from, it.calculation.amount),
                             to = it.actualTo,
-                            dateText = QuickDateFormatter.pairRefreshedTime(ctx, it.refreshDate),
-                            onClick = { onClick(it.pair) },
+                            dateText =
+                                QuickDateFormatter.calculationRefreshedTime(
+                                    ctx,
+                                    it.refreshDate,
+                                ),
+                            onClick = { onClick(it.calculation) },
+                            onLongClick = { onLongClick(it.calculation) },
                         )
                     },
-                    pair = it.pair,
-                    onDelete = { onDelete(it.pair) },
+                    calculation = it.calculation,
+                    onDelete = { onDelete(it.calculation) },
                     onUnpin = onUnpin,
                 )
                 AppHorDiv16()
@@ -361,14 +359,15 @@ private fun GroupPage(
                             from = Amount(it.from, it.amount),
                             to = it.to,
                             dateText =
-                                QuickDateFormatter.pairCalculatedTime(
+                                QuickDateFormatter.calculationCalculatedTime(
                                     ctx,
                                     it.calculatedDate,
                                 ),
                             onClick = { onClick(it) },
+                            onLongClick = { onLongClick(it) },
                         )
                     },
-                    pair = it,
+                    calculation = it,
                     onDelete = { onDelete(it) },
                     onPin = onPin,
                 )
@@ -400,5 +399,6 @@ private fun PreviewItem() {
         to = listOf(Amount("USD", 30.0.toBigDecimal())),
         dateText = "Calculated on",
         onClick = {},
+        onLongClick = {},
     )
 }

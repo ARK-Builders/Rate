@@ -1,8 +1,12 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package dev.arkbuilders.rate.feature.quick.presentation.main
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +47,7 @@ fun QuickItem(
     to: List<Amount>,
     dateText: String,
     onClick: () -> Unit,
+    onLongClick: () -> Unit,
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -53,9 +58,10 @@ fun QuickItem(
             Modifier
                 .fillMaxWidth()
                 .background(Color.White)
-                .clickable {
-                    onClick()
-                },
+                .combinedClickable(
+                    onClick = { onClick() },
+                    onLongClick = { onLongClick() },
+                ),
     ) {
         val (icons, content, chevron) = createRefs()
         Row(

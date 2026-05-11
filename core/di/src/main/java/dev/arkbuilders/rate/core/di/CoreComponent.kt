@@ -6,7 +6,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dev.arkbuilders.rate.core.db.dao.PairAlertDao
 import dev.arkbuilders.rate.core.db.dao.PortfolioDao
-import dev.arkbuilders.rate.core.db.dao.QuickPairDao
+import dev.arkbuilders.rate.core.db.dao.QuickCalculationDao
 import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
@@ -32,7 +32,7 @@ import javax.inject.Singleton
     ],
 )
 interface CoreComponent {
-    fun quickDao(): QuickPairDao
+    fun quickDao(): QuickCalculationDao
 
     fun portfolioDao(): PortfolioDao
 

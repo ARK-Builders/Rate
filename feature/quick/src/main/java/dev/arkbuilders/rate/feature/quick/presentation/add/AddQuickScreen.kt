@@ -2,6 +2,7 @@
 
 package dev.arkbuilders.rate.feature.quick.presentation.add
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -68,12 +69,12 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 @Destination<ExternalModuleGraph>
 fun AddQuickScreen(
-    quickPairId: Long? = null,
+    quickCalculationId: Long? = null,
     newCode: CurrencyCode? = null,
     reuseNotEdit: Boolean = true,
     groupId: Long? = null,
     navigator: DestinationsNavigator,
-    // return back new pair id
+    // return back new calculation id
     resultNavigator: ResultBackNavigator<Long>,
     resultRecipient: ResultRecipient<SearchCurrencyScreenDestination, SearchNavResult>,
 ) {
@@ -86,7 +87,7 @@ fun AddQuickScreen(
         viewModel(
             factory =
                 quickComponent.addQuickVMFactory()
-                    .create(quickPairId, newCode, reuseNotEdit, groupId),
+                    .create(quickCalculationId, newCode, reuseNotEdit, groupId),
         )
 
     resultRecipient.onNavResult { result ->
@@ -96,6 +97,10 @@ fun AddQuickScreen(
                 viewModel.onNavResult(result.value)
             }
         }
+    }
+
+    BackHandler {
+        viewModel.onBackClick()
     }
 
     val state by viewModel.collectAsState()
@@ -109,10 +114,10 @@ fun AddQuickScreen(
                 if (reuseNotEdit)
                     R.string.quick_add_new_calculation
                 else
-                    R.string.quick_edit_pair
+                    R.string.quick_edit_calc
             AppTopBarBack(
                 title = stringResource(title),
-                onBackClick = { navigator.popBackStack() },
+                onBackClick = { viewModel.onBackClick() },
             )
         },
     ) {
@@ -126,8 +131,8 @@ fun AddQuickScreen(
                 onGroupCreate = viewModel::onGroupCreate,
                 onCodeChange = viewModel::onSetCode,
                 onSwapClick = viewModel::onSwapClick,
-                onPairsSwap = viewModel::onPairsSwap,
-                onAddAsset = viewModel::onAddQuickPair,
+                onCurrenciesSwap = viewModel::onCurrenciesSwap,
+                onAddAsset = viewModel::onAddQuickCalculation,
             )
         }
     }
@@ -143,7 +148,7 @@ private fun Content(
     onGroupCreate: (String) -> Unit,
     onCodeChange: (Int) -> Unit,
     onSwapClick: () -> Unit,
-    onPairsSwap: (from: Int, to: Int) -> Unit,
+    onCurrenciesSwap: (from: Int, to: Int) -> Unit,
     onAddAsset: () -> Unit,
 ) {
     val ctx = LocalContext.current
@@ -168,7 +173,7 @@ private fun Content(
         rememberReorderableLazyListState(lazyListState) { from, to ->
             val fromIndex = state.currencies.indexOfFirst { it.code == from.key }
             val toIndex = state.currencies.indexOfFirst { it.code == to.key }
-            onPairsSwap(fromIndex, toIndex)
+            onCurrenciesSwap(fromIndex, toIndex)
             haptic.performHapticFeedback(ReorderHapticFeedbackType.MOVE)
         }
 
@@ -241,7 +246,7 @@ private fun Content(
                     ) {
                         Popup(
                             offset = IntOffset(0, 0),
-                            properties = PopupProperties(),
+                            properties = PopupProperties(focusable = true),
                             onDismissRequest = { showGroupsPopup = false },
                         ) {
                             GroupSelectPopup(
@@ -288,7 +293,7 @@ fun Preview() {
         onGroupSelect = {},
         onCodeChange = {},
         onSwapClick = {},
-        onPairsSwap = { _, _ -> },
+        onCurrenciesSwap = { _, _ -> },
         onAddAsset = {},
         onGroupCreate = {},
     )

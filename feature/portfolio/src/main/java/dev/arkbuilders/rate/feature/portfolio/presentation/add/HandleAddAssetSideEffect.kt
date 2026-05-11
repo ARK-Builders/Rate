@@ -30,5 +30,7 @@ suspend fun handleAddAssetSideEffect(
                     prohibitedCodes = effect.prohibitedCodes.toTypedArray(),
                 ),
             )
+
+        AddAssetSideEffect.NavigateBack -> navigator.popBackStack()
     }
 }

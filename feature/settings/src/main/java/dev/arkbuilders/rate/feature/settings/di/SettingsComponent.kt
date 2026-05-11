@@ -7,7 +7,7 @@ import dev.arkbuilders.rate.core.domain.repo.TimestampRepo
 import dev.arkbuilders.rate.feature.settings.presentation.SettingsViewModelFactory
 
 @SettingsScope
-@Component(dependencies = [CoreComponent::class])
+@Component(dependencies = [CoreComponent::class], modules = [SettingsModule::class])
 interface SettingsComponent {
     fun settingsVMFactory(): SettingsViewModelFactory
 

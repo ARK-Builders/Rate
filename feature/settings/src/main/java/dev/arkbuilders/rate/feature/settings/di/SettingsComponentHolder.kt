@@ -10,7 +10,8 @@ object SettingsComponentHolder {
         component ?: let {
             val app = ctx.applicationContext
             val coreComponent = (app as CoreComponentProvider).provideCoreComponent()
-            component = DaggerSettingsComponent.builder().coreComponent(coreComponent).build()
+            component =
+                DaggerSettingsComponent.builder().coreComponent(coreComponent).build()
         }
         return component!!
     }

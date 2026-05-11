@@ -2,6 +2,7 @@
 
 package dev.arkbuilders.rate.feature.portfolio.presentation.edit
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +44,7 @@ import dev.arkbuilders.rate.core.presentation.ui.InfoDialog
 import dev.arkbuilders.rate.core.presentation.ui.LoadingScreen
 import dev.arkbuilders.rate.feature.portfolio.di.PortfolioComponentHolder
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Destination<ExternalModuleGraph>
 @Composable
@@ -63,11 +65,21 @@ fun EditAssetScreen(
 
     val state by viewModel.collectAsState()
 
+    viewModel.collectSideEffect { effect ->
+        when (effect) {
+            EditAssetScreenEffect.NavigateBack -> navigator.popBackStack()
+        }
+    }
+
+    BackHandler {
+        viewModel.onBackClick()
+    }
+
     Scaffold(
         topBar = {
             AppTopBarBack(
                 title = stringResource(CoreRString.asset_detail),
-                onBackClick = { navigator.popBackStack() },
+                onBackClick = { viewModel.onBackClick() },
             )
         },
     ) {

@@ -76,7 +76,7 @@ class PrefsImpl(val context: Context) : Prefs {
                 PreferenceKey.IsOnboardingCompleted ->
                     booleanPreferencesKey("isOnboardingCompleted")
 
-                PreferenceKey.IsOnboardingQuickPairCompleted ->
+                PreferenceKey.IsOnboardingQuickCalculationCompleted ->
                     booleanPreferencesKey("IsOnboardingQuickPairCompleted")
 
                 PreferenceKey.CurrentVersionCode ->

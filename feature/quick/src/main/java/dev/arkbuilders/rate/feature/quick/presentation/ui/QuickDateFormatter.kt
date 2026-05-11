@@ -7,7 +7,7 @@ import java.time.Duration
 import java.time.OffsetDateTime
 
 object QuickDateFormatter {
-    fun pairCalculatedTime(
+    fun calculationCalculatedTime(
         ctx: Context,
         date: OffsetDateTime,
     ): String {
@@ -34,7 +34,7 @@ object QuickDateFormatter {
         }
     }
 
-    fun pairRefreshedTime(
+    fun calculationRefreshedTime(
         ctx: Context,
         date: OffsetDateTime,
     ): String {

@@ -40,6 +40,8 @@ sealed class AddAssetSideEffect {
 
     data class NavigateSearchSet(val index: Int, val prohibitedCodes: List<CurrencyCode>) :
         AddAssetSideEffect()
+
+    data object NavigateBack : AddAssetSideEffect()
 }
 
 enum class SearchNavResultType {
@@ -61,8 +63,6 @@ class AddAssetViewModel(
         container(AddAssetState())
 
     init {
-        analyticsManager.trackScreen("AddAssetScreen")
-
         intent {
             val group = getGroupByIdOrCreateDefaultUseCase(groupId, GroupFeatureType.Portfolio)
             val groups = groupRepo.getAllSorted(GroupFeatureType.Portfolio)
@@ -108,6 +108,7 @@ class AddAssetViewModel(
 
     fun onAssetRemove(removeIndex: Int) =
         intent {
+            analyticsManager.logEvent("add_asset_currency_removed")
             reduce {
                 state.copy(
                     currencies =
@@ -119,6 +120,7 @@ class AddAssetViewModel(
 
     fun onGroupCreate(name: String) =
         intent {
+            analyticsManager.logEvent("add_asset_group_created")
             val group = Group.empty(name = name)
             val inAvailable = state.availableGroups.any { it.name == group.name }
             reduce {
@@ -137,6 +139,7 @@ class AddAssetViewModel(
 
     fun onGroupSelect(group: Group) =
         intent {
+            analyticsManager.logEvent("add_asset_group_selected")
             reduce { state.copy(group = group) }
         }
 
@@ -163,6 +166,7 @@ class AddAssetViewModel(
 
     fun onAddAsset() =
         intent {
+            analyticsManager.logEvent("add_asset_added")
             val group = groupRepo.getByNameOrCreateNew(state.group.name, GroupFeatureType.Portfolio)
 
             val currencies =
@@ -186,6 +190,7 @@ class AddAssetViewModel(
 
     fun onSetCode(index: Int) =
         intent {
+            analyticsManager.logEvent("add_asset_set_code_clicked")
             val prohibitedCodes = state.currencies.map { it.code }.toMutableList()
             prohibitedCodes.removeAt(index)
             postSideEffect(AddAssetSideEffect.NavigateSearchSet(index, prohibitedCodes))
@@ -193,8 +198,15 @@ class AddAssetViewModel(
 
     fun onAddCode() =
         intent {
+            analyticsManager.logEvent("add_asset_add_code_clicked")
             val prohibitedCodes = state.currencies.map { it.code }
             postSideEffect(AddAssetSideEffect.NavigateSearchAdd(prohibitedCodes))
+        }
+
+    fun onBackClick() =
+        intent {
+            analyticsManager.logEvent("add_asset_back_clicked")
+            postSideEffect(AddAssetSideEffect.NavigateBack)
         }
 }
 

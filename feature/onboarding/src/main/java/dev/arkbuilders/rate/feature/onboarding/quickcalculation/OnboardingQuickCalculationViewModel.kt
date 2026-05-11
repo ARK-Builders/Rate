@@ -1,4 +1,4 @@
-package dev.arkbuilders.rate.feature.onboarding.quickpair
+package dev.arkbuilders.rate.feature.onboarding.quickcalculation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,47 +9,47 @@ import dev.arkbuilders.rate.core.domain.model.CurrencyInfo
 import dev.arkbuilders.rate.core.domain.repo.CurrencyRepo
 import dev.arkbuilders.rate.core.domain.repo.PreferenceKey
 import dev.arkbuilders.rate.core.domain.repo.Prefs
-import dev.arkbuilders.rate.feature.quick.domain.model.QuickPair
+import dev.arkbuilders.rate.feature.quick.domain.model.QuickCalculation
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
-enum class OnboardingQuickPairStep {
+enum class OnboardingQuickCalcStep {
     PairSwipeToRight,
     PairSwipeToLeft,
     PinnedSwipeToRight,
     PairMenu,
 }
 
-data class OnboardingQuickPairState(
-    val pair: QuickPair = QuickPair.empty(),
+data class OnboardingQuickCalcState(
+    val calculation: QuickCalculation = QuickCalculation.empty(),
     val stepIndex: Int = 0,
     val currencies: List<CurrencyInfo> = emptyList(),
     val initialized: Boolean = false,
 )
 
-sealed class OnboardingQuickPairEffect {
-    data object NavBack : OnboardingQuickPairEffect()
+sealed class OnboardingQuickCalcEffect {
+    data object NavBack : OnboardingQuickCalcEffect()
 
-    data object Finish : OnboardingQuickPairEffect()
+    data object Finish : OnboardingQuickCalcEffect()
 }
 
-class OnboardingQuickPairViewModel(
+class OnboardingQuickCalculationViewModel(
     private val quickRepo: QuickRepo,
     private val prefs: Prefs,
     private val currencyRepo: CurrencyRepo,
-) : ViewModel(), ContainerHost<OnboardingQuickPairState, OnboardingQuickPairEffect> {
-    override val container: Container<OnboardingQuickPairState, OnboardingQuickPairEffect> =
-        container(OnboardingQuickPairState())
+) : ViewModel(), ContainerHost<OnboardingQuickCalcState, OnboardingQuickCalcEffect> {
+    override val container: Container<OnboardingQuickCalcState, OnboardingQuickCalcEffect> =
+        container(OnboardingQuickCalcState())
 
     init {
         intent {
-            val pair = quickRepo.getAll().first()
+            val calculation = quickRepo.getAll().first()
             val currencies = currencyRepo.getCurrencyInfo()
             reduce {
                 state.copy(
-                    pair = pair,
+                    calculation = calculation,
                     currencies = currencies,
                     initialized = true,
                 )
@@ -61,7 +61,7 @@ class OnboardingQuickPairViewModel(
         intent {
             val nextIndex = state.stepIndex + 1
 
-            if (nextIndex == OnboardingQuickPairStep.entries.lastIndex + 1) {
+            if (nextIndex == OnboardingQuickCalcStep.entries.lastIndex + 1) {
                 finish()
                 return@intent
             }
@@ -75,7 +75,7 @@ class OnboardingQuickPairViewModel(
         intent {
             val prevIndex = state.stepIndex - 1
             if (prevIndex < 0) {
-                postSideEffect(OnboardingQuickPairEffect.NavBack)
+                postSideEffect(OnboardingQuickCalcEffect.NavBack)
                 return@intent
             }
 
@@ -90,18 +90,18 @@ class OnboardingQuickPairViewModel(
 
     private fun finish() =
         intent {
-            prefs.set(PreferenceKey.IsOnboardingQuickPairCompleted, true)
-            postSideEffect(OnboardingQuickPairEffect.Finish)
+            prefs.set(PreferenceKey.IsOnboardingQuickCalculationCompleted, true)
+            postSideEffect(OnboardingQuickCalcEffect.Finish)
         }
 }
 
-class OnboardingQuickPairViewModelFactory @AssistedInject constructor(
+class OnboardingQuickCalcViewModelFactory @AssistedInject constructor(
     @Assisted private val quickRepo: QuickRepo,
     private val prefs: Prefs,
     private val currencyRepo: CurrencyRepo,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return OnboardingQuickPairViewModel(
+        return OnboardingQuickCalculationViewModel(
             quickRepo,
             prefs,
             currencyRepo,
@@ -112,6 +112,6 @@ class OnboardingQuickPairViewModelFactory @AssistedInject constructor(
     interface Factory {
         fun create(
             @Assisted quickRepo: QuickRepo,
-        ): OnboardingQuickPairViewModelFactory
+        ): OnboardingQuickCalcViewModelFactory
     }
 }

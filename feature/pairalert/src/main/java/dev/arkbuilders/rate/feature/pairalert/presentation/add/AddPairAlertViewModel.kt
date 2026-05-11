@@ -72,8 +72,6 @@ class AddPairAlertViewModel(
         container(AddPairAlertScreenState())
 
     init {
-        analyticsManager.trackScreen("AddPairAlertScreen")
-
         pairAlertId?.let {
             setupFromExisting()
             checkAboveNotBelow()

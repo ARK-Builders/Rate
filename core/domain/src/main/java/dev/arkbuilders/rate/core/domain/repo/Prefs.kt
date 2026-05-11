@@ -13,7 +13,7 @@ sealed class PreferenceKey<out T>(val defaultValue: T) {
 
     data object IsOnboardingCompleted : PreferenceKey<Boolean>(false)
 
-    data object IsOnboardingQuickPairCompleted : PreferenceKey<Boolean>(false)
+    data object IsOnboardingQuickCalculationCompleted : PreferenceKey<Boolean>(false)
 
     data object AppLaunchCount : PreferenceKey<Long>(0)
 

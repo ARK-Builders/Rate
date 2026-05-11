@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
-import dev.arkbuilders.rate.feature.quickwidget.presentation.QuickPairsWidgetReceiver
+import dev.arkbuilders.rate.feature.quickwidget.presentation.QuickCalculationsWidgetReceiver
 
 class NextPageAction : ActionCallback {
     override suspend fun onAction(
@@ -12,7 +12,7 @@ class NextPageAction : ActionCallback {
         glanceId: GlanceId,
         parameters: ActionParameters,
     ) {
-        QuickPairsWidgetReceiver.updateWidgetNewGroup(
+        QuickCalculationsWidgetReceiver.updateWidgetNewGroup(
             context = context,
             glanceId = glanceId,
             findNewIndex = { currentIndex, lastIndex ->

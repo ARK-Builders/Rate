@@ -1,5 +1,6 @@
 package dev.arkbuilders.rate.feature.portfolio.presentation.add
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -84,6 +85,10 @@ fun AddAssetScreen(
         }
     }
 
+    BackHandler {
+        viewModel.onBackClick()
+    }
+
     val state by viewModel.collectAsState()
 
     viewModel.collectSideEffect { effect ->
@@ -94,7 +99,7 @@ fun AddAssetScreen(
         topBar = {
             AppTopBarBack(
                 title = stringResource(CoreRString.portfolio_add_new_assets),
-                onBackClick = { navigator.popBackStack() },
+                onBackClick = { viewModel.onBackClick() },
             )
         },
     ) {
@@ -203,7 +208,7 @@ private fun Content(
                 ) {
                     Popup(
                         offset = IntOffset(0, 0),
-                        properties = PopupProperties(),
+                        properties = PopupProperties(focusable = true),
                         onDismissRequest = { showGroupsPopup = false },
                     ) {
                         GroupSelectPopup(

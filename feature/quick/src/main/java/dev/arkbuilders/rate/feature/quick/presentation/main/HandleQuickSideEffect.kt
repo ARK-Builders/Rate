@@ -8,6 +8,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
+import com.ramcosta.composedestinations.generated.quick.destinations.AddQuickScreenDestination
+import com.ramcosta.composedestinations.generated.quick.destinations.AddQuickScreenDestination.invoke
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.arkbuilders.rate.core.presentation.CoreRString
 import dev.arkbuilders.rate.core.presentation.R
 import dev.arkbuilders.rate.core.presentation.ui.NotifyAddedSnackbarVisuals
@@ -35,6 +38,7 @@ fun HandleQuickSideEffects(
     pagerState: PagerState,
     snackState: SnackbarHostState,
     ctx: Context,
+    navigator: DestinationsNavigator,
     externalNavigator: QuickExternalNavigator,
 ) {
     val selectTabEffect = remember { mutableStateOf<QuickScreenEffect.SelectTab?>(null) }
@@ -44,10 +48,13 @@ fun HandleQuickSideEffects(
             selectTabEffect.value = effect
         } else {
             handleQuickSideEffect(
+                state = state,
                 effect = effect,
                 viewModel = viewModel,
+                pagerState = pagerState,
                 snackState = snackState,
                 ctx = ctx,
+                navigator = navigator,
                 externalNavigator = externalNavigator,
             )
         }
@@ -82,10 +89,13 @@ fun HandleQuickSideEffects(
 }
 
 suspend fun handleQuickSideEffect(
+    state: QuickScreenState,
     effect: QuickScreenEffect,
     viewModel: QuickViewModel,
+    pagerState: PagerState,
     snackState: SnackbarHostState,
     ctx: Context,
+    navigator: DestinationsNavigator,
     externalNavigator: QuickExternalNavigator,
 ) {
     when (effect) {
@@ -93,8 +103,8 @@ suspend fun handleQuickSideEffect(
             val added =
                 ctx.getString(
                     R.string.quick_snackbar_new_added_to,
-                    effect.pair.from,
-                    effect.pair.to.joinToString { it.code },
+                    effect.calculation.from,
+                    effect.calculation.to.joinToString { it.code },
                 )
             val visuals =
                 NotifyAddedSnackbarVisuals(
@@ -112,8 +122,8 @@ suspend fun handleQuickSideEffect(
             val removed =
                 ctx.getString(
                     CoreRString.quick_snackbar_new_added_to,
-                    effect.pair.from,
-                    effect.pair.to.joinToString { it.code },
+                    effect.calculation.from,
+                    effect.calculation.to.joinToString { it.code },
                 )
             val visuals =
                 NotifyRemovedSnackbarVisuals(
@@ -124,7 +134,7 @@ suspend fun handleQuickSideEffect(
                             removed,
                         ),
                     onUndo = {
-                        viewModel.undoDelete(effect.pair)
+                        viewModel.undoDelete(effect.calculation)
                     },
                 )
             snackState.showSnackbar(visuals)
@@ -144,6 +154,26 @@ suspend fun handleQuickSideEffect(
                 }
             }
         }
-        QuickScreenEffect.NavigateToPairOnboarding -> externalNavigator.navigateToPairOnboarding()
+        QuickScreenEffect.NavigateToCalculationOnboarding ->
+            externalNavigator.navigateToCalcOnboarding()
+
+        is QuickScreenEffect.NavigateToEdit -> {
+            navigator.navigate(
+                AddQuickScreenDestination(
+                    quickCalculationId = effect.calc.id,
+                    reuseNotEdit = false,
+                    groupId = state.pages.getOrNull(pagerState.currentPage)?.group?.id,
+                ),
+            )
+        }
+        is QuickScreenEffect.NavigateToReuse -> {
+            navigator.navigate(
+                AddQuickScreenDestination(
+                    quickCalculationId = effect.calc.id,
+                    reuseNotEdit = true,
+                    groupId = state.pages.getOrNull(pagerState.currentPage)?.group?.id,
+                ),
+            )
+        }
     }
 }

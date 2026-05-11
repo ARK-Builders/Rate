@@ -1,4 +1,4 @@
-package dev.arkbuilders.rate.feature.onboarding.quickpair
+package dev.arkbuilders.rate.feature.onboarding.quickcalculation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.LinearEasing
@@ -68,7 +68,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 @Destination<ExternalModuleGraph>
-fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
+fun OnboardingQuickCalculationScreen(navigator: DestinationsNavigator) {
     val ctx = LocalContext.current
     val quickComponent =
         remember {
@@ -78,16 +78,16 @@ fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
         remember {
             OnboardingComponentHolder.provide(ctx)
         }
-    val viewModel: OnboardingQuickPairViewModel =
+    val viewModel: OnboardingQuickCalculationViewModel =
         viewModel(
             factory =
-                onboardingComponent.onboardingQuickPairViewModelFactory()
+                onboardingComponent.onboardingQuickCalcViewModelFactory()
                     .create(quickComponent.quickRepo()),
         )
 
-    var quickPairRect by remember { (mutableStateOf<Rect?>(null)) }
+    var quickCalculationRect by remember { (mutableStateOf<Rect?>(null)) }
 
-    val quickPairTranslatePx by rememberInfiniteTransition().animateFloat(
+    val quickCalcTranslatePx by rememberInfiniteTransition().animateFloat(
         initialValue = 0f,
         targetValue = with(LocalDensity.current) { 120.dp.toPx() },
         animationSpec =
@@ -109,24 +109,24 @@ fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
 
     viewModel.collectSideEffect { effect ->
         when (effect) {
-            OnboardingQuickPairEffect.Finish -> navigator.popBackStack()
-            OnboardingQuickPairEffect.NavBack -> navigator.popBackStack()
+            OnboardingQuickCalcEffect.Finish -> navigator.popBackStack()
+            OnboardingQuickCalcEffect.NavBack -> navigator.popBackStack()
         }
     }
 
-    val step = OnboardingQuickPairStep.entries.get(state.stepIndex)
+    val step = OnboardingQuickCalcStep.entries.get(state.stepIndex)
 
-    val translatePairModifier =
+    val translateCalcModifier =
         when (step) {
-            OnboardingQuickPairStep.PairSwipeToRight ->
-                Modifier.graphicsLayer { translationX = quickPairTranslatePx }
+            OnboardingQuickCalcStep.PairSwipeToRight ->
+                Modifier.graphicsLayer { translationX = quickCalcTranslatePx }
 
-            OnboardingQuickPairStep.PairSwipeToLeft ->
-                Modifier.graphicsLayer { translationX = -quickPairTranslatePx }
+            OnboardingQuickCalcStep.PairSwipeToLeft ->
+                Modifier.graphicsLayer { translationX = -quickCalcTranslatePx }
 
-            OnboardingQuickPairStep.PinnedSwipeToRight ->
+            OnboardingQuickCalcStep.PinnedSwipeToRight ->
                 Modifier.graphicsLayer {
-                    translationX = quickPairTranslatePx
+                    translationX = quickCalcTranslatePx
                 }
 
             else -> Modifier
@@ -168,7 +168,7 @@ fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
             Column(
                 modifier =
                     Modifier.onGloballyPositioned { coordinates ->
-                        quickPairRect = coordinates.boundsInRoot()
+                        quickCalculationRect = coordinates.boundsInRoot()
                     },
             ) {
                 if (state.stepIndex <= 1) {
@@ -179,18 +179,18 @@ fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
                 Box(propagateMinConstraints = true) {
                     DismissBackground(
                         swipeToDelete =
-                            step == OnboardingQuickPairStep.PairSwipeToLeft,
+                            step == OnboardingQuickCalcStep.PairSwipeToLeft,
                         isPinned =
-                            step == OnboardingQuickPairStep.PinnedSwipeToRight,
+                            step == OnboardingQuickCalcStep.PinnedSwipeToRight,
                     )
                     MockQuickItem(
-                        modifier = translatePairModifier,
-                        from = Amount(state.pair.from, state.pair.amount),
-                        to = state.pair.to,
+                        modifier = translateCalcModifier,
+                        from = Amount(state.calculation.from, state.calculation.amount),
+                        to = state.calculation.to,
                         dateText =
-                            QuickDateFormatter.pairCalculatedTime(
+                            QuickDateFormatter.calculationCalculatedTime(
                                 ctx,
-                                state.pair.calculatedDate,
+                                state.calculation.calculatedDate,
                             ),
                     ) { }
                 }
@@ -204,7 +204,7 @@ fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
         }
     }
 
-    quickPairRect?.let {
+    quickCalculationRect?.let {
         Spotlight(
             targetRect = it,
             onTargetClicked = {},
@@ -215,8 +215,8 @@ fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
     }
 
     when (step) {
-        OnboardingQuickPairStep.PairSwipeToRight -> {
-            quickPairRect?.let {
+        OnboardingQuickCalcStep.PairSwipeToRight -> {
+            quickCalculationRect?.let {
                 SpotlightTooltip(
                     targetRect = it,
                     titleText = stringResource(CoreRString.onboarding_quick_calc_1_title),
@@ -230,8 +230,8 @@ fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
             }
         }
 
-        OnboardingQuickPairStep.PairSwipeToLeft -> {
-            quickPairRect?.let {
+        OnboardingQuickCalcStep.PairSwipeToLeft -> {
+            quickCalculationRect?.let {
                 SpotlightTooltip(
                     targetRect = it,
                     titleText = stringResource(CoreRString.onboarding_quick_calc_2_title),
@@ -245,8 +245,8 @@ fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
             }
         }
 
-        OnboardingQuickPairStep.PinnedSwipeToRight -> {
-            quickPairRect?.let {
+        OnboardingQuickCalcStep.PinnedSwipeToRight -> {
+            quickCalculationRect?.let {
                 SpotlightTooltip(
                     targetRect = it,
                     titleText = stringResource(CoreRString.onboarding_quick_calc_3_title),
@@ -260,8 +260,8 @@ fun OnboardingQuickPairScreen(navigator: DestinationsNavigator) {
             }
         }
 
-        OnboardingQuickPairStep.PairMenu -> {
-            quickPairRect?.let {
+        OnboardingQuickCalcStep.PairMenu -> {
+            quickCalculationRect?.let {
                 SpotlightTooltip(
                     targetRect = it,
                     titleText = stringResource(CoreRString.onboarding_quick_calc_4_title),

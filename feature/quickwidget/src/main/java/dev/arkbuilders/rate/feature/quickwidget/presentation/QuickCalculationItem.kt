@@ -21,11 +21,11 @@ import androidx.glance.unit.ColorProvider
 import dev.arkbuilders.rate.core.domain.CurrUtils
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.core.presentation.utils.IconUtils
-import dev.arkbuilders.rate.feature.quick.domain.model.PinnedQuickPair
+import dev.arkbuilders.rate.feature.quick.domain.model.PinnedQuickCalculation
 
 @Composable
-fun QuickPairItem(
-    quick: PinnedQuickPair,
+fun QuickCalculationItem(
+    quick: PinnedQuickCalculation,
     context: Context,
 ) {
     Row(
@@ -37,7 +37,7 @@ fun QuickPairItem(
                 ImageProvider(
                     IconUtils.iconForCurrCode(
                         context,
-                        quick.pair.from,
+                        quick.calculation.from,
                     ),
                 ),
             contentDescription = null,
@@ -47,7 +47,7 @@ fun QuickPairItem(
             verticalAlignment = Alignment.Vertical.CenterVertically,
         ) {
             Text(
-                text = "${quick.pair.from} to ${quick.pair.to.joinToString(
+                text = "${quick.calculation.from} to ${quick.calculation.to.joinToString(
                     separator = ", ",
                 ) { it.code }}",
                 style =
@@ -58,7 +58,9 @@ fun QuickPairItem(
             )
 
             Text(
-                text = "${CurrUtils.prepareToDisplay(quick.pair.amount)} ${quick.pair.from} = ",
+                text = "${CurrUtils.prepareToDisplay(
+                    quick.calculation.amount,
+                )} ${quick.calculation.from} = ",
                 style =
                     TextStyle(
                         color = ColorProvider(ArkColor.TextTertiary),

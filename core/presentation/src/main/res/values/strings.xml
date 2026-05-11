@@ -15,7 +15,7 @@
     <string name="quick_empty_title">Ready for calculation!</string>
     <string name="quick_empty_desc">Select your currencies and enter an amount to start converting. Your exchange results will appear here.</string>
     <string name="quick_add_new_calculation">Add new calculation</string>
-    <string name="quick_edit_pair">Edit pair</string>
+    <string name="quick_edit_calc">Edit calculation</string>
     <string name="quick_last_refreshed_ago">Last refreshed %1$s ago</string>
     <string name="quick_last_refreshed_now">Updated just now</string>
     <string name="quick_calculations">Calculations</string>
@@ -159,6 +159,10 @@
     <string name="edit_group_name">Edit folder \"%1$s\"</string>
     <string name="rename">Rename</string>
     <string name="groups">Folders</string>
+    <string name="language">Language</string>
+    <string name="language_system">System default</string>
+    <string name="language_en" translatable="false">English</string>
+    <string name="language_ru" translatable="false">Русский</string>
 
 
 
@@ -183,8 +187,8 @@
     <string name="onboarding_quick_calc_2_desc">Delete a calculation quickly by swiping left.</string>
     <string name="onboarding_quick_calc_3_title">Swipe the pinned calculation to the right to unpin</string>
     <string name="onboarding_quick_calc_3_desc">Unpin a calculation to move it to calculation history.</string>
-    <string name="onboarding_quick_calc_4_title">Calculation context menu</string>
-    <string name="onboarding_quick_calc_4_desc">Tap to show the complete menu.</string>
+    <string name="onboarding_quick_calc_4_title">Tap to reuse the calculation</string>
+    <string name="onboarding_quick_calc_4_desc">Long press to show the complete menu.</string>
 
 
 </resources>

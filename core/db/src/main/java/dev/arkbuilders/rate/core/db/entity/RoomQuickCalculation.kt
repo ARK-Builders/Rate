@@ -18,7 +18,7 @@ import java.time.OffsetDateTime
         ),
     ],
 )
-data class RoomQuickPair(
+data class RoomQuickCalculation(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val from: CurrencyCode,

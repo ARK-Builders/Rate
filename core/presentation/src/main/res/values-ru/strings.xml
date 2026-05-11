@@ -10,13 +10,13 @@
 
     <string name="bottom_nav_portfolio">Портфели</string>
     <string name="bottom_nav_alerts">Оповещения</string>
-    <string name="bottom_nav_quick">Быстрые</string>
+    <string name="bottom_nav_quick">Расчёты</string>
     <string name="bottom_nav_settings">Настройки</string>
 
     <string name="quick_empty_title">Готово к расчету!</string>
     <string name="quick_empty_desc">Выберите валюты и введите сумму для начала конвертации. Результаты обмена появятся здесь.</string>
     <string name="quick_add_new_calculation">Добавить новый расчет</string>
-    <string name="quick_edit_pair">Редактировать пару</string>
+    <string name="quick_edit_calc">Редактировать расчёт</string>
     <string name="quick_last_refreshed_ago">Последнее обновление %1$s назад</string>
     <string name="quick_last_refreshed_now">Обновлено только что</string>
     <string name="quick_calculations">Расчеты</string>
@@ -68,7 +68,7 @@
     <string name="create_alert">Создать оповещение</string>
     <string name="alert_current_price">Текущая цена = %1$s</string>
 
-    <string name="settings_quick_portfolio_alerts">Быстрые/Портфель/Оповещения</string>
+    <string name="settings_quick_portfolio_alerts">Расчёты/Портфель/Оповещения</string>
     <string name="settings_elapsed_ago">"%1$s назад · "</string>
     <string name="settings_latest_rates_refresh">Последнее обновление курсов</string>
     <string name="settings_latest_alerts_check">Последняя проверка оповещений</string>
@@ -145,7 +145,7 @@
     <string name="delete">Удалить</string>
     <string name="re_use">Повторно использовать</string>
     <string name="edit">Редактировать</string>
-    <string name="options">Параметры</string>
+    <string name="options">Опции</string>
     <string name="oops_request_time_out">Упс, время запроса истекло!</string>
     <string name="check_connection_and_refresh">Пожалуйста, проверьте ваше соединение и обновите страницу, чтобы попробовать снова.</string>
     <string name="refresh">Обновить</string>
@@ -158,6 +158,8 @@
     <string name="edit_group_name">Редактировать папку \"%1$s\"</string>
     <string name="rename">Переименовать</string>
     <string name="groups">Папки</string>
+    <string name="language">Язык</string>
+    <string name="language_system">Как в системе</string>
 
     <string name="onboarding_1_title">Добро пожаловать в ARK Rate!</string>
     <string name="onboarding_2_title">Простая мультивалютная конвертация</string>
@@ -180,7 +182,7 @@
     <string name="onboarding_quick_calc_2_desc">Быстро удалите расчёт, проведя пальцем влево.</string>
     <string name="onboarding_quick_calc_3_title">Проведите пальцем по закрепленному расчёту вправо, чтобы открепить</string>
     <string name="onboarding_quick_calc_3_desc">Открепите расчёт, чтобы переместить его в историю расчётов.</string>
-    <string name="onboarding_quick_calc_4_title">Контекстное меню расчёта</string>
-    <string name="onboarding_quick_calc_4_desc">Нажмите, чтобы открыть полное меню.</string>
+    <string name="onboarding_quick_calc_4_title">Нажмите, чтобы переиспользовать расчёт</string>
+    <string name="onboarding_quick_calc_4_desc">Удерживайте, чтобы открыть полное меню.</string>
 
 </resources>

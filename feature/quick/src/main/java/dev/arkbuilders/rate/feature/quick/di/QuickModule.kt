@@ -2,28 +2,28 @@ package dev.arkbuilders.rate.feature.quick.di
 
 import dagger.Module
 import dagger.Provides
-import dev.arkbuilders.rate.core.db.dao.QuickPairDao
+import dev.arkbuilders.rate.core.db.dao.QuickCalculationDao
 import dev.arkbuilders.rate.core.domain.repo.GroupRepo
 import dev.arkbuilders.rate.core.domain.usecase.ConvertWithRateUseCase
 import dev.arkbuilders.rate.feature.quick.data.QuickRepoImpl
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
-import dev.arkbuilders.rate.feature.quick.domain.usecase.GetSortedPinnedQuickPairsUseCase
+import dev.arkbuilders.rate.feature.quick.domain.usecase.GetSortedPinnedQuickCalculationsUseCase
 
 @Module
 class QuickModule {
     @QuickScope
     @Provides
     fun quickRepo(
-        quickPairDao: QuickPairDao,
+        quickCalculationDao: QuickCalculationDao,
         groupRepo: GroupRepo,
-    ): QuickRepo = QuickRepoImpl(quickPairDao, groupRepo)
+    ): QuickRepo = QuickRepoImpl(quickCalculationDao, groupRepo)
 
     @QuickScope
     @Provides
-    fun getSortedPinnedQuickPairsUseCase(
+    fun getSortedPinnedQuickCalculationsUseCase(
         quickRepo: QuickRepo,
         convertWithRateUseCase: ConvertWithRateUseCase,
-    ) = GetSortedPinnedQuickPairsUseCase(
+    ) = GetSortedPinnedQuickCalculationsUseCase(
         quickRepo,
         convertWithRateUseCase,
     )

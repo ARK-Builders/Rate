@@ -28,6 +28,8 @@ data class SearchScreenState(
 
 sealed class SearchScreenEffect {
     data class NavigateBackWithResult(val result: SearchNavResult) : SearchScreenEffect()
+
+    data object NavigateBack : SearchScreenEffect()
 }
 
 class SearchViewModel(
@@ -44,8 +46,6 @@ class SearchViewModel(
         container(SearchScreenState(prohibitedCodes = prohibitedCodes ?: emptyList()))
 
     init {
-        analyticsManager.trackScreen("SearchScreen")
-
         intent {
             val all = currencyRepo.getCurrencyInfo()
             val frequent = calcFrequentCurrUseCase.invoke().map { currencyRepo.infoByCode(it) }
@@ -87,12 +87,19 @@ class SearchViewModel(
             }
 
             val result = SearchNavResult(navKey, navPos, model.code)
+            analyticsManager.logEvent("search_back_clicked_with_result")
             postSideEffect(SearchScreenEffect.NavigateBackWithResult(result))
         }
 
     fun onCodeProhibitedDialogDismiss() =
         intent {
             reduce { state.copy(showCodeProhibitedDialog = false) }
+        }
+
+    fun onBackClick() =
+        intent {
+            analyticsManager.logEvent("search_back_clicked")
+            postSideEffect(SearchScreenEffect.NavigateBack)
         }
 }
 

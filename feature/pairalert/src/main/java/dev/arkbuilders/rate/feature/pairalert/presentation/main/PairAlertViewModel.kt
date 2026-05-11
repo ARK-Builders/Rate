@@ -69,8 +69,6 @@ class PairAlertViewModel(
         )
 
     init {
-        analyticsManager.trackScreen("PairAlertScreen")
-
         intent {
             if (pairAlertRepo.getAll().isNotEmpty() &&
                 notificationPermissionHelper.isGranted().not()

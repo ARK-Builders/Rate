@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ARKRate"
         android:usesCleartextTraffic="true"
+        android:localeConfig="@xml/locales_config"
         tools:targetApi="31">
         <activity
             android:name=".presentation.MainActivity"
@@ -30,7 +31,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".feature.quickwidget.presentation.QuickPairsWidgetReceiver"
+        <receiver android:name=".feature.quickwidget.presentation.QuickCalculationsWidgetReceiver"
             android:exported="true">
 
             <intent-filter>
@@ -58,6 +59,15 @@
         <meta-data
             android:name="google_analytics_automatic_screen_reporting_enabled"
             android:value="false" />
+
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
     </application>
 
 </manifest>

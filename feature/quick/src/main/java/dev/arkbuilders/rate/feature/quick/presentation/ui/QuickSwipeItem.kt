@@ -25,14 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.arkbuilders.rate.core.presentation.R
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
-import dev.arkbuilders.rate.feature.quick.domain.model.QuickPair
+import dev.arkbuilders.rate.feature.quick.domain.model.QuickCalculation
 
 // bug: callbacks from swipe called multiply times
 @Composable
 fun PinnedQuickSwipeItem(
     content: @Composable () -> Unit,
-    pair: QuickPair,
-    onUnpin: (QuickPair) -> Unit,
+    calculation: QuickCalculation,
+    onUnpin: (QuickCalculation) -> Unit,
     onDelete: () -> Unit,
 ) {
     val dismissState =
@@ -40,7 +40,7 @@ fun PinnedQuickSwipeItem(
             confirmValueChange = {
                 when (it) {
                     SwipeToDismissBoxValue.StartToEnd -> {
-                        onUnpin(pair)
+                        onUnpin(calculation)
                         true
                     }
 
@@ -59,7 +59,7 @@ fun PinnedQuickSwipeItem(
         backgroundContent = {
             DismissBackground(
                 state = dismissState,
-                isPinned = pair.isPinned(),
+                isPinned = calculation.isPinned(),
             )
         },
         content = { content() },
@@ -69,8 +69,8 @@ fun PinnedQuickSwipeItem(
 @Composable
 fun QuickSwipeItem(
     content: @Composable () -> Unit,
-    pair: QuickPair,
-    onPin: (QuickPair) -> Unit,
+    calculation: QuickCalculation,
+    onPin: (QuickCalculation) -> Unit,
     onDelete: () -> Unit,
 ) {
     val dismissState =
@@ -78,7 +78,7 @@ fun QuickSwipeItem(
             confirmValueChange = {
                 when (it) {
                     SwipeToDismissBoxValue.StartToEnd -> {
-                        onPin(pair)
+                        onPin(calculation)
                         true
                     }
 
@@ -97,7 +97,7 @@ fun QuickSwipeItem(
         backgroundContent = {
             DismissBackground(
                 state = dismissState,
-                isPinned = pair.isPinned(),
+                isPinned = calculation.isPinned(),
             )
         },
         content = { content() },

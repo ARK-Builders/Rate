@@ -14,10 +14,10 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class QuickPairsWidgetReceiver : GlanceAppWidgetReceiver() {
+class QuickCalculationsWidgetReceiver : GlanceAppWidgetReceiver() {
     private val coroutineScope = MainScope()
 
-    override val glanceAppWidget: GlanceAppWidget = QuickPairsWidget()
+    override val glanceAppWidget: GlanceAppWidget = QuickCalculationsWidget()
 
     override fun onReceive(
         context: Context,
@@ -27,7 +27,7 @@ class QuickPairsWidgetReceiver : GlanceAppWidgetReceiver() {
         val action = intent.action
         Timber.d(action)
         when (action) {
-            AppWidgetManager.ACTION_APPWIDGET_ENABLED, PINNED_PAIRS_REFRESH ->
+            AppWidgetManager.ACTION_APPWIDGET_ENABLED, PINNED_CALCULATIONS_REFRESH ->
                 updateAll(context)
         }
     }
@@ -44,7 +44,7 @@ class QuickPairsWidgetReceiver : GlanceAppWidgetReceiver() {
     private fun updateAll(context: Context) {
         coroutineScope.launch {
             GlanceAppWidgetManager(context)
-                .getGlanceIds(QuickPairsWidget::class.java)
+                .getGlanceIds(QuickCalculationsWidget::class.java)
                 .forEach { glanceId ->
                     updateWidgetNewGroup(
                         context = context,
@@ -59,7 +59,7 @@ class QuickPairsWidgetReceiver : GlanceAppWidgetReceiver() {
 
     companion object {
         val currentGroupIdKey = longPreferencesKey("currentGroupIdKey")
-        const val PINNED_PAIRS_REFRESH = "PINNED_PAIRS_REFRESH"
+        const val PINNED_CALCULATIONS_REFRESH = "PINNED_CALCULATIONS_REFRESH"
 
         suspend fun updateWidgetNewGroup(
             context: Context,
@@ -85,7 +85,7 @@ class QuickPairsWidgetReceiver : GlanceAppWidgetReceiver() {
                     prefs.remove(currentGroupIdKey)
                 }
             }
-            QuickPairsWidget().update(context, glanceId)
+            QuickCalculationsWidget().update(context, glanceId)
         }
     }
 }

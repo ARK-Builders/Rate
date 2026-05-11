@@ -3,16 +3,16 @@ package dev.arkbuilders.rate.presentation
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import dev.arkbuilders.rate.core.presentation.theme.ARKRateTheme
-import dev.arkbuilders.rate.feature.quickwidget.presentation.QuickPairsWidgetReceiver
+import dev.arkbuilders.rate.feature.quickwidget.presentation.QuickCalculationsWidgetReceiver
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
@@ -30,8 +30,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         sendBroadcast(
-            Intent(this, QuickPairsWidgetReceiver::class.java).apply {
-                action = QuickPairsWidgetReceiver.PINNED_PAIRS_REFRESH
+            Intent(this, QuickCalculationsWidgetReceiver::class.java).apply {
+                action = QuickCalculationsWidgetReceiver.PINNED_CALCULATIONS_REFRESH
             },
         )
         super.onStop()

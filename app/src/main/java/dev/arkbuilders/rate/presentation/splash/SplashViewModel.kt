@@ -59,7 +59,7 @@ class SplashViewModel(
     private suspend fun skipOnboardingIfUserHasData() {
         if (quickRepo.getAll().isNotEmpty() || portfolioRepo.allAssets().isNotEmpty()) {
             prefs.set(PreferenceKey.IsOnboardingCompleted, true)
-            prefs.set(PreferenceKey.IsOnboardingQuickPairCompleted, true)
+            prefs.set(PreferenceKey.IsOnboardingQuickCalculationCompleted, true)
         }
     }
 

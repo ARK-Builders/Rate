@@ -6,10 +6,11 @@ agp = "8.1.4"
 playServicesWearable = "18.2.0"
 coreKtx = "1.15.0"
 minSdk = "26"
-compileSdk = "35"
+compileSdk = "36"
 ksp = "2.1.20-1.0.32"
+
+arkAbout = "0.2.1"
 androidApp = "8.9.1"
-arkAbout = "0.2.0"
 activityCompose = "1.10.1"
 composeDestinationsVersion = "2.1.0"
 arrowFxCoroutines = "1.2.1"
@@ -35,7 +36,7 @@ tagcloud = "1.1.0"
 timber = "5.0.1"
 composeUi = "1.7.5"
 workRuntimeKtx = "2.8.1"
-appcompat = "1.7.0"
+appcompat = "1.7.1"
 material = "1.12.0"
 gson = "2.11.0"
 reorderable = "2.4.3"
@@ -58,6 +59,7 @@ androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtim
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomRuntime" }
 
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "composeUi" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeUi" }
@@ -100,6 +102,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version.ref = "reorderable" }
+
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
