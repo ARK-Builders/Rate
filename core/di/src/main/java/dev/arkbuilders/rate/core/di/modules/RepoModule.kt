@@ -6,6 +6,8 @@ import dagger.Provides
 import dev.arkbuilders.rate.core.data.mapper.CryptoRateResponseMapper
 import dev.arkbuilders.rate.core.data.mapper.FiatRateResponseMapper
 import dev.arkbuilders.rate.core.data.network.NetworkStatusImpl
+import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
+import dev.arkbuilders.rate.core.data.network.api.FiatAPI
 import dev.arkbuilders.rate.core.data.preferences.PrefsImpl
 import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
 import dev.arkbuilders.rate.core.data.repo.BuildConfigFieldsProviderImpl
@@ -23,8 +25,6 @@ import dev.arkbuilders.rate.core.db.dao.CodeUseStatDao
 import dev.arkbuilders.rate.core.db.dao.CurrencyRateDao
 import dev.arkbuilders.rate.core.db.dao.GroupDao
 import dev.arkbuilders.rate.core.db.dao.TimestampDao
-import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
-import dev.arkbuilders.rate.core.data.network.api.FiatAPI
 import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
