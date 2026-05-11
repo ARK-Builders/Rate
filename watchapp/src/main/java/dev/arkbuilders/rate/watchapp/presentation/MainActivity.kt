@@ -11,10 +11,10 @@ import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.arkbuilders.rate.watchapp.presentation.addquickpairs.AddQuickPairsScreen
+import dev.arkbuilders.rate.watchapp.presentation.addquickpairs.AddQuickCalculationsScreen
 import dev.arkbuilders.rate.watchapp.presentation.options.OptionsScreen
 import dev.arkbuilders.rate.watchapp.presentation.options.SuccessScreen
-import dev.arkbuilders.rate.watchapp.presentation.quickpairs.QuickPairsScreen
+import dev.arkbuilders.rate.watchapp.presentation.quickpairs.QuickCalculationsScreen
 import dev.arkbuilders.rate.watchapp.presentation.search.SearchScreen
 import dev.arkbuilders.rate.watchapp.presentation.theme.ArkrateTheme
 import androidx.navigation.NavType
@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = "list"
                     ) {
                         composable("list") {
-                            QuickPairsScreen(
+                            QuickCalculationsScreen(
                                 onNavigateToAdd = {
                                     navController.navigate("addquickpairs")
                                 },
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                                 defaultValue = null
                             })
                         ) {
-                            AddQuickPairsScreen(
+                            AddQuickCalculationsScreen(
                                 navController = navController,
                                 onNavigateToSearch = { field -> 
                                     navController.navigate("search/$field") 

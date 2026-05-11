@@ -83,6 +83,6 @@ fun OptionsMenu(modifier: Modifier = Modifier) {
 
 @Preview(device = Devices.WEAR_OS_LARGE_ROUND, showSystemUi = true)
 @Composable
-fun AddQuickPairsPreview() {
+fun AddQuickCalculationsPreview() {
     OptionsMenu()
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.arkbuilders.rate.feature.quick.domain.model.QuickPair
+import dev.arkbuilders.rate.feature.quick.domain.model.QuickCalculation
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,8 +24,8 @@ class OptionsViewModel @Inject constructor(
 
     val pairId: Long = checkNotNull(savedStateHandle["id"])
 
-    private val _quickPair = MutableStateFlow<QuickPair?>(null)
-    val quickPair: StateFlow<QuickPair?> = _quickPair.asStateFlow()
+    private val _quickPair = MutableStateFlow<QuickCalculation?>(null)
+    val quickPair: StateFlow<QuickCalculation?> = _quickPair.asStateFlow()
 
     private val _showPinLimitDialog = MutableStateFlow(false)
     val showPinLimitDialog: StateFlow<Boolean> = _showPinLimitDialog.asStateFlow()

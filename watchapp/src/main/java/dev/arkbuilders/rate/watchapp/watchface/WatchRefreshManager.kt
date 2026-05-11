@@ -9,7 +9,7 @@ object WatchRefreshManager {
         try {
             val requester = ComplicationDataSourceUpdateRequester.create(
                 context,
-                ComponentName(context, QuickPairComplicationService::class.java)
+                ComponentName(context, QuickCalculationComplicationService::class.java)
             )
             requester.requestUpdateAll()
         } catch (e: Exception) {

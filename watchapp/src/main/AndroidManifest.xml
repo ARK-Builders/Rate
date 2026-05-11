@@ -38,7 +38,7 @@
         </activity>
 
         <service
-            android:name=".watchface.QuickPairsWatchFaceService"
+            android:name=".watchface.QuickCalculationsWatchFaceService"
             android:exported="true"
             android:label="@string/watch_face_name"
             android:permission="android.permission.BIND_WALLPAPER">
@@ -58,7 +58,7 @@
         </service>
 
         <service
-            android:name=".watchface.QuickPairComplicationService"
+            android:name=".watchface.QuickCalculationComplicationService"
             android:exported="true"
             android:label="Quick Pair Rate"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
