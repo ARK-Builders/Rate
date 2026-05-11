@@ -8,9 +8,7 @@ import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
 import dev.arkbuilders.rate.core.domain.model.CurrencyRate
 import dev.arkbuilders.rate.core.domain.model.CurrencyType
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class CryptoCurrencyDataSource @Inject constructor(
     private val cryptoAPI: CryptoAPI,
     private val cryptoRateResponseMapper: CryptoRateResponseMapper,

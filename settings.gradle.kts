@@ -2,9 +2,9 @@ import java.util.Properties
 
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
+        gradlePluginPortal()
         maven {
             setUrl("https://jitpack.io")
         }
@@ -54,6 +54,8 @@ include(":feature:quickwidget")
 include(":feature:search")
 include(":feature:settings")
 include(":feature:onboarding")
+include(":watchapp")
+
 
 fun getLocalProps(): Properties {
     val props = Properties()

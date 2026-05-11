@@ -4,9 +4,7 @@ import android.content.Context
 import android.webkit.WebSettings
 import okhttp3.OkHttpClient
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class OkHttpClientBuilder @Inject constructor(val context: Context) {
     fun build(): OkHttpClient {
         val agent = WebSettings.getDefaultUserAgent(context)

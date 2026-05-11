@@ -11,9 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class CurrencyInfoDataSource @Inject constructor(
     private val ctx: Context,
 ) {
