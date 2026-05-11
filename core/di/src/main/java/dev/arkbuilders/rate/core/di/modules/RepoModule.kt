@@ -42,18 +42,6 @@ import javax.inject.Singleton
 class RepoModule {
     @Singleton
     @Provides
-    fun provideFCryptoRateResponseMapper(): CryptoRateResponseMapper {
-        return CryptoRateResponseMapper()
-    }
-
-    @Singleton
-    @Provides
-    fun provideFiatRateResponseMapper(): FiatRateResponseMapper {
-        return FiatRateResponseMapper()
-    }
-
-    @Singleton
-    @Provides
     fun provideFallbackRatesProvider(
         context: Context,
         fiatRateResponseMapper: FiatRateResponseMapper,
