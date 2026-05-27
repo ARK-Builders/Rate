@@ -5,7 +5,7 @@ update_crypto_data.py
 1. Fetches top N cryptocurrencies from CoinGecko API
 2. Fetches fiat rates from OpenExchangeRates
 3. Downloads matching Android crypto icons
-4. Selects 200 crypto items that have both rates and icons
+4. Validates all top 200 crypto items have rates and icons
 5. Atomically installs rates and icons into the data branch worktree
 """
 
@@ -162,49 +162,67 @@ def fetch_fiat_rates() -> dict:
     return fiat_data
 
 
-def prepare_android_icons(candidates: list[dict], tmp_icons_dir: str) -> tuple[list[dict], int]:
+def validate_crypto_assets(
+    coins: list[dict],
+    icons_dir: str | None = None,
+    expected_count: int = CRYPTO_ASSET_LIMIT,
+) -> None:
+    if len(coins) != expected_count:
+        raise RuntimeError(f"Expected {expected_count} crypto assets, got {len(coins)}")
+
+    resource_names: set[str] = set()
+    for index, coin in enumerate(coins, start=1):
+        symbol = coin.get("symbol")
+        if not symbol:
+            raise RuntimeError(f"Missing crypto symbol at item {index}")
+        if coin.get("current_price") is None:
+            raise RuntimeError(f"Missing current_price for {symbol}")
+
+        resource_name = android_resource_name(symbol)
+        if resource_name in resource_names:
+            raise RuntimeError(f"Duplicate Android icon resource name: {resource_name}")
+        resource_names.add(resource_name)
+
+        if icons_dir is not None:
+            icon_path = os.path.join(icons_dir, f"{resource_name}.png")
+            if not os.path.exists(icon_path):
+                raise RuntimeError(f"Missing PNG icon for {symbol}: {icon_path}")
+            with open(icon_path, "rb") as icon_file:
+                if icon_file.read(len(PNG_SIGNATURE)) != PNG_SIGNATURE:
+                    raise RuntimeError(f"{resource_name} icon is not a PNG")
+
+
+def prepare_android_icons(coins: list[dict], tmp_icons_dir: str) -> int:
     print(f"\n[3/5] Downloading matching Android icons …")
     clean_directory(tmp_icons_dir)
 
     downloaded = 0
-    selected_coins: list[dict] = []
-    resource_names: set[str] = set()
-    for i, coin in enumerate(candidates, start=1):
+    for i, coin in enumerate(coins, start=1):
         ticker = coin.get("symbol", "")
         resource_name = android_resource_name(ticker)
         image_url = coin.get("image", "")
-        progress = f"[{i}/{len(candidates)}]"
+        progress = f"[{i}/{len(coins)}]"
 
         if not image_url:
-            print(f"  {progress} SKIP {ticker or coin.get('id'):<14} missing icon URL")
-            continue
-        if resource_name in resource_names:
-            print(f"  {progress} SKIP {resource_name:<14} duplicate resource name")
-            continue
+            raise RuntimeError(f"Missing icon URL for {ticker or coin.get('id')}")
 
         try:
             image_data = fetch_with_retry(image_url, label=resource_name)
             create_android_drawable(tmp_icons_dir, resource_name, image_data)
-            selected_coins.append(coin)
-            resource_names.add(resource_name)
             downloaded += 1
             print(f"  {progress} ✅ {resource_name:<14}")
         except Exception as e:
-            print(f"  {progress} SKIP {resource_name:<14} {e}")
+            raise RuntimeError(f"Failed to download icon {resource_name}: {e}") from e
 
-        if len(selected_coins) == CRYPTO_ASSET_LIMIT:
-            break
-
-        if i < len(candidates):
+        if i < len(coins):
             time.sleep(DOWNLOAD_DELAY)
 
-    if len(selected_coins) != CRYPTO_ASSET_LIMIT:
-        raise RuntimeError(
-            f"Expected {CRYPTO_ASSET_LIMIT} synced crypto rates/icons, got {len(selected_coins)}"
-        )
+    if downloaded != len(coins):
+        raise RuntimeError(f"Expected {len(coins)} icons, downloaded {downloaded}")
 
+    validate_crypto_assets(coins, tmp_icons_dir, expected_count=len(coins))
     print(f"  ✅ Prepared {downloaded} icons.")
-    return selected_coins, downloaded
+    return downloaded
 
 
 def crypto_rates_data(coins: list[dict]) -> list[dict]:
@@ -272,18 +290,18 @@ def main() -> None:
         print(f"\n❌  Project root not found: {PROJECT_ROOT}")
         sys.exit(1)
 
-    candidate_limit = CRYPTO_ASSET_LIMIT * 2
-    print(f"\n[1/5] Fetching top {candidate_limit} candidate assets from CoinGecko …")
-    candidates = fetch_coin_list(candidate_limit)
-    print(f"  ✅ {len(candidates)} candidate assets retrieved.")
+    print(f"\n[1/5] Fetching top {CRYPTO_ASSET_LIMIT} assets from CoinGecko …")
+    coins = fetch_coin_list(CRYPTO_ASSET_LIMIT)
+    validate_crypto_assets(coins)
+    print(f"  ✅ {len(coins)} assets retrieved and validated.")
 
     fiat_data = fetch_fiat_rates()
 
     tmp_icons_dir = ANDROID_ICONS_DIR + ".tmp"
-    selected_coins, downloaded = prepare_android_icons(candidates, tmp_icons_dir)
+    downloaded = prepare_android_icons(coins, tmp_icons_dir)
 
     print(f"\n[4/5] Preparing {CRYPTO_RATES_FILENAME} …")
-    crypto_data = crypto_rates_data(selected_coins)
+    crypto_data = crypto_rates_data(coins)
     print(f"  ✅ Prepared {len(crypto_data)} crypto rates.")
     install_prepared_data(
         fiat_data,
