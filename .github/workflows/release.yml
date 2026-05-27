@@ -15,6 +15,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Fetch up-to-date currency rates and icons
+      run: |
+        git fetch origin exchange-rates
+        git restore --source=FETCH_HEAD --worktree \
+          core/data/src/main/assets/crypto-rates.json \
+          core/data/src/main/assets/fiat-rates.json \
+          cryptoicons/src/main/res/drawable
+
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:

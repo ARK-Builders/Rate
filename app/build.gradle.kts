@@ -208,5 +208,11 @@ fun collectCurrencyIcons(moduleDir: File): List<String> {
     val drawableDir = moduleDir.resolve("src/main/res/drawable")
     return drawableDir.listFiles()!!
         .map { it.nameWithoutExtension.uppercase() }
-        .map { if (it == "curr_try") "try" else it }
+        .map {
+            when {
+                it == "CURR_TRY" -> "TRY"
+                it.startsWith("COIN_") -> it.removePrefix("COIN_")
+                else -> it
+            }
+        }
 }

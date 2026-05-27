@@ -6,6 +6,8 @@
 /build
 /buildSrc/build/
 *.class
+__pycache__/
+*.pyc
 /captures
 .externalNativeBuild
 .cxx
