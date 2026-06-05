@@ -21,7 +21,7 @@ jobs:
 
     - name: Fetch up-to-date currency rates and icons
       run: |
-        git fetch origin exchange-rates
+        git fetch origin data/currency-icons-and-rates
         git restore --source=FETCH_HEAD --worktree \
           core/data/src/main/assets/crypto-rates.json \
           core/data/src/main/assets/fiat-rates.json \
@@ -50,7 +50,7 @@ jobs:
 
       - name: Fetch up-to-date currency rates and icons
         run: |
-          git fetch origin exchange-rates
+          git fetch origin data/currency-icons-and-rates
           git restore --source=FETCH_HEAD --worktree \
             core/data/src/main/assets/crypto-rates.json \
             core/data/src/main/assets/fiat-rates.json \
@@ -75,7 +75,7 @@ jobs:
 
     - name: Fetch up-to-date currency rates and icons
       run: |
-        git fetch origin exchange-rates
+        git fetch origin data/currency-icons-and-rates
         git restore --source=FETCH_HEAD --worktree \
           core/data/src/main/assets/crypto-rates.json \
           core/data/src/main/assets/fiat-rates.json \
@@ -129,7 +129,7 @@ jobs:
 
       - name: Fetch up-to-date currency rates and icons
         run: |
-          git fetch origin exchange-rates
+          git fetch origin data/currency-icons-and-rates
           git restore --source=FETCH_HEAD --worktree \
             core/data/src/main/assets/crypto-rates.json \
             core/data/src/main/assets/fiat-rates.json \

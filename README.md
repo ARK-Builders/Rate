@@ -92,14 +92,14 @@ All currency icons and rates are shipped with the app bundle.
 
 During first app launch, rates will be updated but the in-bundle rates serve as a fallback.
 
-The branch `exchange-rates` is used to update data automatically (see `fetch-data.yml`).
+The branch `data/currency-icons-and-rates` is used to update data automatically (see `fetch-data.yml`).
 
 :warning: The `main` branch does not contain any currencies.
 
 For local testing it's useful to do this:
 ```sh
-git fetch origin exchange-rates
-git restore --source=origin/exchange-rates --worktree \
+git fetch origin data/currency-icons-and-rates
+git restore --source=origin/data/currency-icons-and-rates --worktree \
   core/data/src/main/assets/crypto-rates.json \
   core/data/src/main/assets/fiat-rates.json \
   cryptoicons/src/main/res/drawable \

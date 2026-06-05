@@ -25,8 +25,8 @@ jobs:
       - name: Checkout data branch into subdirectory
         uses: actions/checkout@v4
         with:
-          ref: exchange-rates
-          path: exchange-rates
+          ref: data/currency-icons-and-rates
+          path: currency-data
       
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -44,11 +44,11 @@ jobs:
 
       - name: Run Android rates and icons update
         env:
-          CI_PROJECT_ROOT: "${{ github.workspace }}/exchange-rates"
+          CI_PROJECT_ROOT: "${{ github.workspace }}/currency-data"
         run: python3 scripts/update_crypto_data.py
        
       - name: Push into Git
-        working-directory: exchange-rates
+        working-directory: currency-data
         run: |-
           git config user.email "bot@ark-builders.dev"
           git config user.name "ARK Builders Bot"
@@ -59,6 +59,6 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "chore(rates,icons): auto-update [skip ci]"
-            git pull origin exchange-rates --no-edit
-            git push origin exchange-rates
+            git pull origin data/currency-icons-and-rates --no-edit
+            git push origin data/currency-icons-and-rates
           fi
