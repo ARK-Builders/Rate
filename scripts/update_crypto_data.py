@@ -32,6 +32,10 @@ FIAT_RATES_FILENAME = "fiat-rates.json"
 
 CRYPTO_ASSET_LIMIT = 200
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+JPEG_SIGNATURE = b"\xff\xd8\xff"
+WEBP_SIGNATURE_OFFSET = 8
+WEBP_SIGNATURE = b"WEBP"
+SUPPORTED_ICON_EXTENSIONS = (".png", ".jpg", ".jpeg", ".webp")
 
 # ── CoinGecko safe delays ─────────────────────────────────────────────────────
 COINGECKO_LIST_DELAY   = 2.0
@@ -122,13 +126,25 @@ def fetch_coin_list(total: int | None) -> list[dict]:
     return coins
 
 
-def create_android_drawable(parent_dir: str, asset_name: str, image_bytes: bytes) -> None:
-    if not image_bytes.startswith(PNG_SIGNATURE):
-        raise RuntimeError(f"{asset_name} icon is not a PNG")
+def android_bitmap_extension(image_bytes: bytes) -> str:
+    if image_bytes.startswith(PNG_SIGNATURE):
+        return ".png"
+    if image_bytes.startswith(JPEG_SIGNATURE):
+        return ".jpg"
+    if (
+        image_bytes.startswith(b"RIFF")
+        and image_bytes[WEBP_SIGNATURE_OFFSET:WEBP_SIGNATURE_OFFSET + len(WEBP_SIGNATURE)] == WEBP_SIGNATURE
+    ):
+        return ".webp"
+    raise RuntimeError("icon is not a supported Android bitmap format")
 
-    image_filename = f"{asset_name}.png"
+
+def create_android_drawable(parent_dir: str, asset_name: str, image_bytes: bytes) -> str:
+    image_extension = android_bitmap_extension(image_bytes)
+    image_filename = f"{asset_name}{image_extension}"
     with open(os.path.join(parent_dir, image_filename), "wb") as f:
         f.write(image_bytes)
+    return image_filename
 
 
 def android_resource_name(symbol: str) -> str:
@@ -184,12 +200,16 @@ def validate_crypto_assets(
         resource_names.add(resource_name)
 
         if icons_dir is not None:
-            icon_path = os.path.join(icons_dir, f"{resource_name}.png")
-            if not os.path.exists(icon_path):
-                raise RuntimeError(f"Missing PNG icon for {symbol}: {icon_path}")
+            icon_path = None
+            for extension in SUPPORTED_ICON_EXTENSIONS:
+                candidate_path = os.path.join(icons_dir, f"{resource_name}{extension}")
+                if os.path.exists(candidate_path):
+                    icon_path = candidate_path
+                    break
+            if icon_path is None:
+                raise RuntimeError(f"Missing icon for {symbol}: {resource_name}")
             with open(icon_path, "rb") as icon_file:
-                if icon_file.read(len(PNG_SIGNATURE)) != PNG_SIGNATURE:
-                    raise RuntimeError(f"{resource_name} icon is not a PNG")
+                android_bitmap_extension(icon_file.read())
 
 
 def prepare_android_icons(coins: list[dict], tmp_icons_dir: str) -> int:
@@ -208,9 +228,9 @@ def prepare_android_icons(coins: list[dict], tmp_icons_dir: str) -> int:
 
         try:
             image_data = fetch_with_retry(image_url, label=resource_name)
-            create_android_drawable(tmp_icons_dir, resource_name, image_data)
+            image_filename = create_android_drawable(tmp_icons_dir, resource_name, image_data)
             downloaded += 1
-            print(f"  {progress} ✅ {resource_name:<14}")
+            print(f"  {progress} ✅ {image_filename:<18}")
         except Exception as e:
             raise RuntimeError(f"Failed to download icon {resource_name}: {e}") from e
 
