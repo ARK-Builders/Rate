@@ -102,13 +102,12 @@ git fetch origin data/currency-icons-and-rates
 git restore --source=origin/data/currency-icons-and-rates --worktree \
   core/data/src/main/assets/crypto-rates.json \
   core/data/src/main/assets/fiat-rates.json \
-  cryptoicons/src/main/res/drawable \
-  fiaticons/src/main/res/drawable
+  cryptoicons/src/main/res/drawable
 ```
 
 This step is performed automatically by Android CI workflows (see `build.yml` and `release.yml`).
 
-Files `crypto-rates.json`, `fiat-rates.json`, `cryptoicons/src/main/res/drawable` and `fiaticons/src/main/res/drawable` must not be committed and are listed in `.gitignore`.
+Files `crypto-rates.json`, `fiat-rates.json` and `cryptoicons/src/main/res/drawable` must not be committed and are listed in `.gitignore`.
 
 
 ## 🌐 Connect with ARK-Builders
