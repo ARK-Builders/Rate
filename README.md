@@ -86,6 +86,29 @@ To build the project, you need to provide a personal access token to download de
 
 2. Add the token to your `local.properties` file at the root of the project: `gpr.token=$your_github_token`
 
+### For developers
+
+All currency icons and rates are shipped with the app bundle.
+
+During first app launch, rates will be updated but the in-bundle rates serve as a fallback.
+
+The branch `data/currency-icons-and-rates` is used to update data automatically (see `fetch-data.yml`).
+
+:warning: The `main` branch does not contain any currencies.
+
+For local testing it's useful to do this:
+```sh
+git fetch origin data/currency-icons-and-rates
+git restore --source=origin/data/currency-icons-and-rates --worktree \
+  core/data/src/main/assets/crypto-rates.json \
+  core/data/src/main/assets/fiat-rates.json \
+  cryptoicons/src/main/res/drawable
+```
+
+This step is performed automatically by Android CI workflows (see `build.yml` and `release.yml`).
+
+Files `crypto-rates.json`, `fiat-rates.json` and `cryptoicons/src/main/res/drawable` must not be committed and are listed in `.gitignore`.
+
 
 ## 🌐 Connect with ARK-Builders
 [![ARK Builders](https://img.shields.io/badge/ARK%20Builders-5865F2?logo=discord&logoColor=white)](https://discord.com/invite/uRWJyYBr)
