@@ -8,6 +8,15 @@
 *.class
 __pycache__/
 *.pyc
+
+# Currency rates and icons are restored from the exchange-rates branch.
+/core/data/src/main/assets/crypto-rates.json
+/core/data/src/main/assets/fiat-rates.json
+/cryptoicons/src/main/res/drawable/
+/fiaticons/src/main/res/drawable/
+/crypto.json
+/cryptoicons.zip
+/fiaticons.zip
 /captures
 .externalNativeBuild
 .cxx
