@@ -63,3 +63,10 @@ jobs:
             git pull origin data/currency-icons-and-rates --no-edit
             git push origin data/currency-icons-and-rates
           fi
+
+      - name: Sync legacy data branch
+        working-directory: currency-data
+        run: |-
+          # TODO: Remove after the Play Store build using data/currency-icons-and-rates is rolled out and users have updated.
+          git fetch origin refs/heads/exchange-rates:refs/remotes/origin/exchange-rates
+          git push --force-with-lease origin HEAD:exchange-rates
