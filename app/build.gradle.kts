@@ -81,22 +81,6 @@ android {
     }
 
     productFlavors.all {
-        val cryptoRatesLastModified =
-            rootProject.file("core/data/src/main/assets/crypto-rates.json").lastModified()
-        val fiatRatesLastModified =
-            rootProject.file("core/data/src/main/assets/fiat-rates.json").lastModified()
-
-        buildConfigField(
-            "long",
-            "CRYPTO_LAST_MODIFIED",
-            cryptoRatesLastModified.toString(),
-        )
-        buildConfigField(
-            "long",
-            "FIAT_LAST_MODIFIED",
-            fiatRatesLastModified.toString(),
-        )
-
         val cryptoIcons = collectCurrencyIcons(project.rootDir.resolve("cryptoicons"))
         val fiatIcons = collectCurrencyIcons(project.rootDir.resolve("fiaticons"))
         val allIcons = (cryptoIcons + fiatIcons).distinct()

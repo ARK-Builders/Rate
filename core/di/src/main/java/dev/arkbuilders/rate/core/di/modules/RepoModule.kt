@@ -17,6 +17,7 @@ import dev.arkbuilders.rate.core.data.repo.currency.CurrencyRepoImpl
 import dev.arkbuilders.rate.core.data.repo.currency.FallbackRatesProvider
 import dev.arkbuilders.rate.core.data.repo.currency.FiatCurrencyDataSource
 import dev.arkbuilders.rate.core.data.repo.currency.LocalCurrencyDataSource
+import dev.arkbuilders.rate.core.data.repo.currency.RatesUpdatedAtDataSource
 import dev.arkbuilders.rate.core.db.dao.CodeUseStatDao
 import dev.arkbuilders.rate.core.db.dao.GroupDao
 import dev.arkbuilders.rate.core.db.dao.TimestampDao
@@ -45,6 +46,7 @@ class RepoModule {
         timestampRepo: TimestampRepo,
         networkStatus: NetworkStatus,
         fallbackRatesProvider: FallbackRatesProvider,
+        ratesUpdatedAtDataSource: RatesUpdatedAtDataSource,
     ): CurrencyRepo =
         CurrencyRepoImpl(
             fiatCurrencyDataSource,
@@ -54,6 +56,7 @@ class RepoModule {
             currencyInfoDataSource,
             timestampRepo,
             networkStatus,
+            ratesUpdatedAtDataSource,
         )
 
     @Singleton

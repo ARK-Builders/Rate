@@ -29,6 +29,7 @@ ANDROID_ICONS_DIR = os.path.join(PROJECT_ROOT, "cryptoicons", "src", "main", "re
 ANDROID_RATES_DIR = os.path.join(PROJECT_ROOT, "core", "data", "src", "main", "assets")
 CRYPTO_RATES_FILENAME = "crypto-rates.json"
 FIAT_RATES_FILENAME = "fiat-rates.json"
+UPDATED_AT_FILENAME = "updatedAt"
 
 CRYPTO_ASSET_LIMIT = 200
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
@@ -264,6 +265,11 @@ def write_json(path: str, data: object) -> None:
         json.dump(data, f, indent=2)
 
 
+def write_text(path: str, data: str) -> None:
+    with open(path, "w") as f:
+        f.write(data)
+
+
 def replace_directory(prepared_dir: str, target_dir: str) -> None:
     backup_dir = target_dir + ".backup"
     if os.path.exists(backup_dir):
@@ -277,6 +283,7 @@ def replace_directory(prepared_dir: str, target_dir: str) -> None:
 def install_prepared_data(
     fiat_data: dict,
     crypto_data: list[dict],
+    updated_at: int,
     prepared_icons_dir: str,
     rates_dir: str,
     icons_dir: str,
@@ -288,8 +295,9 @@ def install_prepared_data(
 
     write_json(os.path.join(tmp_rates_dir, FIAT_RATES_FILENAME), fiat_data)
     write_json(os.path.join(tmp_rates_dir, CRYPTO_RATES_FILENAME), crypto_data)
+    write_text(os.path.join(tmp_rates_dir, UPDATED_AT_FILENAME), f"{updated_at}\n")
 
-    for filename in (FIAT_RATES_FILENAME, CRYPTO_RATES_FILENAME):
+    for filename in (FIAT_RATES_FILENAME, CRYPTO_RATES_FILENAME, UPDATED_AT_FILENAME):
         os.replace(
             os.path.join(tmp_rates_dir, filename),
             os.path.join(rates_dir, filename),
@@ -322,10 +330,12 @@ def main() -> None:
 
     print(f"\n[4/5] Preparing {CRYPTO_RATES_FILENAME} …")
     crypto_data = crypto_rates_data(coins)
+    updated_at = int(time.time())
     print(f"  ✅ Prepared {len(crypto_data)} crypto rates.")
     install_prepared_data(
         fiat_data,
         crypto_data,
+        updated_at,
         tmp_icons_dir,
         ANDROID_RATES_DIR,
         ANDROID_ICONS_DIR,

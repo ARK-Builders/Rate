@@ -21,6 +21,7 @@ jobs:
         git restore --source=FETCH_HEAD --worktree \
           core/data/src/main/assets/crypto-rates.json \
           core/data/src/main/assets/fiat-rates.json \
+          core/data/src/main/assets/updatedAt \
           cryptoicons/src/main/res/drawable
 
     - name: Set up JDK 21

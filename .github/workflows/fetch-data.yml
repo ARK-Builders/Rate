@@ -54,6 +54,7 @@ jobs:
           git config user.name "ARK Builders Bot"
           git add core/data/src/main/assets/fiat-rates.json
           git add core/data/src/main/assets/crypto-rates.json
+          git add core/data/src/main/assets/updatedAt
           git add -A cryptoicons/src/main/res/drawable
           if git diff --cached --quiet; then
             echo "No changes to commit."
