@@ -127,6 +127,7 @@ dependencies {
     implementation(project(":feature:portfolio"))
     implementation(project(":feature:search"))
     implementation(project(":feature:settings"))
+    implementation(project(":feature:paywall"))
     implementation(project(":fiaticons"))
     implementation(project(":cryptoicons"))
 

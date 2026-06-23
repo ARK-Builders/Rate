@@ -6,6 +6,7 @@ import com.ramcosta.composedestinations.annotation.NavHostGraph
 import com.ramcosta.composedestinations.generated.onboarding.destinations.OnboardingQuickCalculationScreenDestination
 import com.ramcosta.composedestinations.generated.onboarding.destinations.OnboardingQuickScreenDestination
 import com.ramcosta.composedestinations.generated.onboarding.destinations.OnboardingScreenDestination
+import com.ramcosta.composedestinations.generated.paywall.destinations.PaywallScreenDestination
 import com.ramcosta.composedestinations.generated.portfolio.destinations.AddAssetScreenDestination
 import com.ramcosta.composedestinations.generated.portfolio.destinations.EditAssetScreenDestination
 import com.ramcosta.composedestinations.generated.portfolio.destinations.PortfolioScreenDestination
@@ -30,5 +31,6 @@ annotation class MainGraph {
     @ExternalDestination<SettingsScreenDestination>
     @ExternalDestination<AboutScreenDestination>
     @ExternalDestination<SearchCurrencyScreenDestination>
+    @ExternalDestination<PaywallScreenDestination>
     companion object Includes
 }

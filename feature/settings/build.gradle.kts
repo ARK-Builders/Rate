@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:presentation"))
     implementation(project(":core:db"))
+    implementation(project(":feature:paywall"))
 
     implementation(libs.androidx.core.ktx)
 

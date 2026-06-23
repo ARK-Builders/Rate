@@ -36,6 +36,7 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.ramcosta.composedestinations.generated.paywall.destinations.PaywallScreenDestination
 import com.ramcosta.composedestinations.generated.settings.destinations.AboutScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.arkbuilders.rate.core.presentation.CoreRDrawable
@@ -73,6 +74,9 @@ fun SettingsScreen(navigator: DestinationsNavigator) {
             SettingsScreenEffect.NavigateToAbout ->
                 navigator.navigate(AboutScreenDestination)
 
+            SettingsScreenEffect.NavigateToPaywall ->
+                navigator.navigate(PaywallScreenDestination)
+
             SettingsScreenEffect.NavigateBack -> navigator.popBackStack()
         }
     }
@@ -87,6 +91,7 @@ fun SettingsScreen(navigator: DestinationsNavigator) {
                 onToggleLanguagePopup = viewModel::onToggleLanguagePopup,
                 onChangeLanguage = viewModel::onChangeLanguage,
                 onAboutClick = viewModel::onAboutClick,
+                onPaywallClick = viewModel::onPaywallClick,
             )
         }
     }
@@ -101,6 +106,7 @@ private fun Content(
     onToggleLanguagePopup: (Boolean) -> Unit,
     onChangeLanguage: (AppLanguage) -> Unit,
     onAboutClick: () -> Unit,
+    onPaywallClick: () -> Unit,
 ) {
     val ctx = LocalContext.current
     Column(
@@ -214,6 +220,22 @@ private fun Content(
                 }
             }
         }
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { onPaywallClick() }
+                    .padding(horizontal = 16.dp, vertical = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "Premium",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                color = ArkColor.TextTertiary,
+            )
+        }
+        AppHorDiv16(modifier = Modifier)
         Row(
             modifier =
                 Modifier
