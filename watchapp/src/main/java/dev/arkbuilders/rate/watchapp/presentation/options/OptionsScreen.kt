@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,13 +51,14 @@ fun OptionsScreen(
     var snackbarMessage by remember { mutableStateOf<String?>(null) }
 
     if (showDeleteDialog) {
+        val context = LocalContext.current
         WearConfirmationDialog(
             title = stringResource(R.string.delete_pair),
             message = stringResource(R.string.are_you_sure_you_want_to_delete_this_pair),
             onConfirm = {
                 showDeleteDialog = false
                 viewModel.deletePair(onDeleted = {
-                    onDeleteSuccess("Deleted Successfully")
+                    onDeleteSuccess(context.getString(R.string.deleted_successfully))
                 })
             },
             onDismiss = {
@@ -107,7 +109,7 @@ fun OptionsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    text = "Options",
+                    text = stringResource(R.string.options),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
@@ -117,7 +119,7 @@ fun OptionsScreen(
 
             item {
                 WearOptionButton(
-                    text = "Update",
+                    text = stringResource(R.string.update),
                     icon = WearOptionButtonIcon.Refresh,
                     onClick = { onUpdateClick(viewModel.pairId) }
                 )
@@ -125,13 +127,14 @@ fun OptionsScreen(
 
             item {
                 val isPinned = quickPair?.isPinned() == true
+                val context = LocalContext.current
                 WearOptionButton(
-                    text = if (isPinned) "Unpin" else "Pin",
+                    text = if (isPinned) stringResource(R.string.unpin) else stringResource(R.string.pin),
                     icon = WearOptionButtonIcon.Pin,
                     onClick = {
                         viewModel.togglePin(onSuccess = { pinned ->
                             if (pinned) {
-                                onPinClick("Pinned Successfully")
+                                onPinClick(context.getString(R.string.pinned_successfully))
                             } else {
                                 snackbarMessage = "Unpinned"
                             }
@@ -142,7 +145,7 @@ fun OptionsScreen(
 
             item {
                 WearOptionButton(
-                    text = "Delete",
+                    text = stringResource(R.string.delete),
                     icon = WearOptionButtonIcon.Delete,
                     buttonType = WearOptionButtonType.Destructive,
                     onClick = {
