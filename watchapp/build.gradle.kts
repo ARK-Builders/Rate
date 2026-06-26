@@ -56,6 +56,15 @@ android {
         )
     }
 
+    signingConfigs {
+        create("testRelease") {
+            storeFile = project.rootProject.file("keystore.jks")
+            storePassword = "sw0rdf1sh"
+            keyAlias = "ark-builders-test"
+            keyPassword = "rybamech"
+        }
+    }
+
     buildTypes {
         debug {
             addManifestPlaceholders(
@@ -70,6 +79,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("testRelease")
             addManifestPlaceholders(
                 mapOf(
                     "appLabel" to "@string/app_name",
