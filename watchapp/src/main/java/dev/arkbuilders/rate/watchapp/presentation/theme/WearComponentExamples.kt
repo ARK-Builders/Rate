@@ -23,7 +23,6 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
-import dev.arkbuilders.rate.watchapp.presentation.options.WearOptionsHomeScreen
 import dev.arkbuilders.rate.watchapp.presentation.options.WearPageIndicator
 
 /**
@@ -135,21 +134,6 @@ fun WearDialogExamples(modifier: Modifier = Modifier) {
             )
         }
     }
-}
-
-// Preview showing the main Options screen from Figma
-@Preview(device = Devices.WEAR_OS_LARGE_ROUND, showSystemUi = true)
-@Composable
-fun WearOptionsHomeScreenExample() {
-    WearOptionsHomeScreen(
-        currentPage = 1,
-        totalPages = 3,
-        onUpdateClick = { /* Handle update */ },
-        onPinClick = { /* Handle pin */ },
-        onEditClick = { /* Handle edit */ },
-        onReuseClick = { /* Handle reuse */ },
-        onDeleteClick = { /* Handle delete */ }
-    )
 }
 
 @Preview(device = Devices.WEAR_OS_LARGE_ROUND, showSystemUi = true)
