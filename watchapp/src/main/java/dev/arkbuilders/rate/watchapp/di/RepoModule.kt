@@ -9,7 +9,6 @@ import dagger.hilt.components.SingletonComponent
 import dev.arkbuilders.rate.core.data.mapper.CryptoRateResponseMapper
 import dev.arkbuilders.rate.core.data.mapper.FiatRateResponseMapper
 import dev.arkbuilders.rate.core.data.network.NetworkStatusImpl
-import dev.arkbuilders.rate.core.data.network.OkHttpClientBuilder
 import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
 import dev.arkbuilders.rate.core.data.preferences.PrefsImpl
 import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
@@ -27,6 +26,7 @@ import dev.arkbuilders.rate.core.data.repo.currency.LocalCurrencyDataSource
 import dev.arkbuilders.rate.core.db.dao.CodeUseStatDao
 import dev.arkbuilders.rate.core.db.dao.CurrencyRateDao
 import dev.arkbuilders.rate.core.db.dao.GroupDao
+import dev.arkbuilders.rate.core.db.dao.QuickCalculationDao
 import dev.arkbuilders.rate.core.db.dao.TimestampDao
 import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
@@ -41,26 +41,24 @@ import dev.arkbuilders.rate.core.domain.usecase.DefaultGroupNameProvider
 import dev.arkbuilders.rate.core.presentation.utils.DefaultGroupNameProviderImpl
 import dev.arkbuilders.rate.feature.quick.data.QuickRepoImpl
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
-import dev.arkbuilders.rate.core.db.dao.QuickCalculationDao
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class RepoModule {
-
     @Singleton
     @Provides
     fun buildConfigFieldsProvider(): BuildConfigFieldsProvider = BuildConfigFieldsProviderImpl()
 
     @Singleton
     @Provides
-    fun provideFCryptoRateResponseMapper(): CryptoRateResponseMapper{
+    fun provideFCryptoRateResponseMapper(): CryptoRateResponseMapper {
         return CryptoRateResponseMapper()
     }
 
     @Singleton
     @Provides
-    fun provideFiatRateResponseMapper(): FiatRateResponseMapper{
+    fun provideFiatRateResponseMapper(): FiatRateResponseMapper {
         return FiatRateResponseMapper()
     }
 
@@ -72,7 +70,7 @@ class RepoModule {
         cryptoRateResponseMapper: CryptoRateResponseMapper,
         buildConfigFieldsProvider: BuildConfigFieldsProvider,
     ): FallbackRatesProvider {
-       return FallbackRatesProvider(
+        return FallbackRatesProvider(
             context,
             fiatRateResponseMapper,
             cryptoRateResponseMapper,
@@ -99,7 +97,7 @@ class RepoModule {
 
     @Singleton
     @Provides
-    fun provideLocalCurrencyDataSource(dao: CurrencyRateDao):LocalCurrencyDataSource {
+    fun provideLocalCurrencyDataSource(dao: CurrencyRateDao): LocalCurrencyDataSource {
         return LocalCurrencyDataSource(dao)
     }
 
@@ -130,7 +128,9 @@ class RepoModule {
 
     @Singleton
     @Provides
-    fun prefs(@ApplicationContext context: Context): Prefs = PrefsImpl(context)
+    fun prefs(
+        @ApplicationContext context: Context,
+    ): Prefs = PrefsImpl(context)
 
     @Singleton
     @Provides
@@ -147,13 +147,15 @@ class RepoModule {
 
     @Singleton
     @Provides
-    fun networkStatus(@ApplicationContext context: Context): NetworkStatus =
-        NetworkStatusImpl(context)
+    fun networkStatus(
+        @ApplicationContext context: Context,
+    ): NetworkStatus = NetworkStatusImpl(context)
 
     @Singleton
     @Provides
-    fun defaultGroupNameProvider(@ApplicationContext context: Context): DefaultGroupNameProvider =
-        DefaultGroupNameProviderImpl(context)
+    fun defaultGroupNameProvider(
+        @ApplicationContext context: Context,
+    ): DefaultGroupNameProvider = DefaultGroupNameProviderImpl(context)
 
     @Singleton
     @Provides
@@ -170,6 +172,6 @@ class RepoModule {
     @Provides
     fun provideQuickRepo(
         quickCalculationDao: QuickCalculationDao,
-        groupRepo: GroupRepo
+        groupRepo: GroupRepo,
     ): QuickRepo = QuickRepoImpl(quickCalculationDao, groupRepo)
 }

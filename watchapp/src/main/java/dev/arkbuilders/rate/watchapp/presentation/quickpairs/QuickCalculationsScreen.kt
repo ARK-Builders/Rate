@@ -3,7 +3,6 @@ package dev.arkbuilders.rate.watchapp.presentation.quickpairs
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,7 +32,7 @@ fun QuickCalculationsScreen(
     modifier: Modifier = Modifier,
     viewModel: QuickCalculationsViewModel = hiltViewModel(),
     onNavigateToAdd: () -> Unit,
-    onNavigateToOptions: (Long) -> Unit
+    onNavigateToOptions: (Long) -> Unit,
 ) {
     val quickCalculationsList = viewModel.quickCalculations.collectAsStateWithLifecycle().value
     val listState = rememberScalingLazyListState()
@@ -46,39 +45,44 @@ fun QuickCalculationsScreen(
             WearFab(
                 onClick = onNavigateToAdd,
                 icon = Icons.Outlined.Add,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
             )
-        }
+        },
     ) { padding ->
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             if (quickCalculationsList.isEmpty()) {
                 QuickCalculationsEmpty(
                     modifier = Modifier.fillMaxSize(),
-                    onAddClick = onNavigateToAdd
+                    onAddClick = onNavigateToAdd,
                 )
             } else {
                 ScalingLazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color.White),
                     state = listState,
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     item {
                         Text(
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth(),
                             text = "Quick",
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 16.sp,
                             textAlign = TextAlign.Center,
-                            color = ArkColor.TextPrimary
+                            color = ArkColor.TextPrimary,
                         )
                     }
-                    items(quickCalculationsList.size, key = { quickCalculationsList[it].id }) { idx ->
+                    items(
+                        quickCalculationsList.size,
+                        key = { quickCalculationsList[it].id },
+                    ) { idx ->
                         QuickCalculationItem(
                             quick = quickCalculationsList[idx],
-                            onClick = { onNavigateToOptions(quickCalculationsList[idx].id) }
+                            onClick = { onNavigateToOptions(quickCalculationsList[idx].id) },
                         )
                     }
                 }

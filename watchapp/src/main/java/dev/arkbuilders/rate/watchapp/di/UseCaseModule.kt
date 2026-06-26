@@ -52,15 +52,11 @@ class UseCaseModule {
     fun searchUseCase(buildConfigFieldsProvider: BuildConfigFieldsProvider) =
         SearchUseCase(buildConfigFieldsProvider.provide())
 
-
     @Singleton
     @Provides
     fun provideLaunchInAppReviewUseCase(
-
         inAppReviewManager: InAppReviewManager,
         prefs: Prefs,
-        buildConfigFieldsProvider: BuildConfigFieldsProvider
-
-    ) =
-        LaunchInAppReviewUseCase(inAppReviewManager, prefs, buildConfigFieldsProvider)
+        buildConfigFieldsProvider: BuildConfigFieldsProvider,
+    ) = LaunchInAppReviewUseCase(inAppReviewManager, prefs, buildConfigFieldsProvider)
 }

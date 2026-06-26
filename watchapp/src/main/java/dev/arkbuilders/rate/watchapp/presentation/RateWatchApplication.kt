@@ -2,7 +2,6 @@ package dev.arkbuilders.rate.watchapp.presentation
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-
 import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
 import dev.arkbuilders.rate.watchapp.BuildConfig
@@ -11,7 +10,7 @@ import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltAndroidApp
-class RateWatchApplication: Application() {
+class RateWatchApplication : Application() {
     @Inject
     lateinit var buildConfigFieldsProvider: BuildConfigFieldsProvider
 
@@ -31,7 +30,8 @@ class RateWatchApplication: Application() {
                 buildType = BuildConfig.BUILD_TYPE,
                 versionCode = BuildConfig.VERSION_CODE,
                 versionName = BuildConfig.VERSION_NAME,
-                isGooglePlayBuild = false, // Default to false for watch app for now
+                // Default to false for watch app for now
+                isGooglePlayBuild = false,
                 fallbackCryptoRatesFetchDate = fallbackCryptoRatesFetchDate,
                 fallbackFiatRatesFetchDate = fallbackFiatRatesFetchDate,
                 availableIconCodes = BuildConfig.ICON_CODES.toSet(),

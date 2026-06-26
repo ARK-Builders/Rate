@@ -77,7 +77,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("testRelease")
             addManifestPlaceholders(
@@ -118,7 +118,6 @@ dependencies {
     implementation(project(":core:presentation"))
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
@@ -131,7 +130,7 @@ dependencies {
     implementation(libs.play.services.wearable)
 //    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
-    implementation (libs.androidx.compose.navigation )// Or the latest version
+    implementation(libs.androidx.compose.navigation) // Or the latest version
     implementation("androidx.wear.compose:compose-material3:1.6.1") // Or current version
 
     implementation(libs.androidx.ui.tooling.preview)

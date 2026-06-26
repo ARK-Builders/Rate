@@ -7,10 +7,11 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUp
 object WatchRefreshManager {
     fun refreshComplications(context: Context) {
         try {
-            val requester = ComplicationDataSourceUpdateRequester.create(
-                context,
-                ComponentName(context, QuickCalculationComplicationService::class.java)
-            )
+            val requester =
+                ComplicationDataSourceUpdateRequester.create(
+                    context,
+                    ComponentName(context, QuickCalculationComplicationService::class.java),
+                )
             requester.requestUpdateAll()
         } catch (e: Exception) {
             e.printStackTrace()

@@ -28,7 +28,7 @@ enum class WearButtonStyle {
     Primary,
     Secondary,
     Outlined,
-    Destructive
+    Destructive,
 }
 
 @Composable
@@ -38,18 +38,19 @@ fun WearButton(
     modifier: Modifier = Modifier,
     style: WearButtonStyle = WearButtonStyle.Primary,
     leadingIcon: ImageVector? = null,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     when (style) {
         WearButtonStyle.Primary -> {
             Button(
                 onClick = onClick,
                 modifier = modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = ArkColor.Primary,
-                    contentColor = Color.White
-                ),
-                enabled = enabled
+                colors =
+                    ButtonDefaults.buttonColors(
+                        backgroundColor = ArkColor.Primary,
+                        contentColor = Color.White,
+                    ),
+                enabled = enabled,
             ) {
                 ButtonContent(text = text, leadingIcon = leadingIcon)
             }
@@ -59,11 +60,12 @@ fun WearButton(
             Button(
                 onClick = onClick,
                 modifier = modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = ArkColor.BGSecondaryAlt,
-                    contentColor = ArkColor.TextSecondary
-                ),
-                enabled = enabled
+                colors =
+                    ButtonDefaults.buttonColors(
+                        backgroundColor = ArkColor.BGSecondaryAlt,
+                        contentColor = ArkColor.TextSecondary,
+                    ),
+                enabled = enabled,
             ) {
                 ButtonContent(text = text, leadingIcon = leadingIcon)
             }
@@ -73,13 +75,15 @@ fun WearButton(
             OutlinedButton(
                 onClick = onClick,
                 modifier = modifier.fillMaxWidth(),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = ArkColor.TextSecondary
-                ),
-                border = ButtonDefaults.buttonBorder(
-                    borderStroke = BorderStroke(1.dp, ArkColor.BorderSecondary)
-                ),
-                enabled = enabled
+                colors =
+                    ButtonDefaults.outlinedButtonColors(
+                        contentColor = ArkColor.TextSecondary,
+                    ),
+                border =
+                    ButtonDefaults.buttonBorder(
+                        borderStroke = BorderStroke(1.dp, ArkColor.BorderSecondary),
+                    ),
+                enabled = enabled,
             ) {
                 ButtonContent(text = text, leadingIcon = leadingIcon)
             }
@@ -89,11 +93,12 @@ fun WearButton(
             Button(
                 onClick = onClick,
                 modifier = modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = ArkColor.UtilityError500,
-                    contentColor = Color.White
-                ),
-                enabled = enabled
+                colors =
+                    ButtonDefaults.buttonColors(
+                        backgroundColor = ArkColor.UtilityError500,
+                        contentColor = Color.White,
+                    ),
+                enabled = enabled,
             ) {
                 ButtonContent(text = text, leadingIcon = leadingIcon)
             }
@@ -105,28 +110,29 @@ fun WearButton(
 private fun ButtonContent(
     text: String,
     leadingIcon: ImageVector?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = if (leadingIcon != null) Arrangement.Start else Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         leadingIcon?.let { icon ->
             Icon(
                 imageVector = icon,
                 contentDescription = text,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(18.dp),
             )
         }
         Text(
             text = text,
-            modifier = Modifier.padding(
-                start = if (leadingIcon != null) 8.dp else 0.dp
-            ),
+            modifier =
+                Modifier.padding(
+                    start = if (leadingIcon != null) 8.dp else 0.dp,
+                ),
             fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp,
-            textAlign = if (leadingIcon != null) TextAlign.Start else TextAlign.Center
+            textAlign = if (leadingIcon != null) TextAlign.Start else TextAlign.Center,
         )
     }
 }
@@ -136,44 +142,49 @@ fun WearCompactButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    style: WearButtonStyle = WearButtonStyle.Outlined
+    style: WearButtonStyle = WearButtonStyle.Outlined,
 ) {
-    val colors = when (style) {
-        WearButtonStyle.Primary -> ButtonDefaults.buttonColors(
-            backgroundColor = ArkColor.Primary,
-            contentColor = Color.White
-        )
+    val colors =
+        when (style) {
+            WearButtonStyle.Primary ->
+                ButtonDefaults.buttonColors(
+                    backgroundColor = ArkColor.Primary,
+                    contentColor = Color.White,
+                )
 
-        WearButtonStyle.Destructive -> ButtonDefaults.buttonColors(
-            backgroundColor = ArkColor.UtilityError500,
-            contentColor = Color.White
-        )
+            WearButtonStyle.Destructive ->
+                ButtonDefaults.buttonColors(
+                    backgroundColor = ArkColor.UtilityError500,
+                    contentColor = Color.White,
+                )
 
-        else -> ButtonDefaults.buttonColors(
-            backgroundColor = Color.White,
-            contentColor = ArkColor.TextSecondary
-        )
-    }
+            else ->
+                ButtonDefaults.buttonColors(
+                    backgroundColor = Color.White,
+                    contentColor = ArkColor.TextSecondary,
+                )
+        }
 
-    val border = if (style == WearButtonStyle.Outlined) {
-        ButtonDefaults.buttonBorder(
-            borderStroke = BorderStroke(1.dp, ArkColor.BorderSecondary)
-        )
-    } else {
-        ButtonDefaults.buttonBorder()
-    }
+    val border =
+        if (style == WearButtonStyle.Outlined) {
+            ButtonDefaults.buttonBorder(
+                borderStroke = BorderStroke(1.dp, ArkColor.BorderSecondary),
+            )
+        } else {
+            ButtonDefaults.buttonBorder()
+        }
 
     Button(
         onClick = onClick,
         modifier = modifier,
         colors = colors,
         border = border,
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
     ) {
         Text(
             text = text,
             fontWeight = FontWeight.Medium,
-            fontSize = 14.sp
+            fontSize = 14.sp,
         )
     }
 }
@@ -184,21 +195,22 @@ fun WearFab(
     icon: ImageVector,
     modifier: Modifier = Modifier,
     backgroundColor: Color = ArkColor.Primary,
-    contentColor: Color = Color.White
+    contentColor: Color = Color.White,
 ) {
     Button(
         onClick = onClick,
         modifier = modifier.size(44.dp),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = backgroundColor,
-            contentColor = contentColor
-        ),
-        shape = CircleShape
+        colors =
+            ButtonDefaults.buttonColors(
+                backgroundColor = backgroundColor,
+                contentColor = contentColor,
+            ),
+        shape = CircleShape,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(20.dp),
         )
     }
 }

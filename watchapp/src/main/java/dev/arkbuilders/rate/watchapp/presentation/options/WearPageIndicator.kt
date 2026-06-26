@@ -20,17 +20,17 @@ import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 fun WearPageIndicator(
     totalPages: Int,
     currentPage: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.padding(6.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         repeat(totalPages) { index ->
             PageIndicatorDot(
                 isSelected = index == currentPage,
-                modifier = Modifier.size(6.dp)
+                modifier = Modifier.size(6.dp),
             )
         }
     }
@@ -39,18 +39,20 @@ fun WearPageIndicator(
 @Composable
 private fun PageIndicatorDot(
     isSelected: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val backgroundColor = if (isSelected) {
-        ArkColor.TextSecondary
-    } else {
-        ArkColor.TextSecondary.copy(alpha = 0.3f)
-    }
+    val backgroundColor =
+        if (isSelected) {
+            ArkColor.TextSecondary
+        } else {
+            ArkColor.TextSecondary.copy(alpha = 0.3f)
+        }
 
     Box(
-        modifier = modifier
-            .clip(CircleShape)
-            .background(backgroundColor)
+        modifier =
+            modifier
+                .clip(CircleShape)
+                .background(backgroundColor),
     )
 }
 
@@ -59,6 +61,6 @@ private fun PageIndicatorDot(
 fun WearPageIndicatorPreview() {
     WearPageIndicator(
         totalPages = 3,
-        currentPage = 1
+        currentPage = 1,
     )
 }

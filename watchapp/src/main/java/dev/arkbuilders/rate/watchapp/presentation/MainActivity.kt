@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
@@ -17,12 +19,9 @@ import dev.arkbuilders.rate.watchapp.presentation.options.SuccessScreen
 import dev.arkbuilders.rate.watchapp.presentation.quickpairs.QuickCalculationsScreen
 import dev.arkbuilders.rate.watchapp.presentation.search.SearchScreen
 import dev.arkbuilders.rate.watchapp.presentation.theme.ArkrateTheme
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
@@ -36,11 +35,11 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     vignette = {
                         Vignette(vignettePosition = VignettePosition.TopAndBottom)
-                    }
+                    },
                 ) {
                     SwipeDismissableNavHost(
                         navController = navController,
-                        startDestination = "list"
+                        startDestination = "list",
                     ) {
                         composable("list") {
                             QuickCalculationsScreen(
@@ -49,87 +48,99 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToOptions = { id ->
                                     navController.navigate("options/$id")
-                                }
+                                },
                             )
                         }
                         composable(
                             route = "addquickpairs?id={id}",
-                            arguments = listOf(navArgument("id") { 
-                                type = NavType.StringType 
-                                nullable = true
-                                defaultValue = null
-                            })
+                            arguments =
+                                listOf(
+                                    navArgument("id") {
+                                        type = NavType.StringType
+                                        nullable = true
+                                        defaultValue = null
+                                    },
+                                ),
                         ) {
                             AddQuickCalculationsScreen(
                                 navController = navController,
-                                onNavigateToSearch = { field -> 
-                                    navController.navigate("search/$field") 
+                                onNavigateToSearch = { field ->
+                                    navController.navigate("search/$field")
                                 },
-                                onNavigateBack = { 
-                                    navController.popBackStack("list", inclusive = false) 
+                                onNavigateBack = {
+                                    navController.popBackStack("list", inclusive = false)
                                 },
                                 onNavigateToSuccess = { message ->
                                     navController.navigate("success?message=$message")
-                                }
+                                },
                             )
                         }
                         composable(
                             route = "options/{id}",
-                            arguments = listOf(navArgument("id") { type = NavType.LongType })
+                            arguments = listOf(navArgument("id") { type = NavType.LongType }),
                         ) {
                             OptionsScreen(
-                                onDeleteSuccess = { message -> 
-                                    navController.navigate("success?message=$message") 
+                                onDeleteSuccess = { message ->
+                                    navController.navigate("success?message=$message")
                                 },
-                                onUpdateClick = { id -> 
-                                    navController.navigate("addquickpairs?id=$id") 
+                                onUpdateClick = { id ->
+                                    navController.navigate("addquickpairs?id=$id")
                                 },
-                                onPinClick = { message -> 
-                                    navController.navigate("success?message=$message") 
+                                onPinClick = { message ->
+                                    navController.navigate("success?message=$message")
                                 },
-                                onDismiss = { navController.popBackStack() }
+                                onDismiss = { navController.popBackStack() },
                             )
                         }
                         composable(
                             route = "search/{field}",
-                            arguments = listOf(navArgument("field") { type = NavType.StringType })
+                            arguments = listOf(navArgument("field") { type = NavType.StringType }),
                         ) { backStackEntry ->
                             val field = backStackEntry.arguments?.getString("field")
                             SearchScreen(
                                 onCurrencyClick = { code ->
-                                    navController.previousBackStackEntry?.savedStateHandle?.set("selected_currency", code)
-                                    navController.previousBackStackEntry?.savedStateHandle?.set("target_field", field)
+                                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                                        "selected_currency",
+                                        code,
+                                    )
+                                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                                        "target_field",
+                                        field,
+                                    )
                                     navController.popBackStack()
-                                }
+                                },
                             )
                         }
                         composable("search") {
                             SearchScreen(
                                 onCurrencyClick = { code ->
                                     navController.popBackStack()
-                                }
+                                },
                             )
                         }
                         composable(
                             route = "success?message={message}",
-                            arguments = listOf(navArgument("message") { 
-                                type = NavType.StringType 
-                                nullable = true
-                                defaultValue = "Success"
-                            })
+                            arguments =
+                                listOf(
+                                    navArgument("message") {
+                                        type = NavType.StringType
+                                        nullable = true
+                                        defaultValue = "Success"
+                                    },
+                                ),
                         ) { backStackEntry ->
-                            val message = backStackEntry.arguments?.getString("message") ?: "Success"
+                            val message =
+                                backStackEntry.arguments?.getString("message") ?: "Success"
                             SuccessScreen(
                                 message = message,
                                 onTimeout = {
                                     navController.popBackStack("list", inclusive = false)
-                                }
+                                },
                             )
                         }
                     }
                 }
             }
-
         }
     }
 }

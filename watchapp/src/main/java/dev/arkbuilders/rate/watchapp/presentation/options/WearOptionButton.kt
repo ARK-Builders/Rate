@@ -9,9 +9,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +32,7 @@ import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 enum class WearOptionButtonType {
     Default,
     Success,
-    Destructive
+    Destructive,
 }
 
 enum class WearOptionButtonIcon(val imageVector: ImageVector) {
@@ -41,7 +41,7 @@ enum class WearOptionButtonIcon(val imageVector: ImageVector) {
     Edit(Icons.Outlined.Edit),
     Reuse(Icons.Outlined.Share),
     Search(Icons.Outlined.Search),
-    Delete(Icons.Outlined.Delete)
+    Delete(Icons.Outlined.Delete),
 }
 
 @Composable
@@ -50,57 +50,79 @@ fun WearOptionButton(
     icon: WearOptionButtonIcon,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    buttonType: WearOptionButtonType = WearOptionButtonType.Default
+    buttonType: WearOptionButtonType = WearOptionButtonType.Default,
 ) {
-    val colors = when (buttonType) {
-        WearOptionButtonType.Default -> ButtonDefaults.buttonColors(
-            backgroundColor = Color.White,
-            contentColor = ArkColor.TextSecondary
-        )
-        WearOptionButtonType.Success -> ButtonDefaults.buttonColors(
-            backgroundColor = ArkColor.UtilitySuccess50,
-            contentColor = ArkColor.Primary
-        )
-        WearOptionButtonType.Destructive -> ButtonDefaults.buttonColors(
-            backgroundColor = Color.White,
-            contentColor = ArkColor.FGErrorPrimary
-        )
-    }
+    val colors =
+        when (buttonType) {
+            WearOptionButtonType.Default ->
+                ButtonDefaults.buttonColors(
+                    backgroundColor = Color.White,
+                    contentColor = ArkColor.TextSecondary,
+                )
+            WearOptionButtonType.Success ->
+                ButtonDefaults.buttonColors(
+                    backgroundColor = ArkColor.UtilitySuccess50,
+                    contentColor = ArkColor.Primary,
+                )
+            WearOptionButtonType.Destructive ->
+                ButtonDefaults.buttonColors(
+                    backgroundColor = Color.White,
+                    contentColor = ArkColor.FGErrorPrimary,
+                )
+        }
 
-    val borderStroke = when (buttonType) {
-        WearOptionButtonType.Default -> ButtonDefaults.buttonBorder(
-            borderStroke = androidx.compose.foundation.BorderStroke(1.dp, ArkColor.BorderSecondary)
-        )
-        WearOptionButtonType.Success -> ButtonDefaults.buttonBorder(
-            borderStroke = androidx.compose.foundation.BorderStroke(1.dp, ArkColor.UtilitySuccess200)
-        )
-        WearOptionButtonType.Destructive -> ButtonDefaults.buttonBorder(
-            borderStroke = androidx.compose.foundation.BorderStroke(1.dp, ArkColor.BorderError)
-        )
-    }
+    val borderStroke =
+        when (buttonType) {
+            WearOptionButtonType.Default ->
+                ButtonDefaults.buttonBorder(
+                    borderStroke =
+                        androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            ArkColor.BorderSecondary,
+                        ),
+                )
+            WearOptionButtonType.Success ->
+                ButtonDefaults.buttonBorder(
+                    borderStroke =
+                        androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            ArkColor.UtilitySuccess200,
+                        ),
+                )
+            WearOptionButtonType.Destructive ->
+                ButtonDefaults.buttonBorder(
+                    borderStroke =
+                        androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            ArkColor.BorderError,
+                        ),
+                )
+        }
 
     Button(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         colors = colors,
-        border = borderStroke
+        border = borderStroke,
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 6.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 6.dp),
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = icon.imageVector,
                 contentDescription = text,
                 modifier = Modifier.size(20.dp),
-                tint = when (buttonType) {
-                    WearOptionButtonType.Default -> ArkColor.TextSecondary
-                    WearOptionButtonType.Success -> ArkColor.Primary
-                    WearOptionButtonType.Destructive -> ArkColor.FGErrorPrimary
-                }
+                tint =
+                    when (buttonType) {
+                        WearOptionButtonType.Default -> ArkColor.TextSecondary
+                        WearOptionButtonType.Success -> ArkColor.Primary
+                        WearOptionButtonType.Destructive -> ArkColor.FGErrorPrimary
+                    },
             )
             Text(
                 text = text,
@@ -108,11 +130,12 @@ fun WearOptionButton(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Start,
-                color = when (buttonType) {
-                    WearOptionButtonType.Default -> ArkColor.TextSecondary
-                    WearOptionButtonType.Success -> ArkColor.TextSecondary
-                    WearOptionButtonType.Destructive -> ArkColor.FGErrorPrimary
-                }
+                color =
+                    when (buttonType) {
+                        WearOptionButtonType.Default -> ArkColor.TextSecondary
+                        WearOptionButtonType.Success -> ArkColor.TextSecondary
+                        WearOptionButtonType.Destructive -> ArkColor.FGErrorPrimary
+                    },
             )
         }
     }
@@ -124,7 +147,7 @@ fun WearOptionButtonPreview() {
     WearOptionButton(
         text = "Update",
         icon = WearOptionButtonIcon.Refresh,
-        onClick = {}
+        onClick = {},
     )
 }
 
@@ -135,6 +158,6 @@ fun WearOptionButtonDestructivePreview() {
         text = "Delete",
         icon = WearOptionButtonIcon.Delete,
         buttonType = WearOptionButtonType.Destructive,
-        onClick = {}
+        onClick = {},
     )
 }

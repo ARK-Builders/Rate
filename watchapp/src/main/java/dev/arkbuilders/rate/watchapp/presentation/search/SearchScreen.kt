@@ -30,34 +30,36 @@ import dev.arkbuilders.rate.watchapp.presentation.quickpairs.composables.CurrIco
 fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
-    onCurrencyClick: (String) -> Unit = {}
+    onCurrencyClick: (String) -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
 
     ScalingLazyColumn(
         modifier = modifier.fillMaxSize().background(Color.White),
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
             SearchTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                 text = state.query,
-                onValueChange = { viewModel.onQueryChange(it) }
+                onValueChange = { viewModel.onQueryChange(it) },
             )
         }
 
         items(state.filteredCurrencies.size) { index ->
             val currency = state.filteredCurrencies[index]
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onCurrencyClick(currency.code) }
-                    .padding(vertical = 8.dp, horizontal = 4.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { onCurrencyClick(currency.code) }
+                        .padding(vertical = 8.dp, horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Start,
             ) {
                 CurrIcon(modifier = Modifier.size(24.dp), code = currency.code)
                 Column(modifier = Modifier.padding(start = 8.dp)) {
@@ -65,12 +67,12 @@ fun SearchScreen(
                         text = currency.code,
                         color = ArkColor.TextPrimary,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                     Text(
                         text = currency.name,
                         color = ArkColor.TextTertiary,
-                        fontSize = 10.sp
+                        fontSize = 10.sp,
                     )
                 }
             }

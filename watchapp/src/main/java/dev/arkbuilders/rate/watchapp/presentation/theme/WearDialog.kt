@@ -2,6 +2,7 @@ package dev.arkbuilders.rate.watchapp.presentation.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,12 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -23,14 +22,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import kotlinx.coroutines.delay
 import androidx.wear.compose.material.Text
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import kotlinx.coroutines.delay
 
 @Composable
 fun WearConfirmationDialog(
@@ -43,23 +40,24 @@ fun WearConfirmationDialog(
     dismissText: String = "No",
     confirmIcon: ImageVector = Icons.Outlined.Check,
     dismissIcon: ImageVector = Icons.Outlined.Close,
-    isDestructive: Boolean = false
+    isDestructive: Boolean = false,
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(color = Color.White)
-                .padding(24.dp),
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(color = Color.White)
+                    .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
-                color = ArkColor.TextPrimary
+                color = ArkColor.TextPrimary,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -68,27 +66,32 @@ fun WearConfirmationDialog(
                 text = message,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
-                color = ArkColor.TextSecondary
+                color = ArkColor.TextSecondary,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 WearCompactButton(
                     text = dismissText,
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f),
-                    style = WearButtonStyle.Outlined
+                    style = WearButtonStyle.Outlined,
                 )
 
                 WearCompactButton(
                     text = confirmText,
                     onClick = onConfirm,
                     modifier = Modifier.weight(1f),
-                    style = if (isDestructive) WearButtonStyle.Destructive else WearButtonStyle.Primary
+                    style =
+                        if (isDestructive) {
+                            WearButtonStyle.Destructive
+                        } else {
+                            WearButtonStyle.Primary
+                        },
                 )
             }
         }
@@ -101,23 +104,24 @@ fun WearInfoDialog(
     message: String,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    dismissText: String = "OK"
+    dismissText: String = "OK",
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(color = Color.White)
-                .padding(24.dp),
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(color = Color.White)
+                    .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
-                color = ArkColor.TextPrimary
+                color = ArkColor.TextPrimary,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -126,7 +130,7 @@ fun WearInfoDialog(
                 text = message,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
-                color = ArkColor.TextSecondary
+                color = ArkColor.TextSecondary,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -135,7 +139,7 @@ fun WearInfoDialog(
                 text = dismissText,
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth(0.8f),
-                style = WearButtonStyle.Primary
+                style = WearButtonStyle.Primary,
             )
         }
     }
@@ -145,7 +149,7 @@ fun WearInfoDialog(
 fun WearSnackbar(
     message: String,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LaunchedEffect(message) {
         delay(2000L)
@@ -153,22 +157,24 @@ fun WearSnackbar(
     }
 
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(bottom = 20.dp),
-        contentAlignment = Alignment.BottomCenter
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(bottom = 20.dp),
+        contentAlignment = Alignment.BottomCenter,
     ) {
         Text(
             text = message,
-            modifier = Modifier
-                .background(
-                    color = Color.DarkGray.copy(alpha = 0.9f),
-                    shape = RoundedCornerShape(20.dp)
-                )
-                .padding(horizontal = 12.dp, vertical = 6.dp),
+            modifier =
+                Modifier
+                    .background(
+                        color = Color.DarkGray.copy(alpha = 0.9f),
+                        shape = RoundedCornerShape(20.dp),
+                    )
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
             color = Color.White,
             fontSize = 12.sp,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }

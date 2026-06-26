@@ -17,21 +17,26 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.Text
 import dev.arkbuilders.rate.core.presentation.CoreRDrawable
 import dev.arkbuilders.rate.core.presentation.CoreRString
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
-import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+
 @Composable
 fun QuickCalculationsEmpty(
     modifier: Modifier = Modifier,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
 ) {
     ScalingLazyColumn(
         modifier = modifier.fillMaxSize().background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 24.dp)
+        contentPadding =
+            androidx.compose.foundation.layout.PaddingValues(
+                horizontal = 16.dp,
+                vertical = 24.dp,
+            ),
     ) {
         item {
             Icon(

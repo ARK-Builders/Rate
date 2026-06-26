@@ -26,7 +26,7 @@ import kotlinx.coroutines.delay
 fun SuccessScreen(
     modifier: Modifier = Modifier,
     message: String = "Success",
-    onTimeout: () -> Unit
+    onTimeout: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         delay(1500L)
@@ -34,26 +34,28 @@ fun SuccessScreen(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = Icons.Default.CheckCircle,
             contentDescription = "Success",
             tint = ArkColor.BrandSecondary,
-            modifier = Modifier
-                .size(48.dp)
-                .padding(bottom = 8.dp)
+            modifier =
+                Modifier
+                    .size(48.dp)
+                    .padding(bottom = 8.dp),
         )
         Text(
             text = message,
             color = ArkColor.TextPrimary,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }

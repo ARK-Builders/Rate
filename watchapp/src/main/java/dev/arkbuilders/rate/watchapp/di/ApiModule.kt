@@ -1,14 +1,12 @@
 package dev.arkbuilders.rate.watchapp.di
 
 import android.content.Context
-import android.webkit.WebSettings
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.arkbuilders.rate.core.data.network.OkHttpClientBuilder
 import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
 import dev.arkbuilders.rate.core.data.network.api.FiatAPI
 import okhttp3.OkHttpClient
@@ -19,10 +17,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class ApiModule {
-
     @Singleton
     @Provides
-    fun clientBuilder(@ApplicationContext context: Context): OkHttpClient {
+    fun clientBuilder(
+        @ApplicationContext context: Context,
+    ): OkHttpClient {
         val client =
             OkHttpClient.Builder()
                 .addNetworkInterceptor { chain ->

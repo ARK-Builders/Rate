@@ -1,27 +1,25 @@
 package dev.arkbuilders.rate.watchapp.presentation.options
 
+import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.arkbuilders.rate.feature.quick.domain.model.QuickCalculation
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
+import dev.arkbuilders.rate.watchapp.watchface.WatchRefreshManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import dev.arkbuilders.rate.watchapp.watchface.WatchRefreshManager
 import javax.inject.Inject
-
-import android.app.Application
 
 @HiltViewModel
 class OptionsViewModel @Inject constructor(
     private val application: Application,
     private val quickRepo: QuickRepo,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-
     val pairId: Long = checkNotNull(savedStateHandle["id"])
 
     private val _quickPair = MutableStateFlow<QuickCalculation?>(null)

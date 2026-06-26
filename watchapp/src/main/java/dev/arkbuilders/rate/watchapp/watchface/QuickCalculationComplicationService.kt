@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuickCalculationComplicationService : SuspendingComplicationDataSourceService() {
-
     @Inject
     lateinit var quickRepo: QuickRepo
 
@@ -37,14 +36,14 @@ class QuickCalculationComplicationService : SuspendingComplicationDataSourceServ
             ComplicationType.SHORT_TEXT -> {
                 ShortTextComplicationData.Builder(
                     text = PlainComplicationText.Builder(text).build(),
-                    contentDescription = PlainComplicationText.Builder("Currency Rate").build()
+                    contentDescription = PlainComplicationText.Builder("Currency Rate").build(),
                 ).setTitle(PlainComplicationText.Builder(title).build())
                     .build()
             }
             ComplicationType.LONG_TEXT -> {
                 LongTextComplicationData.Builder(
                     text = PlainComplicationText.Builder("$title = $text").build(),
-                    contentDescription = PlainComplicationText.Builder("Currency Rate").build()
+                    contentDescription = PlainComplicationText.Builder("Currency Rate").build(),
                 ).setTitle(PlainComplicationText.Builder("Quick Pair Rate").build())
                     .build()
             }
@@ -59,14 +58,20 @@ class QuickCalculationComplicationService : SuspendingComplicationDataSourceServ
             ComplicationType.SHORT_TEXT -> {
                 ShortTextComplicationData.Builder(
                     text = PlainComplicationText.Builder(text).build(),
-                    contentDescription = PlainComplicationText.Builder("Currency Rate Preview").build()
+                    contentDescription =
+                        PlainComplicationText.Builder(
+                            "Currency Rate Preview",
+                        ).build(),
                 ).setTitle(PlainComplicationText.Builder(title).build())
                     .build()
             }
             ComplicationType.LONG_TEXT -> {
                 LongTextComplicationData.Builder(
                     text = PlainComplicationText.Builder("$title = $text").build(),
-                    contentDescription = PlainComplicationText.Builder("Currency Rate Preview").build()
+                    contentDescription =
+                        PlainComplicationText.Builder(
+                            "Currency Rate Preview",
+                        ).build(),
                 ).setTitle(PlainComplicationText.Builder("Quick Pair Rate").build())
                     .build()
             }

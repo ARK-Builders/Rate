@@ -17,26 +17,27 @@ data class SearchState(
     val query: String = "",
     val allCurrencies: List<CurrencyInfo> = emptyList(),
     val filteredCurrencies: List<CurrencyInfo> = emptyList(),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
 )
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val currencyRepo: CurrencyRepo,
-    private val searchUseCase: SearchUseCase
-): ViewModel() {
-
+    private val searchUseCase: SearchUseCase,
+) : ViewModel() {
     private val _state = MutableStateFlow(SearchState())
     val state: StateFlow<SearchState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
             val all = currencyRepo.getCurrencyInfo()
-            _state.update { it.copy(
-                allCurrencies = all,
-                filteredCurrencies = all,
-                isLoading = false
-            ) }
+            _state.update {
+                it.copy(
+                    allCurrencies = all,
+                    filteredCurrencies = all,
+                    isLoading = false,
+                )
+            }
         }
     }
 
@@ -47,11 +48,12 @@ class SearchViewModel @Inject constructor(
 
     private fun filter() {
         val currentState = _state.value
-        val filtered = searchUseCase(
-            currentState.allCurrencies,
-            emptyList(),
-            currentState.query
-        )
+        val filtered =
+            searchUseCase(
+                currentState.allCurrencies,
+                emptyList(),
+                currentState.query,
+            )
         _state.update { it.copy(filteredCurrencies = filtered) }
     }
 }

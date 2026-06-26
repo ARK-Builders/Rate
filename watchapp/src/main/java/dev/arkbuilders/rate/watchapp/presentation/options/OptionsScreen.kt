@@ -21,18 +21,17 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import dev.arkbuilders.rate.watchapp.R
 import dev.arkbuilders.rate.watchapp.presentation.theme.WearConfirmationDialog
 import dev.arkbuilders.rate.watchapp.presentation.theme.WearInfoDialog
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.arkbuilders.rate.watchapp.R
-
 import dev.arkbuilders.rate.watchapp.presentation.theme.WearSnackbar
 
 @Composable
@@ -42,7 +41,7 @@ fun OptionsScreen(
     onUpdateClick: (Long) -> Unit = {},
     onPinClick: (String) -> Unit = {},
     onDeleteSuccess: (String) -> Unit = {},
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     val quickPair by viewModel.quickPair.collectAsStateWithLifecycle()
     val showPinLimitDialog by viewModel.showPinLimitDialog.collectAsStateWithLifecycle()
@@ -65,16 +64,19 @@ fun OptionsScreen(
                 showDeleteDialog = false
                 onDismiss()
             },
-            isDestructive = true
+            isDestructive = true,
         )
     }
 
     if (showPinLimitDialog) {
         WearInfoDialog(
             title = stringResource(R.string.pin_limit_reached),
-            message = stringResource(R.string.you_can_only_pin_up_to_4_pairs_please_unpin_another_pair_first),
+            message =
+                stringResource(
+                    R.string.you_can_only_pin_up_to_4_pairs_please_unpin_another_pair_first,
+                ),
             onDismiss = { viewModel.dismissPinLimitDialog() },
-            dismissText = stringResource(R.string.ok_got_it)
+            dismissText = stringResource(R.string.ok_got_it),
         )
     }
 
@@ -86,34 +88,36 @@ fun OptionsScreen(
                 if (msg == "Unpinned") {
                     onDismiss()
                 }
-            }
+            },
         )
     }
 
     Scaffold(
         positionIndicator = {
             PositionIndicator(scalingLazyListState = listState)
-        }
+        },
     ) {
         ScalingLazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                .background(ArkColor.BGSecondaryAlt),
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(ArkColor.BGSecondaryAlt),
             state = listState,
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
                 Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
                     text = stringResource(R.string.options),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
-                    color = ArkColor.TextPrimary
+                    color = ArkColor.TextPrimary,
                 )
             }
 
@@ -121,7 +125,7 @@ fun OptionsScreen(
                 WearOptionButton(
                     text = stringResource(R.string.update),
                     icon = WearOptionButtonIcon.Refresh,
-                    onClick = { onUpdateClick(viewModel.pairId) }
+                    onClick = { onUpdateClick(viewModel.pairId) },
                 )
             }
 
@@ -129,7 +133,13 @@ fun OptionsScreen(
                 val isPinned = quickPair?.isPinned() == true
                 val context = LocalContext.current
                 WearOptionButton(
-                    text = if (isPinned) stringResource(R.string.unpin) else stringResource(R.string.pin),
+                    text =
+                        if (isPinned)
+                            stringResource(
+                                R.string.unpin,
+                            )
+                        else
+                            stringResource(R.string.pin),
                     icon = WearOptionButtonIcon.Pin,
                     onClick = {
                         viewModel.togglePin(onSuccess = { pinned ->
@@ -139,7 +149,7 @@ fun OptionsScreen(
                                 snackbarMessage = "Unpinned"
                             }
                         })
-                    }
+                    },
                 )
             }
 
@@ -150,7 +160,7 @@ fun OptionsScreen(
                     buttonType = WearOptionButtonType.Destructive,
                     onClick = {
                         showDeleteDialog = true
-                    }
+                    },
                 )
             }
         }

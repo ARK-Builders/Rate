@@ -37,21 +37,21 @@ fun WearButtonExamples(modifier: Modifier = Modifier) {
     Scaffold(
         positionIndicator = {
             PositionIndicator(scalingLazyListState = listState)
-        }
+        },
     ) {
         ScalingLazyColumn(
             modifier = modifier.fillMaxSize(),
             state = listState,
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
                 WearButton(
                     text = "Primary Button",
                     onClick = {},
                     style = WearButtonStyle.Primary,
-                    leadingIcon = Icons.Outlined.Add
+                    leadingIcon = Icons.Outlined.Add,
                 )
             }
 
@@ -60,7 +60,7 @@ fun WearButtonExamples(modifier: Modifier = Modifier) {
                     text = "Secondary Button",
                     onClick = {},
                     style = WearButtonStyle.Secondary,
-                    leadingIcon = Icons.Outlined.Edit
+                    leadingIcon = Icons.Outlined.Edit,
                 )
             }
 
@@ -69,7 +69,7 @@ fun WearButtonExamples(modifier: Modifier = Modifier) {
                     text = "Outlined Button",
                     onClick = {},
                     style = WearButtonStyle.Outlined,
-                    leadingIcon = Icons.Outlined.Refresh
+                    leadingIcon = Icons.Outlined.Refresh,
                 )
             }
 
@@ -77,14 +77,14 @@ fun WearButtonExamples(modifier: Modifier = Modifier) {
                 WearButton(
                     text = "Destructive Button",
                     onClick = {},
-                    style = WearButtonStyle.Destructive
+                    style = WearButtonStyle.Destructive,
                 )
             }
 
             item {
                 WearPageIndicator(
                     totalPages = 5,
-                    currentPage = 2
+                    currentPage = 2,
                 )
             }
         }
@@ -97,20 +97,21 @@ fun WearDialogExamples(modifier: Modifier = Modifier) {
     var showInfoDialog by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         WearButton(
             text = "Show Confirmation Dialog",
-            onClick = { showConfirmDialog = true }
+            onClick = { showConfirmDialog = true },
         )
 
         WearButton(
             text = "Show Info Dialog",
-            onClick = { showInfoDialog = true }
+            onClick = { showInfoDialog = true },
         )
 
         if (showConfirmDialog) {
@@ -122,7 +123,7 @@ fun WearDialogExamples(modifier: Modifier = Modifier) {
                     // Handle confirmation
                 },
                 onDismiss = { showConfirmDialog = false },
-                isDestructive = true
+                isDestructive = true,
             )
         }
 
@@ -130,7 +131,7 @@ fun WearDialogExamples(modifier: Modifier = Modifier) {
             WearInfoDialog(
                 title = "Success",
                 message = "Operation completed successfully!",
-                onDismiss = { showInfoDialog = false }
+                onDismiss = { showInfoDialog = false },
             )
         }
     }

@@ -26,7 +26,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuickCalculationsWatchFaceService : WatchFaceService() {
-
     @Inject
     lateinit var quickRepo: QuickRepo
 
@@ -39,45 +38,62 @@ class QuickCalculationsWatchFaceService : WatchFaceService() {
         surfaceHolder: SurfaceHolder,
         watchState: WatchState,
         complicationSlotsManager: ComplicationSlotsManager,
-        currentUserStyleRepository: CurrentUserStyleRepository
+        currentUserStyleRepository: CurrentUserStyleRepository,
     ): WatchFace {
         Log.d("QuickCalculationsWatchFace", "Creating watch face")
-        val renderer = QuickCalculationsRenderer(
-            context = this,
-            surfaceHolder = surfaceHolder,
-            watchState = watchState,
-            currentUserStyleRepository = currentUserStyleRepository
-        )
+        val renderer =
+            QuickCalculationsRenderer(
+                context = this,
+                surfaceHolder = surfaceHolder,
+                watchState = watchState,
+                currentUserStyleRepository = currentUserStyleRepository,
+            )
 
         scope.launch {
             Log.d("QuickCalculationsWatchFace", "Starting data collection")
             quickRepo.allFlow()
                 .map { pairs -> pairs.filter { it.isPinned() } }
                 .distinctUntilChanged { old, new ->
-                    old.size == new.size && old.all { oldPair ->
-                        new.any { it.id == oldPair.id && it.amount == oldPair.amount && it.from == oldPair.from && it.to == oldPair.to }
-                    }
+                    old.size == new.size &&
+                        old.all { oldPair ->
+                            new.any {
+                                it.id == oldPair.id &&
+                                    it.amount == oldPair.amount &&
+                                    it.from == oldPair.from &&
+                                    it.to == oldPair.to
+                            }
+                        }
                 }
                 .flowOn(Dispatchers.IO)
                 .collectLatest { pinnedPairs ->
                     Log.d("QuickCalculationsWatchFace", "Received ${pinnedPairs.size} pinned pairs")
-                    val processedPairs = withContext(Dispatchers.IO) {
-                        pinnedPairs.map { pair ->
-                            val actualTo = pair.to.map { toAmount ->
-                                val (convertedAmt, _) = convertUseCase.invoke(pair.from, pair.amount, toAmount.code)
-                                Amount(convertedAmt.code, convertedAmt.value)
-                            }
-                            pair.copy(to = actualTo)
-                        }.sortedByDescending { it.pinnedDate }
-                    }
-                    Log.d("QuickCalculationsWatchFace", "Updating renderer with ${processedPairs.size} processed pairs")
+                    val processedPairs =
+                        withContext(Dispatchers.IO) {
+                            pinnedPairs.map { pair ->
+                                val actualTo =
+                                    pair.to.map { toAmount ->
+                                        val (convertedAmt, _) =
+                                            convertUseCase.invoke(
+                                                pair.from,
+                                                pair.amount,
+                                                toAmount.code,
+                                            )
+                                        Amount(convertedAmt.code, convertedAmt.value)
+                                    }
+                                pair.copy(to = actualTo)
+                            }.sortedByDescending { it.pinnedDate }
+                        }
+                    Log.d(
+                        "QuickCalculationsWatchFace",
+                        "Updating renderer with ${processedPairs.size} processed pairs",
+                    )
                     renderer.updateQuickCalculations(processedPairs)
                 }
         }
 
         return WatchFace(
             watchFaceType = WatchFaceType.DIGITAL,
-            renderer = renderer
+            renderer = renderer,
         )
     }
 

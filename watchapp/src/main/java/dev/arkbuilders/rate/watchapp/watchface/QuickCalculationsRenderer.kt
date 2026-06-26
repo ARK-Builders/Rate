@@ -24,49 +24,56 @@ class QuickCalculationsRenderer(
     private val watchState: WatchState,
     currentUserStyleRepository: CurrentUserStyleRepository,
 ) : Renderer.CanvasRenderer(
-    surfaceHolder,
-    currentUserStyleRepository,
-    watchState,
-    CanvasType.SOFTWARE,
-    1000L // 1 second refresh is enough for HH:mm
-) {
+        surfaceHolder,
+        currentUserStyleRepository,
+        watchState,
+        CanvasType.SOFTWARE,
+        // 1 second refresh is enough for HH:mm
+        1000L,
+    ) {
     private var quickPairs: List<QuickCalculation> = emptyList()
-    private val backgroundPaint = Paint().apply {
-        color = Color.WHITE
-        isAntiAlias = true
-    }
+    private val backgroundPaint =
+        Paint().apply {
+            color = Color.WHITE
+            isAntiAlias = true
+        }
 
-    private val timePaint = Paint().apply {
-        color = Color.parseColor("#7F56D9") // ArkColor.Primary
-        textSize = 48f
-        textAlign = Paint.Align.CENTER
-        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-        isAntiAlias = true
-    }
+    private val timePaint =
+        Paint().apply {
+            color = Color.parseColor("#7F56D9") // ArkColor.Primary
+            textSize = 48f
+            textAlign = Paint.Align.CENTER
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            isAntiAlias = true
+        }
 
+    private val itemTitlePaint =
+        Paint().apply {
+            color = Color.parseColor("#101828") // ArkColor.TextPrimary
+            textSize = 18f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            isAntiAlias = true
+        }
 
-    private val itemTitlePaint = Paint().apply {
-        color = Color.parseColor("#101828") // ArkColor.TextPrimary
-        textSize = 18f
-        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-        isAntiAlias = true
-    }
-
-    private val itemSubtitlePaint = Paint().apply {
-        color = Color.parseColor("#475467") // ArkColor.TextTertiary
-        textSize = 14f
-        isAntiAlias = true
-    }
+    private val itemSubtitlePaint =
+        Paint().apply {
+            color = Color.parseColor("#475467") // ArkColor.TextTertiary
+            textSize = 14f
+            isAntiAlias = true
+        }
 
     private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-
 
     fun updateQuickCalculations(pairs: List<QuickCalculation>) {
         quickPairs = pairs
         invalidate()
     }
 
-    override fun render(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime) {
+    override fun render(
+        canvas: Canvas,
+        bounds: Rect,
+        zonedDateTime: ZonedDateTime,
+    ) {
         val isAmbient = renderParameters.drawMode == DrawMode.AMBIENT
 
         val centerX = bounds.centerX().toFloat()
@@ -128,6 +135,10 @@ class QuickCalculationsRenderer(
         }
     }
 
-    override fun renderHighlightLayer(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime) {
+    override fun renderHighlightLayer(
+        canvas: Canvas,
+        bounds: Rect,
+        zonedDateTime: ZonedDateTime,
+    ) {
     }
 }
