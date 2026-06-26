@@ -3,7 +3,6 @@ package dev.arkbuilders.rate.core.data.repo.currency
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import dev.arkbuilders.rate.core.domain.AppConfig
 import dev.arkbuilders.rate.core.domain.model.CurrencyCode
 import dev.arkbuilders.rate.core.domain.model.CurrencyInfo
 import dev.arkbuilders.rate.core.domain.model.CurrencyRate
@@ -17,7 +16,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import java.time.Duration
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
@@ -29,6 +27,7 @@ class CurrencyRepoImpl @Inject constructor(
     private val currencyInfoDataSource: CurrencyInfoDataSource,
     private val timestampRepo: TimestampRepo,
     private val networkStatus: NetworkStatus,
+    private val ratesUpdatedAtDataSource: RatesUpdatedAtDataSource,
 ) : CurrencyRepo {
     private val updateRatesMutex = Mutex()
     private val loadInfoMutex = Mutex()
@@ -45,12 +44,12 @@ class CurrencyRepoImpl @Inject constructor(
                 launch(Job()) { updateRates() }
                 return@withContext local
             } else {
+                val fallbackRates = runCatching { useFallbackRates() }.getOrNull()
                 val remoteRates = updateRates()
                 if (remoteRates.isRight())
                     return@withContext remoteRates.getOrNull()!!
 
-                val fallbackRates = useFallbackRates()
-                return@withContext fallbackRates
+                return@withContext fallbackRates ?: useFallbackRates()
             }
         }
 
@@ -79,7 +78,16 @@ class CurrencyRepoImpl @Inject constructor(
                 timestampRepo
                     .getTimestamp(TimestampType.FetchRates)
 
-            if ((networkStatus.isOnline() && hasUpdateIntervalPassed(updatedDate)).not()) {
+            if (networkStatus.isOnline().not()) {
+                return IllegalStateException("Skip rate updates").left()
+            }
+
+            val remoteUpdatedAt =
+                ratesUpdatedAtDataSource
+                    .fetchRemote()
+                    .onLeft { return@withLock it.left() }
+                    .getOrNull()!!
+            if (isNewer(remoteUpdatedAt, updatedDate).not()) {
                 return IllegalStateException("Skip rate updates").left()
             }
 
@@ -87,7 +95,7 @@ class CurrencyRepoImpl @Inject constructor(
             val fiat = fiatDataSource.fetchRemote().onLeft { return@withLock it.left() }
             val rates = crypto.getOrNull()!! + fiat.getOrNull()!!
             localCurrencyDataSource.insert(rates)
-            timestampRepo.rememberTimestamp(TimestampType.FetchRates)
+            timestampRepo.rememberTimestamp(TimestampType.FetchRates, remoteUpdatedAt)
             return@withLock rates.right()
         }
 
@@ -105,11 +113,8 @@ class CurrencyRepoImpl @Inject constructor(
             infoMap = currencyInfoDataSource.provide()
         }
 
-    private fun hasUpdateIntervalPassed(updatedDate: OffsetDateTime?) =
-        updatedDate == null ||
-            Duration.between(updatedDate, OffsetDateTime.now())
-                .toMillis() > updateInterval
-
-    private val updateInterval =
-        Duration.ofHours(AppConfig.CURRENCY_RATES_UPDATE_INTERVAL_HOURS).toMillis()
+    private fun isNewer(
+        remoteUpdatedAt: OffsetDateTime,
+        localUpdatedAt: OffsetDateTime?,
+    ) = localUpdatedAt == null || remoteUpdatedAt.isAfter(localUpdatedAt)
 }

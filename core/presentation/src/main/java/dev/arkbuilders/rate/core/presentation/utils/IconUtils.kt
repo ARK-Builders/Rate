@@ -15,10 +15,17 @@ object IconUtils {
             lowercaseCode = "curr_try"
         }
 
+        val resourceName =
+            if (lowercaseCode.firstOrNull()?.isLetter() == false) {
+                "coin_$lowercaseCode"
+            } else {
+                lowercaseCode
+            }
+
         val drawableID =
             ctx.resources
                 .getIdentifier(
-                    lowercaseCode,
+                    resourceName,
                     "drawable",
                     ctx.packageName,
                 )

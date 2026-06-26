@@ -1,0 +1,72 @@
+name: Update Rates And Icons
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0,8,16 * * *"
+
+env:
+  OPENEXCHANGERATES_API_KEY: ${{ secrets.OPENEXCHANGERATES_API_KEY }}
+
+jobs:
+  update-rates-and-icons:
+    runs-on: ubuntu-latest
+  
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout main (for scripts)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Checkout data branch into subdirectory
+        uses: actions/checkout@v4
+        with:
+          ref: data/currency-icons-and-rates
+          path: currency-data
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Check if OPENEXCHANGERATES_API_KEY secret is set
+        run: |
+          if [ -z "${{ secrets.OPENEXCHANGERATES_API_KEY }}" ]; then
+            echo "OPENEXCHANGERATES_API_KEY is NOT set"
+            exit 1
+          else
+            echo "OPENEXCHANGERATES_API_KEY is set (value is masked)"
+          fi
+
+      - name: Run Android rates and icons update
+        env:
+          CI_PROJECT_ROOT: "${{ github.workspace }}/currency-data"
+        run: python3 scripts/update_crypto_data.py
+       
+      - name: Push into Git
+        working-directory: currency-data
+        run: |-
+          git config user.email "bot@ark-builders.dev"
+          git config user.name "ARK Builders Bot"
+          git add core/data/src/main/assets/fiat-rates.json
+          git add core/data/src/main/assets/crypto-rates.json
+          git add core/data/src/main/assets/updatedAt
+          git add -A cryptoicons/src/main/res/drawable
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore(rates,icons): auto-update [skip ci]"
+            git pull origin data/currency-icons-and-rates --no-edit
+            git push origin data/currency-icons-and-rates
+          fi
+
+      - name: Sync legacy data branch
+        working-directory: currency-data
+        run: |-
+          # TODO: Remove after the Play Store build using data/currency-icons-and-rates is rolled out and users have updated.
+          git fetch origin refs/heads/exchange-rates:refs/remotes/origin/exchange-rates
+          git push --force-with-lease origin HEAD:exchange-rates

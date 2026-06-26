@@ -6,6 +6,16 @@
 /build
 /buildSrc/build/
 *.class
+__pycache__/
+*.pyc
+
+# Currency rates and icons are restored from the data/currency-icons-and-rates branch.
+/core/data/src/main/assets/crypto-rates.json
+/core/data/src/main/assets/fiat-rates.json
+/core/data/src/main/assets/updatedAt
+/cryptoicons/src/main/res/drawable/
+/crypto.json
+/cryptoicons.zip
 /captures
 .externalNativeBuild
 .cxx

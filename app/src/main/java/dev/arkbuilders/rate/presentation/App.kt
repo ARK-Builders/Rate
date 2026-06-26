@@ -22,8 +22,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.Instant
-import java.time.ZoneOffset
 import java.util.concurrent.TimeUnit
 
 class App : Application(), Configuration.Provider, CoreComponentProvider {
@@ -44,18 +42,12 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
     }
 
     private fun initBuildConfigFields() {
-        val fallbackCryptoRatesFetchDate =
-            Instant.ofEpochMilli(BuildConfig.CRYPTO_LAST_MODIFIED).atOffset(ZoneOffset.UTC)
-        val fallbackFiatRatesFetchDate =
-            Instant.ofEpochMilli(BuildConfig.FIAT_LAST_MODIFIED).atOffset(ZoneOffset.UTC)
         coreComponent.buildConfigFieldsProvider().init(
             BuildConfigFields(
                 buildType = BuildConfig.BUILD_TYPE,
                 versionCode = BuildConfig.VERSION_CODE,
                 versionName = BuildConfig.VERSION_NAME,
                 isGooglePlayBuild = BuildConfig.GOOGLE_PLAY_BUILD,
-                fallbackCryptoRatesFetchDate = fallbackCryptoRatesFetchDate,
-                fallbackFiatRatesFetchDate = fallbackFiatRatesFetchDate,
                 availableIconCodes = BuildConfig.ICON_CODES.toSet(),
             ),
         )
