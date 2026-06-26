@@ -39,6 +39,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:di"))
+    implementation(project(":core:db"))
+    implementation(project(":core:domain"))
     implementation(project(":core:presentation"))
 
     implementation(libs.androidx.core.ktx)

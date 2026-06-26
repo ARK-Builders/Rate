@@ -1,5 +1,6 @@
 package dev.arkbuilders.rate.feature.paywall
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,6 +25,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -42,15 +46,37 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.arkbuilders.rate.core.presentation.CoreRDrawable
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import dev.arkbuilders.rate.feature.paywall.di.PaywallComponentHolder
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Destination<ExternalModuleGraph>
 @Composable
-fun PaywallScreen() {
-    val viewModel: PaywallViewModel = viewModel()
+fun PaywallScreen(navigator: DestinationsNavigator) {
+    val ctx = LocalContext.current
+    val component =
+        remember {
+            PaywallComponentHolder.provide(ctx)
+        }
+    val viewModel: PaywallViewModel =
+        viewModel(factory = component.paywallVMFactory())
+    val state by viewModel.collectAsState()
+
+    BackHandler {
+        viewModel.onBackClick()
+    }
+
+    viewModel.collectSideEffect { effect ->
+        when (effect) {
+            PaywallScreenEffect.NavigateBack -> navigator.popBackStack()
+        }
+    }
 
     PaywallContent(
+        state = state,
         onCloseClick = viewModel::onCloseClick,
         onRestoreClick = viewModel::onRestoreClick,
         onYearlyClick = viewModel::onYearlyPlanClick,
@@ -65,6 +91,7 @@ fun PaywallScreen() {
 
 @Composable
 private fun PaywallContent(
+    state: PaywallScreenState,
     onCloseClick: () -> Unit,
     onRestoreClick: () -> Unit,
     onYearlyClick: () -> Unit,
@@ -138,7 +165,7 @@ private fun PaywallContent(
                     description = "7 days free, then \$19.99 / year",
                     monthlyPrice = "\$1.67 / month",
                     badge = "Best value",
-                    selected = true,
+                    selected = state.selectedPlan == PaywallPlan.Yearly,
                     onClick = onYearlyClick,
                 )
                 Spacer(Modifier.height(12.dp))
@@ -148,7 +175,7 @@ private fun PaywallContent(
                     description = "7 days free, then \$2.99 / month",
                     monthlyPrice = null,
                     badge = null,
-                    selected = false,
+                    selected = state.selectedPlan == PaywallPlan.Monthly,
                     onClick = onMonthlyClick,
                 )
                 Spacer(Modifier.height(28.dp))
