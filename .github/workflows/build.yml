@@ -81,6 +81,9 @@ jobs:
     - name: Build release GooglePlay APK
       run: ./gradlew assembleGoogleplay
 
+    - name: Build release WatchApp APK
+      run: ./gradlew :watchapp:assembleRelease
+
     - name: Upload Github APK
       uses: actions/upload-artifact@v4
       with:
@@ -93,6 +96,11 @@ jobs:
         name: ark-rate-googleplay
         path: ./app/build/outputs/apk/googleplay/release/ark-rate-googleplay-release.apk
 
+    - name: Upload WatchApp APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: ark-rate-watchapp
+        path: ./watchapp/build/outputs/apk/release/watchapp-release.apk
   lint:
     needs: build
     environment: Development
