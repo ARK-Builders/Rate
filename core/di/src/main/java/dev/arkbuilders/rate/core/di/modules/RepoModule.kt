@@ -47,13 +47,13 @@ class RepoModule {
         context: Context,
         fiatRateResponseMapper: FiatRateResponseMapper,
         cryptoRateResponseMapper: CryptoRateResponseMapper,
-        buildConfigFieldsProvider: BuildConfigFieldsProvider,
+        ratesUpdatedAtDataSource: RatesUpdatedAtDataSource,
     ): FallbackRatesProvider {
         return FallbackRatesProvider(
             context,
             fiatRateResponseMapper,
             cryptoRateResponseMapper,
-            buildConfigFieldsProvider,
+            ratesUpdatedAtDataSource,
         )
     }
 
