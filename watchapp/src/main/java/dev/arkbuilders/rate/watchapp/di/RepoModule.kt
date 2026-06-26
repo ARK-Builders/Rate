@@ -71,7 +71,7 @@ class RepoModule {
         fiatRateResponseMapper: FiatRateResponseMapper,
         cryptoRateResponseMapper: CryptoRateResponseMapper,
         ratesUpdatedAtDataSource: RatesUpdatedAtDataSource,
-        ): FallbackRatesProvider {
+    ): FallbackRatesProvider {
         return FallbackRatesProvider(
             context,
             fiatRateResponseMapper,
