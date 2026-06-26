@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,6 +43,7 @@ import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import dev.arkbuilders.rate.watchapp.R
 import dev.arkbuilders.rate.watchapp.presentation.quickpairs.composables.CurrIcon
 
 @Composable
@@ -81,7 +83,9 @@ fun AddQuickCalculationsScreen(
     }
 
     if (state.isSaved) {
-        val message = if (state.editId != null) "Updated Successfully" else "Added Successfully"
+        val message = if (state.editId != null) stringResource(R.string.updated_successfully) else stringResource(
+            R.string.added_successfully
+        )
         LaunchedEffect(Unit) {
             onNavigateToSuccess(message)
         }
@@ -99,7 +103,9 @@ fun AddQuickCalculationsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
-                text = if (state.editId != null) "Update" else "Add",
+                text = if (state.editId != null) stringResource(R.string.update) else stringResource(
+                    R.string.add
+                ),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 color = ArkColor.TextPrimary,
@@ -278,7 +284,9 @@ fun AddQuickCalculationsScreen(
                     .height(36.dp),
                 colors = ButtonDefaults.primaryButtonColors(backgroundColor = ArkColor.Primary)
             ) {
-                Text(if (state.editId != null) "Update Pair" else "Save Pair", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(if (state.editId != null) stringResource(R.string.update_pair) else stringResource(
+                    R.string.save_pair
+                ), fontSize = 14.sp, fontWeight = FontWeight.Bold)
             }
         }
     }

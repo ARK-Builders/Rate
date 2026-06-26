@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
@@ -29,6 +30,7 @@ import dev.arkbuilders.rate.watchapp.presentation.theme.WearConfirmationDialog
 import dev.arkbuilders.rate.watchapp.presentation.theme.WearInfoDialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.arkbuilders.rate.watchapp.R
 
 import dev.arkbuilders.rate.watchapp.presentation.theme.WearSnackbar
 
@@ -49,8 +51,8 @@ fun OptionsScreen(
 
     if (showDeleteDialog) {
         WearConfirmationDialog(
-            title = "Delete Pair",
-            message = "Are you sure you want to delete this pair?",
+            title = stringResource(R.string.delete_pair),
+            message = stringResource(R.string.are_you_sure_you_want_to_delete_this_pair),
             onConfirm = {
                 showDeleteDialog = false
                 viewModel.deletePair(onDeleted = {
@@ -67,17 +69,17 @@ fun OptionsScreen(
 
     if (showPinLimitDialog) {
         WearInfoDialog(
-            title = "Pin Limit Reached",
-            message = "You can only pin up to 4 pairs. Please unpin another pair first.",
+            title = stringResource(R.string.pin_limit_reached),
+            message = stringResource(R.string.you_can_only_pin_up_to_4_pairs_please_unpin_another_pair_first),
             onDismiss = { viewModel.dismissPinLimitDialog() },
-            dismissText = "Ok got it"
+            dismissText = stringResource(R.string.ok_got_it)
         )
     }
 
     snackbarMessage?.let { msg ->
         WearSnackbar(
             message = msg,
-            onDismiss = { 
+            onDismiss = {
                 snackbarMessage = null
                 if (msg == "Unpinned") {
                     onDismiss()
@@ -92,7 +94,8 @@ fun OptionsScreen(
         }
     ) {
         ScalingLazyColumn(
-            modifier = modifier.fillMaxSize()
+            modifier = modifier
+                .fillMaxSize()
                 .background(ArkColor.BGSecondaryAlt),
             state = listState,
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),

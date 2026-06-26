@@ -6,6 +6,7 @@ import dev.arkbuilders.rate.core.domain.model.CurrencyRate
 import dev.arkbuilders.rate.core.domain.model.CurrencyType
 import java.math.BigDecimal
 import javax.inject.Inject
+
 class FiatRateResponseMapper @Inject constructor() {
     fun map(response: FiatRateResponse): List<CurrencyRate> =
         response.rates.map { (code, rate) ->

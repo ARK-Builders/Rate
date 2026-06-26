@@ -5,6 +5,7 @@ import dev.arkbuilders.rate.core.domain.model.CurrencyRate
 import dev.arkbuilders.rate.core.domain.model.CurrencyType
 import java.math.BigDecimal
 import javax.inject.Inject
+
 class CryptoRateResponseMapper @Inject constructor() {
     fun map(response: List<CryptoRateResponse>) =
         response.map {
