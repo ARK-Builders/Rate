@@ -56,7 +56,6 @@ include(":feature:settings")
 include(":feature:onboarding")
 include(":watchapp")
 
-
 fun getLocalProps(): Properties {
     val props = Properties()
     val localPropsFile = File(rootDir, "local.properties")
