@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
 import dev.arkbuilders.rate.core.data.network.api.FiatAPI
+import dev.arkbuilders.rate.core.data.network.api.UpdatedAtAPI
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -62,5 +63,19 @@ class ApiModule {
             .client(httpClient)
             .build()
             .create(FiatAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun updatedAtAPI(clientBuilder: OkHttpClient): UpdatedAtAPI {
+        val httpClient = clientBuilder
+        val gson = GsonBuilder().create()
+
+        return Retrofit.Builder()
+            .baseUrl("https://raw.githubusercontent.com")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient)
+            .build()
+            .create(UpdatedAtAPI::class.java)
     }
 }

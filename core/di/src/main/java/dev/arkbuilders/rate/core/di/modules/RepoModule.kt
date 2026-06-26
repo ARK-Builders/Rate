@@ -8,6 +8,7 @@ import dev.arkbuilders.rate.core.data.mapper.FiatRateResponseMapper
 import dev.arkbuilders.rate.core.data.network.NetworkStatusImpl
 import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
 import dev.arkbuilders.rate.core.data.network.api.FiatAPI
+import dev.arkbuilders.rate.core.data.network.api.UpdatedAtAPI
 import dev.arkbuilders.rate.core.data.preferences.PrefsImpl
 import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
 import dev.arkbuilders.rate.core.data.repo.BuildConfigFieldsProviderImpl
@@ -79,6 +80,15 @@ class RepoModule {
             networkStatus,
             ratesUpdatedAtDataSource,
         )
+
+    @Singleton
+    @Provides
+    fun ratesUpdatedAtDataSource(
+        context: Context,
+        updatedAtAPI: UpdatedAtAPI,
+    ): RatesUpdatedAtDataSource {
+        return RatesUpdatedAtDataSource(context, updatedAtAPI)
+    }
 
     @Singleton
     @Provides

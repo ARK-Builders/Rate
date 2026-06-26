@@ -10,6 +10,7 @@ import dev.arkbuilders.rate.core.data.mapper.CryptoRateResponseMapper
 import dev.arkbuilders.rate.core.data.mapper.FiatRateResponseMapper
 import dev.arkbuilders.rate.core.data.network.NetworkStatusImpl
 import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
+import dev.arkbuilders.rate.core.data.network.api.UpdatedAtAPI
 import dev.arkbuilders.rate.core.data.preferences.PrefsImpl
 import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
 import dev.arkbuilders.rate.core.data.repo.BuildConfigFieldsProviderImpl
@@ -23,6 +24,7 @@ import dev.arkbuilders.rate.core.data.repo.currency.CurrencyRepoImpl
 import dev.arkbuilders.rate.core.data.repo.currency.FallbackRatesProvider
 import dev.arkbuilders.rate.core.data.repo.currency.FiatCurrencyDataSource
 import dev.arkbuilders.rate.core.data.repo.currency.LocalCurrencyDataSource
+import dev.arkbuilders.rate.core.data.repo.currency.RatesUpdatedAtDataSource
 import dev.arkbuilders.rate.core.db.dao.CodeUseStatDao
 import dev.arkbuilders.rate.core.db.dao.CurrencyRateDao
 import dev.arkbuilders.rate.core.db.dao.GroupDao
@@ -68,13 +70,13 @@ class RepoModule {
         @ApplicationContext context: Context,
         fiatRateResponseMapper: FiatRateResponseMapper,
         cryptoRateResponseMapper: CryptoRateResponseMapper,
-        buildConfigFieldsProvider: BuildConfigFieldsProvider,
-    ): FallbackRatesProvider {
+        ratesUpdatedAtDataSource: RatesUpdatedAtDataSource,
+        ): FallbackRatesProvider {
         return FallbackRatesProvider(
             context,
             fiatRateResponseMapper,
             cryptoRateResponseMapper,
-            buildConfigFieldsProvider,
+            ratesUpdatedAtDataSource,
         )
     }
 
@@ -111,6 +113,7 @@ class RepoModule {
         timestampRepo: TimestampRepo,
         networkStatus: NetworkStatus,
         fallbackRatesProvider: FallbackRatesProvider,
+        ratesUpdatedAtDataSource: RatesUpdatedAtDataSource,
     ): CurrencyRepo =
         CurrencyRepoImpl(
             fiatCurrencyDataSource,
@@ -120,7 +123,17 @@ class RepoModule {
             currencyInfoDataSource,
             timestampRepo,
             networkStatus,
+            ratesUpdatedAtDataSource,
         )
+
+    @Singleton
+    @Provides
+    fun ratesUpdatedAtDataSource(
+        @ApplicationContext context: Context,
+        updatedAtAPI: UpdatedAtAPI,
+    ): RatesUpdatedAtDataSource {
+        return RatesUpdatedAtDataSource(context, updatedAtAPI)
+    }
 
     @Singleton
     @Provides

@@ -8,11 +8,8 @@ import dev.arkbuilders.rate.core.data.network.api.UpdatedAtAPI
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class RatesUpdatedAtDataSource @Inject constructor(
+class RatesUpdatedAtDataSource(
     private val ctx: Context,
     private val updatedAtAPI: UpdatedAtAPI,
 ) {
