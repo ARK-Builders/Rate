@@ -12,6 +12,7 @@ import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
 import dev.arkbuilders.rate.core.data.repo.CodeUseStatRepoImpl
 import dev.arkbuilders.rate.core.data.repo.GooglePlayInAppReviewManagerImpl
 import dev.arkbuilders.rate.core.data.repo.GroupRepoImpl
+import dev.arkbuilders.rate.core.data.repo.PremiumManagerRevenueCatImpl
 import dev.arkbuilders.rate.core.data.repo.TimestampRepoImpl
 import dev.arkbuilders.rate.core.data.repo.currency.CryptoCurrencyDataSource
 import dev.arkbuilders.rate.core.data.repo.currency.CurrencyInfoDataSource
@@ -32,6 +33,7 @@ import dev.arkbuilders.rate.core.domain.repo.GroupRepo
 import dev.arkbuilders.rate.core.domain.repo.InAppReviewManager
 import dev.arkbuilders.rate.core.domain.repo.NetworkStatus
 import dev.arkbuilders.rate.core.domain.repo.Prefs
+import dev.arkbuilders.rate.core.domain.repo.PremiumManager
 import dev.arkbuilders.rate.core.domain.repo.TimestampRepo
 import dev.arkbuilders.rate.core.domain.usecase.DefaultGroupNameProvider
 import dev.arkbuilders.rate.core.presentation.utils.DefaultGroupNameProviderImpl
@@ -123,6 +125,19 @@ class RepoModule {
         ratesApiClient: RatesApiClient,
         fiatRateResponseMapper: FiatRateResponseMapper,
     ): FiatCurrencyDataSource = FiatCurrencyDataSource(ratesApiClient, fiatRateResponseMapper)
+    fun premiumManager(
+        context: Context,
+        buildConfigFieldsProvider: BuildConfigFieldsProvider,
+    ): PremiumManager =
+        PremiumManagerRevenueCatImpl(
+            context,
+            buildConfigFieldsProvider,
+        )
+
+    @Singleton
+    @Provides
+    fun defaultGroupNameProvider(context: Context): DefaultGroupNameProvider =
+        DefaultGroupNameProviderImpl(context)
 
     @Singleton
     @Provides

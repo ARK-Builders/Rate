@@ -36,6 +36,8 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
                 applicationContext,
                 buildConfigFields(),
             )
+        initBuildConfigFields()
+        initPremiumManager()
         instance = this
 
         initCrashlytics()
@@ -53,6 +55,10 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
             isGooglePlayBuild = BuildConfig.GOOGLE_PLAY_BUILD,
             availableIconCodes = BuildConfig.ICON_CODES.toSet(),
         )
+
+    private fun initPremiumManager() {
+        coreComponent.premiumManager()
+    }
 
     private fun initCrashlytics() =
         CoroutineScope(Dispatchers.IO).launch {

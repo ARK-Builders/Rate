@@ -49,6 +49,7 @@ import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.arkbuilders.rate.core.presentation.CoreRDrawable
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import dev.arkbuilders.rate.core.presentation.utils.findActivity
 import dev.arkbuilders.rate.feature.paywall.di.PaywallComponentHolder
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -57,12 +58,14 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 fun PaywallScreen(navigator: DestinationsNavigator) {
     val ctx = LocalContext.current
+    val activity = ctx.findActivity()
     val component =
         remember {
             PaywallComponentHolder.provide(ctx)
         }
     val viewModel: PaywallViewModel =
         viewModel(factory = component.paywallVMFactory())
+    val premiumManager = component.premiumManager()
     val state by viewModel.collectAsState()
 
     BackHandler {
@@ -72,6 +75,14 @@ fun PaywallScreen(navigator: DestinationsNavigator) {
     viewModel.collectSideEffect { effect ->
         when (effect) {
             PaywallScreenEffect.NavigateBack -> navigator.popBackStack()
+
+            is PaywallScreenEffect.Purchase ->
+                activity?.let {
+                    premiumManager.purchase(
+                        activity = it,
+                        productId = effect.productId,
+                    )
+                }
         }
     }
 
