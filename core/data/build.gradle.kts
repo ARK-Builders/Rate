@@ -52,6 +52,7 @@ dependencies {
 
     implementation(libs.play.review)
     implementation(libs.play.review.ktx)
+    implementation(libs.revenuecat.purchases)
 
     implementation(libs.arrow.core)
     implementation(libs.arrow.fx.coroutines)
