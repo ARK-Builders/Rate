@@ -29,6 +29,7 @@ import com.ramcosta.composedestinations.generated.destinations.SplashScreenDesti
 import com.ramcosta.composedestinations.generated.onboarding.destinations.OnboardingQuickCalculationScreenDestination
 import com.ramcosta.composedestinations.generated.onboarding.destinations.OnboardingQuickScreenDestination
 import com.ramcosta.composedestinations.generated.onboarding.destinations.OnboardingScreenDestination
+import com.ramcosta.composedestinations.generated.paywall.destinations.PaywallScreenDestination
 import com.ramcosta.composedestinations.generated.portfolio.destinations.PortfolioScreenDestination
 import com.ramcosta.composedestinations.generated.quick.destinations.AddQuickScreenDestination
 import com.ramcosta.composedestinations.generated.quick.destinations.QuickScreenDestination
@@ -185,6 +186,10 @@ fun MainScreen() {
                                 destinationsNavigator.navigate(
                                     OnboardingQuickCalculationScreenDestination,
                                 )
+                            }
+
+                            override fun navigateToPaywall() {
+                                destinationsNavigator.navigate(PaywallScreenDestination)
                             }
                         }
                     }

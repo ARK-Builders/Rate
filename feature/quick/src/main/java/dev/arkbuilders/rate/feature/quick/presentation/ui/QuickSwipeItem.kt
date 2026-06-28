@@ -70,17 +70,14 @@ fun PinnedQuickSwipeItem(
 fun QuickSwipeItem(
     content: @Composable () -> Unit,
     calculation: QuickCalculation,
-    onPin: (QuickCalculation) -> Unit,
+    onPinRequested: (QuickCalculation) -> Boolean,
     onDelete: () -> Unit,
 ) {
     val dismissState =
         rememberSwipeToDismissBoxState(
             confirmValueChange = {
                 when (it) {
-                    SwipeToDismissBoxValue.StartToEnd -> {
-                        onPin(calculation)
-                        true
-                    }
+                    SwipeToDismissBoxValue.StartToEnd -> onPinRequested(calculation)
 
                     SwipeToDismissBoxValue.EndToStart -> {
                         onDelete()
