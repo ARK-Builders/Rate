@@ -14,6 +14,7 @@ import dev.arkbuilders.rate.core.domain.repo.CurrencyRepo
 import dev.arkbuilders.rate.core.domain.repo.GroupRepo
 import dev.arkbuilders.rate.core.domain.repo.PreferenceKey
 import dev.arkbuilders.rate.core.domain.repo.Prefs
+import dev.arkbuilders.rate.core.domain.repo.PremiumManager
 import dev.arkbuilders.rate.core.domain.repo.TimestampRepo
 import dev.arkbuilders.rate.core.domain.usecase.CalcFrequentCurrUseCase
 import dev.arkbuilders.rate.core.domain.usecase.ConvertWithRateUseCase
@@ -51,6 +52,8 @@ data class QuickScreenState(
     val editGroupReorderSheetState: EditGroupReorderSheetState? = null,
     val editGroupOptionsSheetState: EditGroupOptionsSheetState? = null,
     val editGroupRenameSheetState: EditGroupRenameSheetState? = null,
+    val isPremium: Boolean = false,
+    val showUnlimitedPinDialog: Boolean = false,
     val initialized: Boolean = false,
 )
 
@@ -72,6 +75,8 @@ sealed class QuickScreenEffect {
     data object NavigateToCalculationOnboarding : QuickScreenEffect()
 
     data object NavigateBack : QuickScreenEffect()
+
+    data object NavigateToPaywall : QuickScreenEffect()
 }
 
 class QuickViewModel(
@@ -85,9 +90,10 @@ class QuickViewModel(
     private val searchUseCase: SearchUseCase,
     private val analyticsManager: AnalyticsManager,
     private val prefs: Prefs,
+    private val premiumManager: PremiumManager,
 ) : ViewModel(), ContainerHost<QuickScreenState, QuickScreenEffect> {
     override val container: Container<QuickScreenState, QuickScreenEffect> =
-        container(QuickScreenState())
+        container(QuickScreenState(isPremium = premiumManager.isPremium()))
 
     init {
         init()
@@ -101,6 +107,16 @@ class QuickViewModel(
                     reduce {
                         state.copy(
                             pages = pages,
+                        )
+                    }
+                }
+            }.launchIn(viewModelScope)
+
+            premiumManager.premiumState.onEach { isPremium ->
+                intent {
+                    reduce {
+                        state.copy(
+                            isPremium = isPremium,
                         )
                     }
                 }
@@ -184,11 +200,46 @@ class QuickViewModel(
             reduce { state.copy(calculationOptionsData = null) }
         }
 
-    fun onPin(calculation: QuickCalculation) =
+    fun onPinRequested(calculation: QuickCalculation): Boolean {
+        val currentState = container.stateFlow.value
+        val canPin = currentState.isPremium || currentState.pages.all { it.pinned.isEmpty() }
+        if (canPin) {
+            onPin(calculation)
+        } else {
+            onPinLimitReached()
+        }
+        return canPin
+    }
+
+    private fun onPin(calculation: QuickCalculation) =
         intent {
             analyticsManager.logEvent("quick_calculation_pinned")
             val newCalculation = calculation.copy(pinnedDate = OffsetDateTime.now())
             quickRepo.insert(newCalculation)
+        }
+
+    private fun onPinLimitReached() =
+        intent {
+            analyticsManager.logEvent("quick_unlimited_pin_premium_dialog_shown")
+            reduce {
+                state.copy(
+                    calculationOptionsData = null,
+                    showUnlimitedPinDialog = true,
+                )
+            }
+        }
+
+    fun onDismissUnlimitedPinDialog() =
+        intent {
+            analyticsManager.logEvent("quick_unlimited_pin_premium_dialog_closed")
+            reduce { state.copy(showUnlimitedPinDialog = false) }
+        }
+
+    fun onTryPremiumClick() =
+        intent {
+            analyticsManager.logEvent("quick_unlimited_pin_try_premium_clicked")
+            reduce { state.copy(showUnlimitedPinDialog = false) }
+            postSideEffect(QuickScreenEffect.NavigateToPaywall)
         }
 
     fun onUnpin(calculation: QuickCalculation) =
@@ -413,6 +464,7 @@ class QuickViewModelFactory @AssistedInject constructor(
     private val searchUseCase: SearchUseCase,
     private val analyticsManager: AnalyticsManager,
     private val prefs: Prefs,
+    private val premiumManager: PremiumManager,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return QuickViewModel(
@@ -426,6 +478,7 @@ class QuickViewModelFactory @AssistedInject constructor(
             searchUseCase,
             analyticsManager,
             prefs,
+            premiumManager,
         ) as T
     }
 
