@@ -32,7 +32,6 @@ import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.watchapp.R
 import dev.arkbuilders.rate.watchapp.presentation.theme.WearConfirmationDialog
 import dev.arkbuilders.rate.watchapp.presentation.theme.WearInfoDialog
-import dev.arkbuilders.rate.watchapp.presentation.theme.WearSnackbar
 
 @Composable
 fun OptionsScreen(
@@ -47,7 +46,6 @@ fun OptionsScreen(
     val showPinLimitDialog by viewModel.showPinLimitDialog.collectAsStateWithLifecycle()
     val listState = rememberScalingLazyListState()
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var snackbarMessage by remember { mutableStateOf<String?>(null) }
 
     if (showDeleteDialog) {
         val context = LocalContext.current
@@ -77,18 +75,6 @@ fun OptionsScreen(
                 ),
             onDismiss = { viewModel.dismissPinLimitDialog() },
             dismissText = stringResource(R.string.ok_got_it),
-        )
-    }
-
-    snackbarMessage?.let { msg ->
-        WearSnackbar(
-            message = msg,
-            onDismiss = {
-                snackbarMessage = null
-                if (msg == "Unpinned") {
-                    onDismiss()
-                }
-            },
         )
     }
 
@@ -146,7 +132,7 @@ fun OptionsScreen(
                             if (pinned) {
                                 onPinClick(context.getString(R.string.pinned_successfully))
                             } else {
-                                snackbarMessage = "Unpinned"
+                                onPinClick(context.getString(R.string.unpinned_successfully))
                             }
                         })
                     },
