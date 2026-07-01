@@ -34,6 +34,7 @@ import dev.arkbuilders.rate.core.domain.model.Group
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.core.presentation.utils.IconUtils
 import dev.arkbuilders.rate.feature.quick.domain.model.QuickCalculation
+import dev.arkbuilders.rate.feature.quick.presentation.ui.QuickDateFormatter
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 
@@ -43,6 +44,7 @@ fun QuickCalculationItem(
     quick: QuickCalculation,
     onClick: () -> Unit,
 ) {
+    val ctx = LocalContext.current
     Column(
         modifier =
             modifier
@@ -51,7 +53,6 @@ fun QuickCalculationItem(
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .background(Color.White),
     ) {
-        // Top row: Flags and "2 mins ago"
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -72,7 +73,7 @@ fun QuickCalculationItem(
                 }
             }
             Text(
-                text = "2 mins ago",
+                text = QuickDateFormatter.calculationCalculatedTime(ctx, quick.calculatedDate),
                 color = ArkColor.TextTertiary,
                 fontSize = 10.sp,
             )
