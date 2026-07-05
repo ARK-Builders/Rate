@@ -159,7 +159,9 @@ private fun PaywallContent(
                 )
                 Text(
                     modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
-                    text = "Get live exchange rates updated every 5-10 minutes and more with Premium.",
+                    text =
+                        "Get live exchange rates " +
+                            "updated every 5-10 minutes and more with Premium.",
                     color = ArkColor.TextTertiary,
                     fontSize = 15.sp,
                     lineHeight = 22.sp,
@@ -404,7 +406,7 @@ private fun BenefitIcon(iconType: BenefitIconType) {
                         BenefitIconType.Pin -> Unit
                     }
                 }
-            }
+        }
     }
 }
 
