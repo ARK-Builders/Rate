@@ -33,10 +33,13 @@ import com.ramcosta.composedestinations.generated.paywall.destinations.PaywallSc
 import com.ramcosta.composedestinations.generated.portfolio.destinations.PortfolioScreenDestination
 import com.ramcosta.composedestinations.generated.quick.destinations.AddQuickScreenDestination
 import com.ramcosta.composedestinations.generated.quick.destinations.QuickScreenDestination
+import com.ramcosta.composedestinations.generated.search.destinations.SearchCurrencyScreenDestination
+import com.ramcosta.composedestinations.generated.search.navtype.searchNavResultNavType
 import com.ramcosta.composedestinations.generated.settings.destinations.SettingsScreenDestination
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.navargs.primitives.longNavType
 import com.ramcosta.composedestinations.rememberNavHostEngine
+import com.ramcosta.composedestinations.scope.resultBackNavigator
 import com.ramcosta.composedestinations.scope.resultRecipient
 import com.ramcosta.composedestinations.utils.startDestination
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
@@ -53,6 +56,8 @@ import dev.arkbuilders.rate.feature.quick.presentation.QuickExternalNavigator
 import dev.arkbuilders.rate.feature.quick.presentation.main.QuickScreen
 import dev.arkbuilders.rate.feature.quickwidget.presentation.action.AddNewCalculationAction.Companion.ADD_NEW_CALCULATION
 import dev.arkbuilders.rate.feature.quickwidget.presentation.action.AddNewCalculationAction.Companion.ADD_NEW_CALCULATION_GROUP_KEY
+import dev.arkbuilders.rate.feature.search.presentation.SearchCurrencyScreen
+import dev.arkbuilders.rate.feature.search.presentation.SearchExternalNavigator
 import dev.arkbuilders.rate.presentation.navigation.AnimatedRateBottomNavigation
 import kotlinx.coroutines.flow.drop
 
@@ -196,6 +201,27 @@ fun MainScreen() {
                 QuickScreen(
                     navigator = destinationsNavigator,
                     resultRecipient = resultRecipient(longNavType),
+                    externalNavigator = externalNavigator,
+                )
+            }
+
+            composable(SearchCurrencyScreenDestination) {
+                val args = navArgs
+                val externalNavigator =
+                    remember {
+                        object : SearchExternalNavigator {
+                            override fun navigateToPaywall() {
+                                destinationsNavigator.navigate(PaywallScreenDestination)
+                            }
+                        }
+                    }
+
+                SearchCurrencyScreen(
+                    title = args.title,
+                    navKey = args.navKey,
+                    navPos = args.navPos,
+                    prohibitedCodes = args.prohibitedCodes,
+                    resultNavigator = resultBackNavigator(searchNavResultNavType),
                     externalNavigator = externalNavigator,
                 )
             }
