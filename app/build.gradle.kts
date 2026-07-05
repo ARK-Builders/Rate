@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,6 +10,8 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     alias(libs.plugins.compose.compiler)
 }
+
+val localProps = getLocalProperties()
 
 android {
     namespace = "dev.arkbuilders.rate"
@@ -25,6 +29,15 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField(
+            "String",
+            "REVENUECAT_API_KEY",
+            toBuildConfigString(
+                localProps.getProperty("revenuecat.apiKey")
+                    ?: System.getenv("REVENUECAT_API_KEY")
+                    ?: "",
+            ),
+        )
 
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
@@ -127,6 +140,7 @@ dependencies {
     implementation(project(":feature:portfolio"))
     implementation(project(":feature:search"))
     implementation(project(":feature:settings"))
+    implementation(project(":feature:paywall"))
     implementation(project(":fiaticons"))
     implementation(project(":cryptoicons"))
 
@@ -200,3 +214,18 @@ fun collectCurrencyIcons(moduleDir: File): List<String> {
             }
         }
 }
+
+fun getLocalProperties(): Properties {
+    val props = Properties()
+    val localPropsFile = File(rootDir, "local.properties")
+
+    if (localPropsFile.exists()) {
+        localPropsFile.inputStream().use { stream ->
+            props.load(stream)
+        }
+    }
+
+    return props
+}
+
+fun toBuildConfigString(value: String): String = "\"$value\""

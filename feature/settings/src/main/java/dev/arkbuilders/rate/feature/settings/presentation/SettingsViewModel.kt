@@ -38,6 +38,8 @@ data class SettingsScreenState(
 sealed class SettingsScreenEffect() {
     data object NavigateToAbout : SettingsScreenEffect()
 
+    data object NavigateToPaywall : SettingsScreenEffect()
+
     data object NavigateBack : SettingsScreenEffect()
 }
 
@@ -132,6 +134,12 @@ class SettingsViewModel(
         intent {
             analyticsManager.logEvent("settings_about_clicked")
             postSideEffect(SettingsScreenEffect.NavigateToAbout)
+        }
+
+    fun onPaywallClick() =
+        intent {
+            analyticsManager.logEvent("settings_paywall_clicked")
+            postSideEffect(SettingsScreenEffect.NavigateToPaywall)
         }
 
     fun onBackClick() =

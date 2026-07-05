@@ -7,6 +7,7 @@ data class BuildConfigFields(
     val versionCode: Int,
     val versionName: String,
     val isGooglePlayBuild: Boolean,
+    val revenueCatApiKey: String,
     val availableIconCodes: Set<CurrencyCode>,
 )
 

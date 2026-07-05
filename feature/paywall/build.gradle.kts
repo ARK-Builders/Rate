@@ -3,10 +3,11 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    id("kotlin-parcelize")
 }
 
 android {
-    namespace = "dev.arkbuilders.rate.feature.settings"
+    namespace = "dev.arkbuilders.rate.feature.paywall"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -15,7 +16,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
         ksp {
-            arg("compose-destinations.moduleName", "settings")
+            arg("compose-destinations.moduleName", "paywall")
         }
     }
 
@@ -39,14 +40,11 @@ android {
 
 dependencies {
     implementation(project(":core:di"))
+    implementation(project(":core:db"))
     implementation(project(":core:domain"))
     implementation(project(":core:presentation"))
-    implementation(project(":core:db"))
-    implementation(project(":feature:paywall"))
 
     implementation(libs.androidx.core.ktx)
-
-    implementation(libs.ark.about)
 
     implementation(libs.androidx.ui)
     implementation(libs.navigation.compose)
@@ -56,25 +54,21 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.constraintlayout.compose)
 
-    implementation(libs.orbit.compose)
-    implementation(libs.orbit.viewmodel)
-    implementation(libs.androidx.appcompat)
+    implementation(libs.timber)
 
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
 
+    implementation(libs.orbit.compose)
+    implementation(libs.orbit.viewmodel)
+
+    implementation(libs.arrow.core)
+    implementation(libs.arrow.fx.coroutines)
+
     implementation(libs.compose.destinations.core)
     ksp(libs.compose.destinations.compiler)
-
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
-
-tasks.getByPath(":feature:settings:preBuild").dependsOn("ktlintCheck")
-
-tasks.getByPath(":feature:settings:preBuild").dependsOn("ktlintFormat")

@@ -15,6 +15,7 @@ import dev.arkbuilders.rate.core.domain.repo.GroupRepo
 import dev.arkbuilders.rate.core.domain.repo.InAppReviewManager
 import dev.arkbuilders.rate.core.domain.repo.NetworkStatus
 import dev.arkbuilders.rate.core.domain.repo.Prefs
+import dev.arkbuilders.rate.core.domain.repo.PremiumManager
 import dev.arkbuilders.rate.core.domain.repo.TimestampRepo
 import dev.arkbuilders.rate.core.domain.usecase.CalcFrequentCurrUseCase
 import dev.arkbuilders.rate.core.domain.usecase.ConvertWithRateUseCase
@@ -71,6 +72,8 @@ interface CoreComponent {
     fun analyticsManager(): AnalyticsManager
 
     fun inAppReviewManager(): InAppReviewManager
+
+    fun premiumManager(): PremiumManager
 
     @Component.Factory
     interface Factory {

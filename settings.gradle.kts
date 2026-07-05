@@ -54,6 +54,7 @@ include(":feature:quickwidget")
 include(":feature:search")
 include(":feature:settings")
 include(":feature:onboarding")
+include(":feature:paywall")
 
 fun getLocalProps(): Properties {
     val props = Properties()

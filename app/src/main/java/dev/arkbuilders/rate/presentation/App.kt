@@ -32,6 +32,7 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
         Timber.plant(Timber.DebugTree())
         coreComponent = DaggerCoreComponent.factory().create(this, applicationContext)
         initBuildConfigFields()
+        initPremiumManager()
         instance = this
 
         initCrashlytics()
@@ -48,9 +49,14 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
                 versionCode = BuildConfig.VERSION_CODE,
                 versionName = BuildConfig.VERSION_NAME,
                 isGooglePlayBuild = BuildConfig.GOOGLE_PLAY_BUILD,
+                revenueCatApiKey = BuildConfig.REVENUECAT_API_KEY,
                 availableIconCodes = BuildConfig.ICON_CODES.toSet(),
             ),
         )
+    }
+
+    private fun initPremiumManager() {
+        coreComponent.premiumManager()
     }
 
     private fun initCrashlytics() =
