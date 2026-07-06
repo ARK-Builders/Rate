@@ -12,6 +12,7 @@ import dev.arkbuilders.rate.core.domain.repo.NetworkStatus
 import dev.arkbuilders.rate.core.domain.repo.TimestampRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -72,31 +73,39 @@ class CurrencyRepoImpl @Inject constructor(
         return infoMap[code] ?: CurrencyInfo.emptyWithCode(code)
     }
 
-    private suspend fun updateRates(): Either<Throwable, List<CurrencyRate>> =
-        updateRatesMutex.withLock {
-            val updatedDate =
-                timestampRepo
-                    .getTimestamp(TimestampType.FetchRates)
+    override suspend fun updateRates(): Either<Throwable, List<CurrencyRate>> =
+        withContext(Dispatchers.IO) {
+            updateRatesMutex.withLock {
+                val updatedDate =
+                    timestampRepo
+                        .getTimestamp(TimestampType.FetchRates)
 
-            if (networkStatus.isOnline().not()) {
-                return IllegalStateException("Skip rate updates").left()
+                if (networkStatus.isOnline().not()) {
+                    return@withLock IllegalStateException("Skip rate updates").left()
+                }
+
+                val remoteUpdatedAt =
+                    ratesUpdatedAtDataSource
+                        .fetchRemote()
+                        .onLeft { return@withLock it.left() }
+                        .getOrNull()!!
+
+                if (isNewer(remoteUpdatedAt, updatedDate).not()) {
+                    return@withLock IllegalStateException("Skip rate updates").left()
+                }
+
+                val cryptoDeferred = async { cryptoDataSource.fetchRemote() }
+                val fiatDeferred = async { fiatDataSource.fetchRemote() }
+                val crypto = cryptoDeferred.await()
+                val fiat = fiatDeferred.await()
+                crypto.onLeft { return@withLock it.left() }
+                fiat.onLeft { return@withLock it.left() }
+
+                val rates = crypto.getOrNull()!! + fiat.getOrNull()!!
+                localCurrencyDataSource.insert(rates)
+                timestampRepo.rememberTimestamp(TimestampType.FetchRates, remoteUpdatedAt)
+                return@withLock rates.right()
             }
-
-            val remoteUpdatedAt =
-                ratesUpdatedAtDataSource
-                    .fetchRemote()
-                    .onLeft { return@withLock it.left() }
-                    .getOrNull()!!
-            if (isNewer(remoteUpdatedAt, updatedDate).not()) {
-                return IllegalStateException("Skip rate updates").left()
-            }
-
-            val crypto = cryptoDataSource.fetchRemote().onLeft { return@withLock it.left() }
-            val fiat = fiatDataSource.fetchRemote().onLeft { return@withLock it.left() }
-            val rates = crypto.getOrNull()!! + fiat.getOrNull()!!
-            localCurrencyDataSource.insert(rates)
-            timestampRepo.rememberTimestamp(TimestampType.FetchRates, remoteUpdatedAt)
-            return@withLock rates.right()
         }
 
     private suspend fun useFallbackRates(): List<CurrencyRate> {
