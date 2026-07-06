@@ -72,11 +72,12 @@ fun QuickCalculationItem(
                     )
                 }
             }
-            val timeText = if (quick.isPinned()) {
-                QuickDateFormatter.calculationRefreshedTime(ctx, quick.calculatedDate)
-            } else {
-                QuickDateFormatter.calculationCalculatedTime(ctx, quick.calculatedDate)
-            }
+            val timeText =
+                if (quick.isPinned()) {
+                    QuickDateFormatter.calculationRefreshedTime(ctx, quick.calculatedDate)
+                } else {
+                    QuickDateFormatter.calculationCalculatedTime(ctx, quick.calculatedDate)
+                }
             Text(
                 text = timeText,
                 color = ArkColor.TextTertiary,

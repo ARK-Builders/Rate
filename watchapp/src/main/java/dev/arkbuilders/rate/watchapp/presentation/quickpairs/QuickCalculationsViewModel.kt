@@ -25,36 +25,35 @@ class QuickCalculationsViewModel @Inject constructor(
     val quickCalculations: StateFlow<List<QuickCalculation>> =
         combine(
             quickRepo.allFlow(),
-            timestampRepo.timestampFlow(TimestampType.FetchRates)
+            timestampRepo.timestampFlow(TimestampType.FetchRates),
         ) { pairs, refreshDate ->
-                pairs.map { pair ->
-                    if (pair.isPinned()) {
-                        val actualTo =
-                            pair.to.map { toAmount ->
-                                val (convertedAmt, _) =
-                                    convertUseCase.invoke(
-                                        pair.from,
-                                        pair.amount,
-                                        toAmount.code,
-                                    )
-                                convertedAmt
-                            }
-                        pair.copy(
-                            to = actualTo,
-                            calculatedDate = refreshDate ?: pair.calculatedDate
-                        )
-                    } else {
-                        pair
-                    }
-                }.sortedWith(
-                    compareByDescending<QuickCalculation> { it.isPinned() }
-                        .thenByDescending { it.calculatedDate },
-                )
-            }
+            pairs.map { pair ->
+                if (pair.isPinned()) {
+                    val actualTo =
+                        pair.to.map { toAmount ->
+                            val (convertedAmt, _) =
+                                convertUseCase.invoke(
+                                    pair.from,
+                                    pair.amount,
+                                    toAmount.code,
+                                )
+                            convertedAmt
+                        }
+                    pair.copy(
+                        to = actualTo,
+                        calculatedDate = refreshDate ?: pair.calculatedDate,
+                    )
+                } else {
+                    pair
+                }
+            }.sortedWith(
+                compareByDescending<QuickCalculation> { it.isPinned() }
+                    .thenByDescending { it.calculatedDate },
+            )
+        }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList(),
             )
-
 }
