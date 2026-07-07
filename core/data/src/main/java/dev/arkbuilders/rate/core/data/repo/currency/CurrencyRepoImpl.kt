@@ -18,9 +18,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class CurrencyRepoImpl @Inject constructor(
     private val fiatDataSource: FiatCurrencyDataSource,
     private val cryptoDataSource: CryptoCurrencyDataSource,

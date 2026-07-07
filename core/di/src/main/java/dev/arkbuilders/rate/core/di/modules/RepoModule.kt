@@ -3,7 +3,12 @@ package dev.arkbuilders.rate.core.di.modules
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import dev.arkbuilders.rate.core.data.mapper.CryptoRateResponseMapper
+import dev.arkbuilders.rate.core.data.mapper.FiatRateResponseMapper
 import dev.arkbuilders.rate.core.data.network.NetworkStatusImpl
+import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
+import dev.arkbuilders.rate.core.data.network.api.FiatAPI
+import dev.arkbuilders.rate.core.data.network.api.UpdatedAtAPI
 import dev.arkbuilders.rate.core.data.preferences.PrefsImpl
 import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
 import dev.arkbuilders.rate.core.data.repo.BuildConfigFieldsProviderImpl
@@ -19,6 +24,7 @@ import dev.arkbuilders.rate.core.data.repo.currency.FiatCurrencyDataSource
 import dev.arkbuilders.rate.core.data.repo.currency.LocalCurrencyDataSource
 import dev.arkbuilders.rate.core.data.repo.currency.RatesUpdatedAtDataSource
 import dev.arkbuilders.rate.core.db.dao.CodeUseStatDao
+import dev.arkbuilders.rate.core.db.dao.CurrencyRateDao
 import dev.arkbuilders.rate.core.db.dao.GroupDao
 import dev.arkbuilders.rate.core.db.dao.TimestampDao
 import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
@@ -36,6 +42,22 @@ import javax.inject.Singleton
 
 @Module
 class RepoModule {
+    @Singleton
+    @Provides
+    fun provideFallbackRatesProvider(
+        context: Context,
+        fiatRateResponseMapper: FiatRateResponseMapper,
+        cryptoRateResponseMapper: CryptoRateResponseMapper,
+        ratesUpdatedAtDataSource: RatesUpdatedAtDataSource,
+    ): FallbackRatesProvider {
+        return FallbackRatesProvider(
+            context,
+            fiatRateResponseMapper,
+            cryptoRateResponseMapper,
+            ratesUpdatedAtDataSource,
+        )
+    }
+
     @Singleton
     @Provides
     fun currencyRepo(
@@ -58,6 +80,15 @@ class RepoModule {
             networkStatus,
             ratesUpdatedAtDataSource,
         )
+
+    @Singleton
+    @Provides
+    fun ratesUpdatedAtDataSource(
+        context: Context,
+        updatedAtAPI: UpdatedAtAPI,
+    ): RatesUpdatedAtDataSource {
+        return RatesUpdatedAtDataSource(context, updatedAtAPI)
+    }
 
     @Singleton
     @Provides
@@ -92,6 +123,30 @@ class RepoModule {
     @Provides
     fun defaultGroupNameProvider(context: Context): DefaultGroupNameProvider =
         DefaultGroupNameProviderImpl(context)
+
+    @Singleton
+    @Provides
+    fun fiatCurrencyDataSource(
+        fiatAPI: FiatAPI,
+        fiatRateResponseMapper: FiatRateResponseMapper,
+    ): FiatCurrencyDataSource = FiatCurrencyDataSource(fiatAPI, fiatRateResponseMapper)
+
+    @Singleton
+    @Provides
+    fun cryptoCurrencyDataSource(
+        cryptoAPI: CryptoAPI,
+        cryptoRateResponseMapper: CryptoRateResponseMapper,
+    ): CryptoCurrencyDataSource = CryptoCurrencyDataSource(cryptoAPI, cryptoRateResponseMapper)
+
+    @Singleton
+    @Provides
+    fun localCurrencyDataSource(dao: CurrencyRateDao): LocalCurrencyDataSource =
+        LocalCurrencyDataSource(dao)
+
+    @Singleton
+    @Provides
+    fun currencyInfoDataSource(context: Context): CurrencyInfoDataSource =
+        CurrencyInfoDataSource(context)
 
     @Singleton
     @Provides

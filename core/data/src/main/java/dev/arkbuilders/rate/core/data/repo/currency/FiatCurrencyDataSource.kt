@@ -8,9 +8,7 @@ import dev.arkbuilders.rate.core.data.network.api.FiatAPI
 import dev.arkbuilders.rate.core.domain.model.CurrencyRate
 import dev.arkbuilders.rate.core.domain.model.CurrencyType
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class FiatCurrencyDataSource @Inject constructor(
     private val fiatAPI: FiatAPI,
     private val fiatRateResponseMapper: FiatRateResponseMapper,

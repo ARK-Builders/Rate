@@ -11,9 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class FallbackRatesProvider @Inject constructor(
     private val ctx: Context,
     private val fiatRateResponseMapper: FiatRateResponseMapper,
