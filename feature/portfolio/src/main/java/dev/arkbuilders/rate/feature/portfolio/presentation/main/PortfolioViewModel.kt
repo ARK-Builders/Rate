@@ -7,11 +7,13 @@ import dev.arkbuilders.rate.core.domain.model.Amount
 import dev.arkbuilders.rate.core.domain.model.CurrencyCode
 import dev.arkbuilders.rate.core.domain.model.Group
 import dev.arkbuilders.rate.core.domain.model.GroupFeatureType
+import dev.arkbuilders.rate.core.domain.model.TimestampType
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.CurrencyRepo
 import dev.arkbuilders.rate.core.domain.repo.GroupRepo
 import dev.arkbuilders.rate.core.domain.repo.PreferenceKey
 import dev.arkbuilders.rate.core.domain.repo.Prefs
+import dev.arkbuilders.rate.core.domain.repo.TimestampRepo
 import dev.arkbuilders.rate.core.domain.usecase.ConvertWithRateUseCase
 import dev.arkbuilders.rate.core.domain.usecase.GroupReorderSwapUseCase
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupOptionsSheetState
@@ -70,6 +72,7 @@ class PortfolioViewModel(
     private val convertUseCase: ConvertWithRateUseCase,
     private val groupReorderSwapUseCase: GroupReorderSwapUseCase,
     private val analyticsManager: AnalyticsManager,
+    private val timestampRepo: TimestampRepo,
 ) : ViewModel(), ContainerHost<PortfolioScreenState, PortfolioScreenEffect> {
     override val container: Container<PortfolioScreenState, PortfolioScreenEffect> =
         container(PortfolioScreenState())
@@ -80,21 +83,25 @@ class PortfolioViewModel(
 
     private fun init() =
         intent {
-            initPages()
-
             assetsRepo.allAssetsFlow().drop(1).onEach {
-                initPages()
+                refreshPages()
             }.launchIn(viewModelScope)
 
             groupRepo.allFlow(GroupFeatureType.Portfolio).drop(1).onEach {
-                initPages()
+                refreshPages()
             }.launchIn(viewModelScope)
+
+            timestampRepo.timestampFlow(TimestampType.FetchRates).drop(1).onEach {
+                refreshPages()
+            }.launchIn(viewModelScope)
+
+            refreshPages()
         }
 
     fun onReturnFromAddScreen(result: AddAssetsNavResult) =
         intent {
             if (result.added.isNotEmpty()) {
-                initPages()
+                refreshPages()
                 postSideEffect(PortfolioScreenEffect.SelectTab(result.added.first().groupId))
                 postSideEffect(PortfolioScreenEffect.ShowSnackbarAdded(result.added.toList()))
             }
@@ -104,7 +111,7 @@ class PortfolioViewModel(
         intent {
             analyticsManager.logEvent("portfolio_base_currency_changed")
             prefs.set(PreferenceKey.BaseCurrencyCode, baseCode)
-            initPages()
+            refreshPages()
         }
 
     fun onAssetRemove(asset: Asset) =
@@ -140,7 +147,7 @@ class PortfolioViewModel(
             }
         }
 
-    private fun initPages() =
+    private fun refreshPages() =
         intent {
             val baseCode = prefs.get(PreferenceKey.BaseCurrencyCode)
             val assets = assetsRepo.allAssets().toMutableList()
@@ -293,6 +300,7 @@ class PortfolioViewModelFactory @Inject constructor(
     private val groupReorderSwapUseCase: GroupReorderSwapUseCase,
     private val analyticsManager: AnalyticsManager,
     private val groupRepo: GroupRepo,
+    private val timestampRepo: TimestampRepo,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PortfolioViewModel(
@@ -303,6 +311,7 @@ class PortfolioViewModelFactory @Inject constructor(
             convertUseCase,
             groupReorderSwapUseCase,
             analyticsManager,
+            timestampRepo,
         ) as T
     }
 }

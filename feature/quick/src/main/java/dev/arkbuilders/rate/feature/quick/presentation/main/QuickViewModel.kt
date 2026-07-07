@@ -95,9 +95,9 @@ class QuickViewModel(
 
     private fun init() =
         intent {
-            quickRepo.allFlow().drop(1).onEach { quick ->
+            quickRepo.allFlow().drop(1).onEach {
                 intent {
-                    val pages = mapCalculationsToPages(quick)
+                    val pages = buildPages()
                     reduce {
                         state.copy(
                             pages = pages,
@@ -108,7 +108,7 @@ class QuickViewModel(
 
             groupRepo.allFlow(GroupFeatureType.Quick).drop(1).onEach {
                 intent {
-                    val pages = mapCalculationsToPages(quickRepo.getAll())
+                    val pages = buildPages()
                     reduce {
                         state.copy(
                             pages = pages,
@@ -129,10 +129,21 @@ class QuickViewModel(
                 }
             }.launchIn(viewModelScope)
 
+            timestampRepo.timestampFlow(TimestampType.FetchRates).drop(1).onEach {
+                intent {
+                    val pages = buildPages()
+                    reduce {
+                        state.copy(
+                            pages = pages,
+                        )
+                    }
+                }
+            }.launchIn(viewModelScope)
+
             val frequent =
                 calcFrequentCurrUseCase()
                     .map { currencyRepo.infoByCode(it) }
-            val pages = mapCalculationsToPages(quickRepo.getAll())
+            val pages = buildPages()
             reduce {
                 state.copy(
                     currencies = allCurrencies,
@@ -151,7 +162,7 @@ class QuickViewModel(
             }
 
             val calculation = quickRepo.getById(newCalculationId) ?: return@intent
-            val pages = mapCalculationsToPages(quickRepo.getAll())
+            val pages = buildPages()
             reduce {
                 state.copy(
                     pages = pages,
@@ -253,9 +264,8 @@ class QuickViewModel(
             }
         }
 
-    private suspend fun mapCalculationsToPages(
-        calculations: List<QuickCalculation>,
-    ): List<QuickScreenPage> {
+    private suspend fun buildPages(): List<QuickScreenPage> {
+        val calculations = quickRepo.getAll()
         val refreshDate = timestampRepo.getTimestamp(TimestampType.FetchRates)
         val groups = groupRepo.getAllSorted(GroupFeatureType.Quick)
         val pages =
