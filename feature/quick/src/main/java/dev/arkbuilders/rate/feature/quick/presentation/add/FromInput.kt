@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import dev.arkbuilders.rate.core.domain.model.CurrencyCode
 import dev.arkbuilders.rate.core.presentation.R
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import dev.arkbuilders.rate.core.presentation.ui.AmountInputVisualTransformation
 import dev.arkbuilders.rate.core.presentation.ui.ArkBasicTextField
 import dev.arkbuilders.rate.core.presentation.utils.ReorderHapticFeedback
 import dev.arkbuilders.rate.core.presentation.utils.ReorderHapticFeedbackType
@@ -114,6 +115,7 @@ fun FromInput(
                 keyboardOptions =
                     KeyboardOptions.Default
                         .copy(keyboardType = KeyboardType.Number),
+                visualTransformation = AmountInputVisualTransformation,
                 textStyle =
                     TextStyle.Default.copy(
                         color = ArkColor.TextPrimary,

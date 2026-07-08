@@ -14,6 +14,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
@@ -23,6 +24,7 @@ fun ArkLargeTextField(
     modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     BasicTextField(
         modifier =
@@ -40,6 +42,7 @@ fun ArkLargeTextField(
         keyboardOptions =
             KeyboardOptions.Default
                 .copy(keyboardType = KeyboardType.Number),
+        visualTransformation = visualTransformation,
         singleLine = true,
     )
 }
@@ -50,6 +53,7 @@ fun ArkCursorLargeTextField(
     modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     var currentTextFieldValue =
         remember {
@@ -78,6 +82,7 @@ fun ArkCursorLargeTextField(
         keyboardOptions =
             KeyboardOptions.Default
                 .copy(keyboardType = KeyboardType.Number),
+        visualTransformation = visualTransformation,
         singleLine = true,
     )
 }
