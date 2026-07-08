@@ -42,9 +42,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.androidx.room.runtime)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.logging.interceptor)
+    implementation(libs.ktor.client.core)
 
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)

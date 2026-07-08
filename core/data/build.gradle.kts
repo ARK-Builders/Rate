@@ -56,9 +56,12 @@ dependencies {
     implementation(libs.arrow.core)
     implementation(libs.arrow.fx.coroutines)
 
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.logging.interceptor)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.gson)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.gson)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

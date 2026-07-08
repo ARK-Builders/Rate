@@ -168,10 +168,6 @@ dependencies {
     implementation(libs.compose.destinations.core)
     ksp(libs.compose.destinations.compiler)
 
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.logging.interceptor)
-
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
