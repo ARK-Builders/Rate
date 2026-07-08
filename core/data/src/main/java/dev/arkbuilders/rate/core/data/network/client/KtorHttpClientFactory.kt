@@ -1,35 +1,24 @@
 package dev.arkbuilders.rate.core.data.network.client
 
-import android.content.Context
-import android.webkit.WebSettings
 import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.header
-import io.ktor.http.HttpHeaders
 import io.ktor.serialization.gson.gson
 import timber.log.Timber
 import javax.inject.Inject
 
 class KtorHttpClientFactory @Inject constructor(
-    private val context: Context,
     private val buildConfigFieldsProvider: BuildConfigFieldsProvider,
 ) {
     fun create(): HttpClient {
-        val userAgent = WebSettings.getDefaultUserAgent(context.applicationContext)
         val buildConfigFields = buildConfigFieldsProvider.provide()
 
         return HttpClient(OkHttp) {
             expectSuccess = true
-
-            defaultRequest {
-                header(HttpHeaders.UserAgent, userAgent)
-            }
 
             install(ContentNegotiation) {
                 gson()

@@ -6,9 +6,7 @@ import dagger.Provides
 import dev.arkbuilders.rate.core.data.mapper.CryptoRateResponseMapper
 import dev.arkbuilders.rate.core.data.mapper.FiatRateResponseMapper
 import dev.arkbuilders.rate.core.data.network.NetworkStatusImpl
-import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
-import dev.arkbuilders.rate.core.data.network.api.FiatAPI
-import dev.arkbuilders.rate.core.data.network.api.UpdatedAtAPI
+import dev.arkbuilders.rate.core.data.network.remote.RatesApiClient
 import dev.arkbuilders.rate.core.data.preferences.PrefsImpl
 import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
 import dev.arkbuilders.rate.core.data.repo.BuildConfigFieldsProviderImpl
@@ -85,9 +83,9 @@ class RepoModule {
     @Provides
     fun ratesUpdatedAtDataSource(
         context: Context,
-        updatedAtAPI: UpdatedAtAPI,
+        ratesApiClient: RatesApiClient,
     ): RatesUpdatedAtDataSource {
-        return RatesUpdatedAtDataSource(context, updatedAtAPI)
+        return RatesUpdatedAtDataSource(context, ratesApiClient)
     }
 
     @Singleton
@@ -127,16 +125,16 @@ class RepoModule {
     @Singleton
     @Provides
     fun fiatCurrencyDataSource(
-        fiatAPI: FiatAPI,
+        ratesApiClient: RatesApiClient,
         fiatRateResponseMapper: FiatRateResponseMapper,
-    ): FiatCurrencyDataSource = FiatCurrencyDataSource(fiatAPI, fiatRateResponseMapper)
+    ): FiatCurrencyDataSource = FiatCurrencyDataSource(ratesApiClient, fiatRateResponseMapper)
 
     @Singleton
     @Provides
     fun cryptoCurrencyDataSource(
-        cryptoAPI: CryptoAPI,
+        ratesApiClient: RatesApiClient,
         cryptoRateResponseMapper: CryptoRateResponseMapper,
-    ): CryptoCurrencyDataSource = CryptoCurrencyDataSource(cryptoAPI, cryptoRateResponseMapper)
+    ): CryptoCurrencyDataSource = CryptoCurrencyDataSource(ratesApiClient, cryptoRateResponseMapper)
 
     @Singleton
     @Provides

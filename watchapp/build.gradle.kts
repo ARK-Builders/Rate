@@ -118,15 +118,12 @@ dependencies {
     implementation(project(":core:presentation"))
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.logging.interceptor)
-
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.ktor.client.core)
     implementation(libs.play.services.wearable)
 //    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

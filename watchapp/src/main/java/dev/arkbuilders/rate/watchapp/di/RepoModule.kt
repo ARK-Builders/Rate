@@ -9,8 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import dev.arkbuilders.rate.core.data.mapper.CryptoRateResponseMapper
 import dev.arkbuilders.rate.core.data.mapper.FiatRateResponseMapper
 import dev.arkbuilders.rate.core.data.network.NetworkStatusImpl
-import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
-import dev.arkbuilders.rate.core.data.network.api.UpdatedAtAPI
+import dev.arkbuilders.rate.core.data.network.remote.RatesApiClient
 import dev.arkbuilders.rate.core.data.preferences.PrefsImpl
 import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
 import dev.arkbuilders.rate.core.data.repo.BuildConfigFieldsProviderImpl
@@ -91,10 +90,10 @@ class RepoModule {
     @Singleton
     @Provides
     fun provideCryptoCurrencyDataSource(
-        cryptoAPI: CryptoAPI,
+        ratesApiClient: RatesApiClient,
         cryptoRateResponseMapper: CryptoRateResponseMapper,
     ): CryptoCurrencyDataSource {
-        return CryptoCurrencyDataSource(cryptoAPI, cryptoRateResponseMapper)
+        return CryptoCurrencyDataSource(ratesApiClient, cryptoRateResponseMapper)
     }
 
     @Singleton
@@ -130,9 +129,9 @@ class RepoModule {
     @Provides
     fun ratesUpdatedAtDataSource(
         @ApplicationContext context: Context,
-        updatedAtAPI: UpdatedAtAPI,
+        ratesApiClient: RatesApiClient,
     ): RatesUpdatedAtDataSource {
-        return RatesUpdatedAtDataSource(context, updatedAtAPI)
+        return RatesUpdatedAtDataSource(context, ratesApiClient)
     }
 
     @Singleton
