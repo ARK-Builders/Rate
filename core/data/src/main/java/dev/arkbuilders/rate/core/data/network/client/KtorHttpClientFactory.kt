@@ -1,7 +1,7 @@
 package dev.arkbuilders.rate.core.data.network.client
 
 import dev.arkbuilders.rate.core.data.appJson
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
+import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -13,11 +13,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class KtorHttpClientFactory @Inject constructor(
-    private val buildConfigFieldsProvider: BuildConfigFieldsProvider,
+    private val buildConfigFields: BuildConfigFields,
 ) {
     fun create(): HttpClient {
-        val buildConfigFields = buildConfigFieldsProvider.provide()
-
         return HttpClient(OkHttp) {
             expectSuccess = true
 

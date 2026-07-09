@@ -30,8 +30,12 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-        coreComponent = DaggerCoreComponent.factory().create(this, applicationContext)
-        initBuildConfigFields()
+        coreComponent =
+            DaggerCoreComponent.factory().create(
+                this,
+                applicationContext,
+                buildConfigFields(),
+            )
         instance = this
 
         initCrashlytics()
@@ -41,17 +45,14 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
         )
     }
 
-    private fun initBuildConfigFields() {
-        coreComponent.buildConfigFieldsProvider().init(
-            BuildConfigFields(
-                buildType = BuildConfig.BUILD_TYPE,
-                versionCode = BuildConfig.VERSION_CODE,
-                versionName = BuildConfig.VERSION_NAME,
-                isGooglePlayBuild = BuildConfig.GOOGLE_PLAY_BUILD,
-                availableIconCodes = BuildConfig.ICON_CODES.toSet(),
-            ),
+    private fun buildConfigFields() =
+        BuildConfigFields(
+            buildType = BuildConfig.BUILD_TYPE,
+            versionCode = BuildConfig.VERSION_CODE,
+            versionName = BuildConfig.VERSION_NAME,
+            isGooglePlayBuild = BuildConfig.GOOGLE_PLAY_BUILD,
+            availableIconCodes = BuildConfig.ICON_CODES.toSet(),
         )
-    }
 
     private fun initCrashlytics() =
         CoroutineScope(Dispatchers.IO).launch {

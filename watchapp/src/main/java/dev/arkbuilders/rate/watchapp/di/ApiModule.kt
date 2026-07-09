@@ -5,16 +5,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.arkbuilders.rate.core.data.network.client.KtorHttpClientFactory
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
+import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import io.ktor.client.HttpClient
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class   ApiModule {
+class ApiModule {
     @Singleton
     @Provides
     fun httpClient(
-        buildConfigFieldsProvider: BuildConfigFieldsProvider,
-    ): HttpClient = KtorHttpClientFactory(buildConfigFieldsProvider).create()
+        buildConfigFields: BuildConfigFields,
+    ): HttpClient = KtorHttpClientFactory(buildConfigFields).create()
 }

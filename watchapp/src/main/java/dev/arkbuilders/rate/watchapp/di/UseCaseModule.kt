@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
+import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
 import dev.arkbuilders.rate.core.domain.repo.CurrencyRepo
 import dev.arkbuilders.rate.core.domain.repo.GroupRepo
@@ -49,14 +49,13 @@ class UseCaseModule {
 
     @Singleton
     @Provides
-    fun searchUseCase(buildConfigFieldsProvider: BuildConfigFieldsProvider) =
-        SearchUseCase(buildConfigFieldsProvider.provide())
+    fun searchUseCase(buildConfigFields: BuildConfigFields) = SearchUseCase(buildConfigFields)
 
     @Singleton
     @Provides
     fun provideLaunchInAppReviewUseCase(
         inAppReviewManager: InAppReviewManager,
         prefs: Prefs,
-        buildConfigFieldsProvider: BuildConfigFieldsProvider,
-    ) = LaunchInAppReviewUseCase(inAppReviewManager, prefs, buildConfigFieldsProvider)
+        buildConfigFields: BuildConfigFields,
+    ) = LaunchInAppReviewUseCase(inAppReviewManager, prefs, buildConfigFields)
 }

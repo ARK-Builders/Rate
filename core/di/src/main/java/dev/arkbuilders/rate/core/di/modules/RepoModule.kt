@@ -9,7 +9,6 @@ import dev.arkbuilders.rate.core.data.network.NetworkStatusImpl
 import dev.arkbuilders.rate.core.data.network.remote.RatesApiClient
 import dev.arkbuilders.rate.core.data.preferences.PrefsImpl
 import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
-import dev.arkbuilders.rate.core.data.repo.BuildConfigFieldsProviderImpl
 import dev.arkbuilders.rate.core.data.repo.CodeUseStatRepoImpl
 import dev.arkbuilders.rate.core.data.repo.GooglePlayInAppReviewManagerImpl
 import dev.arkbuilders.rate.core.data.repo.GroupRepoImpl
@@ -25,7 +24,7 @@ import dev.arkbuilders.rate.core.db.dao.CodeUseStatDao
 import dev.arkbuilders.rate.core.db.dao.CurrencyRateDao
 import dev.arkbuilders.rate.core.db.dao.GroupDao
 import dev.arkbuilders.rate.core.db.dao.TimestampDao
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
+import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
 import dev.arkbuilders.rate.core.domain.repo.CurrencyRepo
@@ -115,10 +114,6 @@ class RepoModule {
 
     @Singleton
     @Provides
-    fun buildConfigFieldsProvider(): BuildConfigFieldsProvider = BuildConfigFieldsProviderImpl()
-
-    @Singleton
-    @Provides
     fun defaultGroupNameProvider(context: Context): DefaultGroupNameProvider =
         DefaultGroupNameProviderImpl(context)
 
@@ -150,10 +145,10 @@ class RepoModule {
     @Provides
     fun inAppReviewManager(
         analyticsManager: AnalyticsManager,
-        buildConfigFieldsProvider: BuildConfigFieldsProvider,
+        buildConfigFields: BuildConfigFields,
     ): InAppReviewManager =
         GooglePlayInAppReviewManagerImpl(
             analyticsManager,
-            buildConfigFieldsProvider.provide(),
+            buildConfigFields,
         )
 }
