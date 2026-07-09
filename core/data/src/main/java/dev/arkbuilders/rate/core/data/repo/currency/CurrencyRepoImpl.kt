@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.time.Duration
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
@@ -76,6 +77,11 @@ class CurrencyRepoImpl @Inject constructor(
     override suspend fun updateRates(): Either<Throwable, List<CurrencyRate>> =
         withContext(Dispatchers.IO) {
             updateRatesMutex.withLock {
+                val lastCheckedAt = timestampRepo.getTimestamp(TimestampType.RatesUpdatedAtCheck)
+                if (shouldCheckRemoteRatesUpdatedAt(lastCheckedAt).not()) {
+                    return@withLock IllegalStateException("Skip rate updates").left()
+                }
+
                 val updatedDate =
                     timestampRepo
                         .getTimestamp(TimestampType.FetchRates)
@@ -89,6 +95,8 @@ class CurrencyRepoImpl @Inject constructor(
                         .fetchRemote()
                         .onLeft { return@withLock it.left() }
                         .getOrNull()!!
+
+                timestampRepo.rememberTimestamp(TimestampType.RatesUpdatedAtCheck)
 
                 if (isNewer(remoteUpdatedAt, updatedDate).not()) {
                     return@withLock IllegalStateException("Skip rate updates").left()
@@ -126,4 +134,12 @@ class CurrencyRepoImpl @Inject constructor(
         remoteUpdatedAt: OffsetDateTime,
         localUpdatedAt: OffsetDateTime?,
     ) = localUpdatedAt == null || remoteUpdatedAt.isAfter(localUpdatedAt)
+
+    private fun shouldCheckRemoteRatesUpdatedAt(lastCheckedAt: OffsetDateTime?): Boolean =
+        lastCheckedAt == null ||
+            Duration.between(lastCheckedAt, OffsetDateTime.now()) >= RATES_UPDATED_AT_CHECK_INTERVAL
+
+    private companion object {
+        val RATES_UPDATED_AT_CHECK_INTERVAL: Duration = Duration.ofMinutes(10)
+    }
 }
