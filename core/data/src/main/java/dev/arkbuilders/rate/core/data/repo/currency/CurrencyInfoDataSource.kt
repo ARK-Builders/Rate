@@ -1,15 +1,15 @@
 package dev.arkbuilders.rate.core.data.repo.currency
 
 import android.content.Context
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dev.arkbuilders.rate.core.data.R
+import dev.arkbuilders.rate.core.data.appJson
 import dev.arkbuilders.rate.core.domain.model.CurrencyCode
 import dev.arkbuilders.rate.core.domain.model.CurrencyInfo
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.decodeFromString
 import javax.inject.Inject
 
 class CurrencyInfoDataSource @Inject constructor(
@@ -23,8 +23,7 @@ class CurrencyInfoDataSource @Inject constructor(
                         ctx.resources.openRawResource(R.raw.code_name).bufferedReader().use {
                             it.readText()
                         }
-                    val codeNameType = object : TypeToken<Map<String, String>>() {}.type
-                    Gson().fromJson(codeNameText, codeNameType)
+                    appJson.decodeFromString<Map<String, String>>(codeNameText)
                 }
 
             val countryDef: Deferred<Map<String, List<String>>> =
@@ -33,8 +32,7 @@ class CurrencyInfoDataSource @Inject constructor(
                         ctx.resources.openRawResource(R.raw.code_country).bufferedReader().use {
                             it.readText()
                         }
-                    val codeCountryType = object : TypeToken<Map<String, List<String>>>() {}.type
-                    Gson().fromJson(codeCountryText, codeCountryType)
+                    appJson.decodeFromString<Map<String, List<String>>>(codeCountryText)
                 }
 
             val codeToName = nameDef.await()

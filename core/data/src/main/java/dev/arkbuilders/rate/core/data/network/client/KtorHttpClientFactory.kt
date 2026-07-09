@@ -1,5 +1,6 @@
 package dev.arkbuilders.rate.core.data.network.client
 
+import dev.arkbuilders.rate.core.data.appJson
 import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -7,7 +8,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.serialization.gson.gson
+import io.ktor.serialization.kotlinx.json.json
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ class KtorHttpClientFactory @Inject constructor(
             expectSuccess = true
 
             install(ContentNegotiation) {
-                gson()
+                json(appJson)
             }
 
             if (buildConfigFields.buildType == DEBUG_BUILD_TYPE) {
@@ -32,7 +33,7 @@ class KtorHttpClientFactory @Inject constructor(
                                 Timber.d(message)
                             }
                         }
-                    level = LogLevel.ALL
+                    level = LogLevel.INFO
                 }
             }
         }

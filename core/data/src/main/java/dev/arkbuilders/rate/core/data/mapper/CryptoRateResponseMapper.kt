@@ -12,7 +12,7 @@ class CryptoRateResponseMapper @Inject constructor() {
             CurrencyRate(
                 CurrencyType.CRYPTO,
                 it.symbol.uppercase(),
-                BigDecimal.valueOf(it.current_price),
+                BigDecimal.valueOf(it.currentPrice),
             )
         }
 }
