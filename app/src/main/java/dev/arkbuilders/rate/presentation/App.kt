@@ -8,8 +8,8 @@ import androidx.work.ListenableWorker
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import dev.arkbuilders.rate.BuildConfig
 import dev.arkbuilders.rate.core.di.CoreComponent
 import dev.arkbuilders.rate.core.di.CoreComponentProvider
@@ -91,7 +91,7 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
         )
     }
 
-    override fun getWorkManagerConfiguration() =
+    override val workManagerConfiguration: Configuration =
         Configuration.Builder()
             .setMinimumLoggingLevel(android.util.Log.INFO)
             .setWorkerFactory(AppWorkerFactory())

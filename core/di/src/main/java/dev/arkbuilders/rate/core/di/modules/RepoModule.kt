@@ -102,7 +102,7 @@ class RepoModule {
 
     @Singleton
     @Provides
-    fun analyticsManager(prefs: Prefs): AnalyticsManager = AnalyticsManagerImpl(prefs)
+    fun analyticsManager(): AnalyticsManager = AnalyticsManagerImpl()
 
     @Singleton
     @Provides

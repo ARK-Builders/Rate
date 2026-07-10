@@ -5,6 +5,14 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(
+            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21,
+        )
+    }
+}
+
 android {
     namespace = "dev.arkbuilders.rate.core.db"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -32,9 +40,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
-    }
-    kotlinOptions {
-        jvmTarget = "21"
     }
     sourceSets {
         // Adds exported schema location as test app assets.

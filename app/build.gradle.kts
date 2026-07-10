@@ -9,6 +9,14 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(
+            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21,
+        )
+    }
+}
+
 android {
     namespace = "dev.arkbuilders.rate"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -102,9 +110,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
-    }
 
     buildFeatures {
         buildConfig = true
@@ -142,6 +147,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
 
     implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.concurrent.futures.ktx)
 
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
@@ -186,7 +192,8 @@ tasks.getByPath(":app:preBuild").dependsOn("ktlintFormat")
 
 fun collectCurrencyIcons(moduleDir: File): List<String> {
     val drawableDir = moduleDir.resolve("src/main/res/drawable")
-    return drawableDir.listFiles()!!
+    return drawableDir
+        .listFiles()!!
         .map { it.nameWithoutExtension.uppercase() }
         .map {
             when {

@@ -5,6 +5,15 @@ plugins {
     alias(libs.plugins.ksp)
     id("com.google.dagger.hilt.android")
 }
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(
+            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21,
+        )
+    }
+}
+
 android {
     namespace = "dev.arkbuilders.rate.watchapp"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -91,9 +100,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -116,7 +122,7 @@ dependencies {
     implementation(project(":feature:quick"))
     implementation(project(":core:domain"))
     implementation(project(":core:presentation"))
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.hilt.navigation.compose)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
@@ -127,8 +133,8 @@ dependencies {
     implementation(libs.play.services.wearable)
 //    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
-    implementation(libs.androidx.compose.navigation) // Or the latest version
-    implementation("androidx.wear.compose:compose-material3:1.6.1") // Or current version
+    implementation(libs.androidx.compose.navigation)
+    implementation(libs.androidx.wear.compose.material3)
 
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.compose.material)
@@ -136,6 +142,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.material3)
+    implementation(libs.material.icons.extended)
     implementation(libs.navigation.compose)
 
     implementation(libs.androidx.wear.watchface)

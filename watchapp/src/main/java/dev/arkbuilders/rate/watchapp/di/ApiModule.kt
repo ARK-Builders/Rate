@@ -14,7 +14,6 @@ import javax.inject.Singleton
 class ApiModule {
     @Singleton
     @Provides
-    fun httpClient(
-        buildConfigFields: BuildConfigFields,
-    ): HttpClient = KtorHttpClientFactory(buildConfigFields).create()
+    fun httpClient(buildConfigFields: BuildConfigFields): HttpClient =
+        KtorHttpClientFactory(buildConfigFields).create()
 }

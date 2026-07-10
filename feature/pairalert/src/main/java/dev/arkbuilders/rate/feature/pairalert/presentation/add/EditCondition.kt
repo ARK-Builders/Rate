@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,7 +35,6 @@ fun EditCondition(
     onPriceOrPercentInputChanged: (String) -> Unit,
     onIncreaseToggle: () -> Unit,
 ) {
-    val ctx = LocalContext.current
     Column(
         modifier = Modifier.padding(top = 48.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,9 +95,9 @@ fun EditCondition(
                     modifier = Modifier.padding(start = 4.dp),
                     text =
                         if (state.aboveNotBelow)
-                            ctx.getString(CoreRString.above)
+                            stringResource(CoreRString.above)
                         else
-                            ctx.getString(CoreRString.below),
+                            stringResource(CoreRString.below),
                     color =
                         if (state.aboveNotBelow)
                             ArkColor.PairAlertInc

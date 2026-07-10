@@ -60,10 +60,10 @@ private fun extractGroupsAndInsertIntoGroupTable(db: SupportSQLiteDatabase) {
     fun insertGroups(groups: Set<String>, featureType: GroupFeatureType) {
         var orderIndex = 0
         val creationTime = OffsetDateTimeTypeConverter.fromOffsetDateTime(OffsetDateTime.now())
-        groups.forEach { group->
+        groups.forEach { group ->
             db.execSQL(
                 "INSERT INTO RoomGroup (name, orderIndex, creationTime, featureType) VALUES (?, ?, ?, ?)",
-                arrayOf(group, orderIndex++, creationTime, featureType.name)
+                arrayOf<Any>(group, orderIndex++, creationTime, featureType.name),
             )
         }
     }
@@ -171,4 +171,3 @@ private fun migrateDataAndCleanup(db: SupportSQLiteDatabase) {
     db.execSQL("ALTER TABLE RoomQuickPair_new RENAME TO RoomQuickPair")
     db.execSQL("ALTER TABLE RoomPairAlert_new RENAME TO RoomPairAlert")
 }
-
