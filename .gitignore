@@ -3,7 +3,7 @@
 .gradle
 /local.properties
 .DS_Store
-/build
+build/
 /buildSrc/build/
 *.class
 __pycache__/
