@@ -115,6 +115,7 @@ For development, build, workflow, and release details, see the documentation in 
 1. [Development setup](docs/develop.md)
 2. [GitHub Actions workflows](docs/workflows.md)
 3. [Release instructions](docs/release.md)
+4. [Publication checklist](docs/publication.md)
 
 
 ## 🌐 Connect with ARK-Builders

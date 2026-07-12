@@ -44,7 +44,7 @@ jobs:
         gpg -d --passphrase "${{ secrets.GOOGLE_PASSWORD }}" --batch google-services.asc > app/google-services.json
 
     - name: Build Release APK
-      run: ./gradlew assembleRelease
+      run: ./gradlew assembleRelease --stacktrace
 
     - name: Release
       uses: ncipollo/release-action@v1
