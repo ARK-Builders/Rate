@@ -6,7 +6,7 @@ Before any release, make sure the app builds locally. Set up local build prerequ
 
 ## Pre-release build check
 
-Restore fallback rates and icons as described in [develop.md](develop.md#bundled-fallback-data).
+Restore fallback rates and icons as described in [develop.md](develop.md#restore-bundled-fallback-data).
 
 Run the local checks:
 
@@ -36,7 +36,7 @@ Use this path for the production Play Store release. Play Store publishing is do
 1. Update `versionCode` and `versionName` in `app/build.gradle.kts`.
 2. Put `keystore.jks` in the project root from the secret storage.
 3. Put the production `app/google-services.json` from the secret storage.
-4. Restore bundled fallback rates and icons as described in [develop.md](develop.md#bundled-fallback-data).
+4. Restore bundled fallback rates and icons as described in [develop.md](develop.md#restore-bundled-fallback-data).
 5. Open the project in Android Studio and create the signed Google Play release artifact using the production signing/config files.
 6. Upload the generated Play Store artifact through Google Play Console.
 

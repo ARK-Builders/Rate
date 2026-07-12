@@ -82,7 +82,7 @@ To build the project, you need to provide a personal access token to download de
 
 1. Generate a **fine-grained personal access token**:
    - URL: [Create token](https://github.com/settings/personal-access-tokens/new)
-   - Required access: **Read-Only**, **Public Repositories/Packages**
+   - Required access: **Public repositories** (read-only)
 
 2. Add the token to your `local.properties` file at the root of the project: `gpr.token=$your_github_token`
 
