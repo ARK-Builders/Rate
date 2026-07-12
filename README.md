@@ -99,7 +99,7 @@ The branch `data/currency-icons-and-rates` is used to update data automatically 
 For local testing it's useful to do this:
 ```sh
 git fetch origin data/currency-icons-and-rates
-git restore --source=origin/data/currency-icons-and-rates --worktree \
+git restore --source=FETCH_HEAD --worktree \
   core/data/src/main/assets/crypto-rates.json \
   core/data/src/main/assets/fiat-rates.json \
   core/data/src/main/assets/updatedAt \

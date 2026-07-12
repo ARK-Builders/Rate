@@ -22,6 +22,8 @@ All currency icons and rates are shipped with the app bundle. During first app l
 
 The branch `data/currency-icons-and-rates` is used to update data automatically. The `main` branch does not contain generated crypto icons or bundled rate files.
 
+These files are required for the app's bundled fallback path. A build can still pass without fresh local fallback data, but the app may ship without the intended offline rates, update timestamp, or crypto icons. Always restore them before local release checks or Play Store release builds.
+
 For local testing, restore the latest remote data:
 
 ```sh
