@@ -2,7 +2,7 @@
 
 This document covers local build prerequisites and development data setup.
 
-## GitHub Packages authentication
+## Step 1: Configure GitHub Packages authentication
 
 The project depends on packages hosted in GitHub Packages. To build locally, create a fine-grained personal access token in GitHub:
 
@@ -16,7 +16,7 @@ gpr.token=your_github_token
 
 Gradle reads this value in `settings.gradle.kts`. If `gpr.token` is not present, Gradle falls back to the `GITHUB_TOKEN` environment variable.
 
-## Restore bundled fallback data
+## Step 2: Hydrate bundled fallback data
 
 All currency icons and rates are shipped with the app bundle. During first app launch, rates will be updated, but in-bundle rates serve as a fallback.
 
