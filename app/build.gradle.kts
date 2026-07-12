@@ -17,8 +17,8 @@ android {
         applicationId = "dev.arkbuilders.rate"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.compileSdk.get().toInt()
-        versionCode = 9
-        versionName = "2.1.2"
+        versionCode = 10
+        versionName = "2.1.3"
         setProperty("archivesBaseName", "ark-rate")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
