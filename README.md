@@ -82,7 +82,7 @@ To build the project, you need to provide a personal access token to download de
 
 1. Generate a **fine-grained personal access token**:
    - URL: [Create token](https://github.com/settings/personal-access-tokens/new)
-   - Required access: **Public repositories**
+   - Required access: **Read-Only**, **Public Repositories/Packages**
 
 2. Add the token to your `local.properties` file at the root of the project: `gpr.token=$your_github_token`
 
@@ -109,6 +109,12 @@ git restore --source=origin/data/currency-icons-and-rates --worktree \
 This step is performed automatically by Android CI workflows (see `build.yml` and `release.yml`).
 
 Files `crypto-rates.json`, `fiat-rates.json`, `updatedAt` and `cryptoicons/src/main/res/drawable` must not be committed and are listed in `.gitignore`.
+
+For development, build, workflow, and release details, see the documentation in [`docs`](docs/):
+
+1. [Development setup](docs/develop.md)
+2. [GitHub Actions workflows](docs/workflows.md)
+3. [Release instructions](docs/release.md)
 
 
 ## 🌐 Connect with ARK-Builders
