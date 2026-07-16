@@ -192,8 +192,11 @@ tasks.getByPath(":app:preBuild").dependsOn("ktlintFormat")
 
 fun collectCurrencyIcons(moduleDir: File): List<String> {
     val drawableDir = moduleDir.resolve("src/main/res/drawable")
+    if (!drawableDir.exists()) {
+        return emptyList()
+    }
     return drawableDir
-        .listFiles()!!
+        .listFiles()
         .map { it.nameWithoutExtension.uppercase() }
         .map {
             when {
