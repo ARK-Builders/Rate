@@ -3,240 +3,240 @@
     "id": "bitcoin",
     "symbol": "btc",
     "name": "Bitcoin",
-    "current_price": 66488,
-    "market_cap": 1333564412534,
+    "current_price": 66443,
+    "market_cap": 1332252001972,
     "market_cap_rank": 1
   },
   {
     "id": "ethereum",
     "symbol": "eth",
     "name": "Ethereum",
-    "current_price": 1925.99,
-    "market_cap": 232409126249,
+    "current_price": 1935.29,
+    "market_cap": 233446068762,
     "market_cap_rank": 2
   },
   {
     "id": "tether",
     "symbol": "usdt",
     "name": "Tether",
-    "current_price": 0.999385,
-    "market_cap": 184107717182,
+    "current_price": 0.999262,
+    "market_cap": 184089709561,
     "market_cap_rank": 3
   },
   {
     "id": "binancecoin",
     "symbol": "bnb",
     "name": "BNB",
-    "current_price": 574.23,
-    "market_cap": 76469565755,
+    "current_price": 573.52,
+    "market_cap": 76334195915,
     "market_cap_rank": 4
   },
   {
     "id": "usd-coin",
     "symbol": "usdc",
     "name": "USDC",
-    "current_price": 0.999874,
-    "market_cap": 73237893343,
+    "current_price": 0.999914,
+    "market_cap": 73242912000,
     "market_cap_rank": 5
   },
   {
     "id": "ripple",
     "symbol": "xrp",
     "name": "XRP",
-    "current_price": 1.15,
-    "market_cap": 71791313346,
+    "current_price": 1.14,
+    "market_cap": 71424684070,
     "market_cap_rank": 6
   },
   {
     "id": "solana",
     "symbol": "sol",
     "name": "Solana",
-    "current_price": 78.1,
-    "market_cap": 45518491920,
+    "current_price": 78.31,
+    "market_cap": 45616934247,
     "market_cap_rank": 7
   },
   {
     "id": "tron",
     "symbol": "trx",
     "name": "TRON",
-    "current_price": 0.328317,
-    "market_cap": 31148510611,
+    "current_price": 0.328947,
+    "market_cap": 31210053551,
     "market_cap_rank": 8
   },
   {
     "id": "figure-heloc",
     "symbol": "figr_heloc",
     "name": "Figure Heloc",
-    "current_price": 1.001,
-    "market_cap": 20229877090,
+    "current_price": 1.005,
+    "market_cap": 20314058647,
     "market_cap_rank": 9
   },
   {
     "id": "hyperliquid",
     "symbol": "hype",
     "name": "Hyperliquid",
-    "current_price": 61.77,
-    "market_cap": 13740590091,
+    "current_price": 60.92,
+    "market_cap": 13544834909,
     "market_cap_rank": 10
   },
   {
     "id": "dogecoin",
     "symbol": "doge",
     "name": "Dogecoin",
-    "current_price": 0.073349,
-    "market_cap": 11380822741,
+    "current_price": 0.073568,
+    "market_cap": 11406098199,
     "market_cap_rank": 11
-  },
-  {
-    "id": "usds",
-    "symbol": "usds",
-    "name": "USDS",
-    "current_price": 0.999874,
-    "market_cap": 9906964745,
-    "market_cap_rank": 12
   },
   {
     "id": "rain",
     "symbol": "rain",
     "name": "Rain",
-    "current_price": 0.01416747,
-    "market_cap": 9839832494,
-    "market_cap_rank": 13
+    "current_price": 0.01539633,
+    "market_cap": 10693065004,
+    "market_cap_rank": 12
   },
   {
-    "id": "zcash",
-    "symbol": "zec",
-    "name": "Zcash",
-    "current_price": 538.35,
-    "market_cap": 9040318726,
-    "market_cap_rank": 14
+    "id": "usds",
+    "symbol": "usds",
+    "name": "USDS",
+    "current_price": 0.999882,
+    "market_cap": 9894227241,
+    "market_cap_rank": 13
   },
   {
     "id": "leo-token",
     "symbol": "leo",
     "name": "LEO Token",
-    "current_price": 9.71,
-    "market_cap": 8936124653,
+    "current_price": 9.74,
+    "market_cap": 8964273273,
+    "market_cap_rank": 14
+  },
+  {
+    "id": "zcash",
+    "symbol": "zec",
+    "name": "Zcash",
+    "current_price": 532.26,
+    "market_cap": 8929619586,
     "market_cap_rank": 15
   },
   {
     "id": "whitebit",
     "symbol": "wbt",
     "name": "WhiteBIT Coin",
-    "current_price": 57.86,
-    "market_cap": 6825784888,
+    "current_price": 57.75,
+    "market_cap": 6811987744,
     "market_cap_rank": 16
-  },
-  {
-    "id": "stellar",
-    "symbol": "xlm",
-    "name": "Stellar",
-    "current_price": 0.192094,
-    "market_cap": 6560300100,
-    "market_cap_rank": 17
   },
   {
     "id": "monero",
     "symbol": "xmr",
     "name": "Monero",
-    "current_price": 347.23,
-    "market_cap": 6521407035,
+    "current_price": 358.64,
+    "market_cap": 6731015233,
+    "market_cap_rank": 17
+  },
+  {
+    "id": "stellar",
+    "symbol": "xlm",
+    "name": "Stellar",
+    "current_price": 0.193328,
+    "market_cap": 6608974297,
     "market_cap_rank": 18
   },
   {
     "id": "chainlink",
     "symbol": "link",
     "name": "Chainlink",
-    "current_price": 8.67,
-    "market_cap": 6487921199,
+    "current_price": 8.71,
+    "market_cap": 6511723631,
     "market_cap_rank": 19
   },
   {
     "id": "cardano",
     "symbol": "ada",
     "name": "Cardano",
-    "current_price": 0.173657,
-    "market_cap": 6474335969,
+    "current_price": 0.174256,
+    "market_cap": 6495222155,
     "market_cap_rank": 20
   },
   {
     "id": "canton-network",
     "symbol": "cc",
     "name": "Canton",
-    "current_price": 0.125026,
-    "market_cap": 4891363571,
+    "current_price": 0.126514,
+    "market_cap": 4950519803,
     "market_cap_rank": 21
   },
   {
     "id": "dai",
     "symbol": "dai",
     "name": "Dai",
-    "current_price": 0.999827,
-    "market_cap": 4637677813,
+    "current_price": 0.99994,
+    "market_cap": 4637038359,
     "market_cap_rank": 22
   },
   {
     "id": "bitcoin-cash",
     "symbol": "bch",
     "name": "Bitcoin Cash",
-    "current_price": 225.29,
-    "market_cap": 4520190617,
+    "current_price": 224.36,
+    "market_cap": 4501271092,
     "market_cap_rank": 23
   },
   {
     "id": "usd1-wlfi",
     "symbol": "usd1",
     "name": "USD1",
-    "current_price": 0.999241,
-    "market_cap": 4189015450,
+    "current_price": 0.998933,
+    "market_cap": 4187925154,
     "market_cap_rank": 24
   },
   {
     "id": "the-open-network",
     "symbol": "gram",
     "name": "Gram (prev. Toncoin)",
-    "current_price": 1.52,
-    "market_cap": 4150964821,
+    "current_price": 1.53,
+    "market_cap": 4181704243,
     "market_cap_rank": 25
   },
   {
     "id": "ethena-usde",
     "symbol": "usde",
     "name": "Ethena USDe",
-    "current_price": 0.999839,
-    "market_cap": 4035512088,
+    "current_price": 0.999851,
+    "market_cap": 4043816964,
     "market_cap_rank": 26
   },
   {
     "id": "litecoin",
     "symbol": "ltc",
     "name": "Litecoin",
-    "current_price": 47.68,
-    "market_cap": 3691039698,
+    "current_price": 46.84,
+    "market_cap": 3623960548,
     "market_cap_rank": 27
   },
   {
     "id": "global-dollar",
     "symbol": "usdg",
     "name": "Global Dollar",
-    "current_price": 0.999953,
-    "market_cap": 3241318647,
+    "current_price": 1.001,
+    "market_cap": 3245687285,
     "market_cap_rank": 28
   },
   {
     "id": "sui",
     "symbol": "sui",
     "name": "Sui",
-    "current_price": 0.76907,
-    "market_cap": 3116429542,
+    "current_price": 0.768131,
+    "market_cap": 3112294519,
     "market_cap_rank": 29
   },
   {
     "id": "hedera-hashgraph",
     "symbol": "hbar",
     "name": "Hedera",
-    "current_price": 0.068505,
-    "market_cap": 2999708816,
+    "current_price": 0.06994,
+    "market_cap": 3061478152,
     "market_cap_rank": 30
   },
   {
@@ -251,24 +251,24 @@
     "id": "avalanche-2",
     "symbol": "avax",
     "name": "Avalanche",
-    "current_price": 6.63,
-    "market_cap": 2861209943,
+    "current_price": 6.57,
+    "market_cap": 2836626003,
     "market_cap_rank": 32
-  },
-  {
-    "id": "crypto-com-chain",
-    "symbol": "cro",
-    "name": "Cronos",
-    "current_price": 0.058578,
-    "market_cap": 2768889961,
-    "market_cap_rank": 33
   },
   {
     "id": "paypal-usd",
     "symbol": "pyusd",
     "name": "PayPal USD",
-    "current_price": 0.999835,
-    "market_cap": 2763146752,
+    "current_price": 0.999796,
+    "market_cap": 2778859106,
+    "market_cap_rank": 33
+  },
+  {
+    "id": "crypto-com-chain",
+    "symbol": "cro",
+    "name": "Cronos",
+    "current_price": 0.058632,
+    "market_cap": 2771313373,
     "market_cap_rank": 34
   },
   {
@@ -276,39 +276,39 @@
     "symbol": "buidl",
     "name": "BlackRock USD Institutional Digital Liquidity Fund",
     "current_price": 1.0,
-    "market_cap": 2533856529,
+    "market_cap": 2536756529,
     "market_cap_rank": 35
-  },
-  {
-    "id": "shiba-inu",
-    "symbol": "shib",
-    "name": "Shiba Inu",
-    "current_price": 4.28e-06,
-    "market_cap": 2522772662,
-    "market_cap_rank": 36
   },
   {
     "id": "near",
     "symbol": "near",
     "name": "NEAR Protocol",
     "current_price": 1.94,
-    "market_cap": 2522151405,
-    "market_cap_rank": 37
+    "market_cap": 2527675210,
+    "market_cap_rank": 36
   },
   {
     "id": "tether-gold",
     "symbol": "xaut",
     "name": "Tether Gold",
-    "current_price": 4064.18,
-    "market_cap": 2491225239,
+    "current_price": 4112.99,
+    "market_cap": 2520417869,
+    "market_cap_rank": 37
+  },
+  {
+    "id": "shiba-inu",
+    "symbol": "shib",
+    "name": "Shiba Inu",
+    "current_price": 4.26e-06,
+    "market_cap": 2511867611,
     "market_cap_rank": 38
   },
   {
     "id": "uniswap",
     "symbol": "uni",
     "name": "Uniswap",
-    "current_price": 3.7,
-    "market_cap": 2311476475,
+    "current_price": 3.71,
+    "market_cap": 2318574730,
     "market_cap_rank": 39
   },
   {
@@ -316,15 +316,15 @@
     "symbol": "usdy",
     "name": "Ondo US Dollar Yield",
     "current_price": 1.14,
-    "market_cap": 2152765917,
+    "market_cap": 2156334675,
     "market_cap_rank": 40
   },
   {
     "id": "ondo-finance",
     "symbol": "ondo",
     "name": "Ondo",
-    "current_price": 0.398539,
-    "market_cap": 1941127073,
+    "current_price": 0.401629,
+    "market_cap": 1955428624,
     "market_cap_rank": 41
   },
   {
@@ -332,39 +332,39 @@
     "symbol": "tao",
     "name": "Bittensor",
     "current_price": 199.96,
-    "market_cap": 1918991602,
+    "market_cap": 1918194988,
     "market_cap_rank": 42
   },
   {
     "id": "pax-gold",
     "symbol": "paxg",
     "name": "PAX Gold",
-    "current_price": 4061.98,
-    "market_cap": 1823384869,
+    "current_price": 4110.39,
+    "market_cap": 1845100615,
     "market_cap_rank": 43
   },
   {
     "id": "world-liberty-financial",
     "symbol": "wlfi",
     "name": "World Liberty Financial",
-    "current_price": 0.056117,
-    "market_cap": 1783125748,
+    "current_price": 0.05697,
+    "market_cap": 1810216759,
     "market_cap_rank": 44
   },
   {
     "id": "okb",
     "symbol": "okb",
     "name": "OKB",
-    "current_price": 82.09,
-    "market_cap": 1723775076,
+    "current_price": 82.74,
+    "market_cap": 1737254716,
     "market_cap_rank": 45
   },
   {
     "id": "aster-2",
     "symbol": "aster",
     "name": "Aster",
-    "current_price": 0.625931,
-    "market_cap": 1680992948,
+    "current_price": 0.626654,
+    "market_cap": 1683083108,
     "market_cap_rank": 46
   },
   {
@@ -372,111 +372,111 @@
     "symbol": "htx",
     "name": "HTX DAO",
     "current_price": 1.85e-06,
-    "market_cap": 1662560883,
+    "market_cap": 1658749509,
     "market_cap_rank": 47
   },
   {
     "id": "ripple-usd",
     "symbol": "rlusd",
     "name": "Ripple USD",
-    "current_price": 1.0,
-    "market_cap": 1646551391,
+    "current_price": 1.001,
+    "market_cap": 1583878483,
     "market_cap_rank": 48
   },
   {
     "id": "memecore",
     "symbol": "m",
     "name": "MemeCore",
-    "current_price": 1.19,
-    "market_cap": 1582144677,
+    "current_price": 1.18,
+    "market_cap": 1576260122,
     "market_cap_rank": 49
   },
   {
     "id": "usdd",
     "symbol": "usdd",
     "name": "USDD",
-    "current_price": 0.999445,
-    "market_cap": 1525755475,
+    "current_price": 0.999386,
+    "market_cap": 1531728660,
     "market_cap_rank": 50
   },
   {
     "id": "aave",
     "symbol": "aave",
     "name": "Aave",
-    "current_price": 96.2,
-    "market_cap": 1483068019,
+    "current_price": 96.64,
+    "market_cap": 1488819929,
     "market_cap_rank": 51
   },
   {
     "id": "sky",
     "symbol": "sky",
     "name": "Sky",
-    "current_price": 0.063141,
-    "market_cap": 1474883726,
+    "current_price": 0.062695,
+    "market_cap": 1464264115,
     "market_cap_rank": 52
   },
   {
     "id": "polkadot",
     "symbol": "dot",
     "name": "Polkadot",
-    "current_price": 0.852116,
-    "market_cap": 1443770994,
+    "current_price": 0.85143,
+    "market_cap": 1442164291,
     "market_cap_rank": 53
   },
   {
     "id": "falcon-finance",
     "symbol": "usdf",
     "name": "Falcon USD",
-    "current_price": 0.995842,
-    "market_cap": 1419660167,
+    "current_price": 0.995913,
+    "market_cap": 1420721239,
     "market_cap_rank": 54
   },
   {
     "id": "mantle",
     "symbol": "mnt",
     "name": "Mantle",
-    "current_price": 0.428565,
-    "market_cap": 1415214850,
+    "current_price": 0.428104,
+    "market_cap": 1413362705,
     "market_cap_rank": 55
   },
   {
     "id": "worldcoin-wld",
     "symbol": "wld",
     "name": "Worldcoin",
-    "current_price": 0.38047,
-    "market_cap": 1348857656,
+    "current_price": 0.382282,
+    "market_cap": 1356269219,
     "market_cap_rank": 56
   },
   {
     "id": "morpho",
     "symbol": "morpho",
     "name": "Morpho",
-    "current_price": 2.04,
-    "market_cap": 1337517104,
+    "current_price": 2.06,
+    "market_cap": 1346246724,
     "market_cap_rank": 57
   },
   {
     "id": "bfusd",
     "symbol": "bfusd",
     "name": "BFUSD",
-    "current_price": 0.998599,
-    "market_cap": 1318160347,
+    "current_price": 0.998507,
+    "market_cap": 1318029545,
     "market_cap_rank": 58
   },
   {
     "id": "internet-computer",
     "symbol": "icp",
     "name": "Internet Computer",
-    "current_price": 2.22,
-    "market_cap": 1234930193,
+    "current_price": 2.21,
+    "market_cap": 1228653480,
     "market_cap_rank": 59
   },
   {
     "id": "pepe",
     "symbol": "pepe",
     "name": "Pepe",
-    "current_price": 2.9e-06,
-    "market_cap": 1221417869,
+    "current_price": 2.87e-06,
+    "market_cap": 1208736679,
     "market_cap_rank": 60
   },
   {
@@ -484,7 +484,7 @@
     "symbol": "bgb",
     "name": "Bitget Token",
     "current_price": 1.69,
-    "market_cap": 1181868756,
+    "market_cap": 1188704439,
     "market_cap_rank": 61
   },
   {
@@ -492,15 +492,15 @@
     "symbol": "etc",
     "name": "Ethereum Classic",
     "current_price": 7.01,
-    "market_cap": 1104727733,
+    "market_cap": 1103892337,
     "market_cap_rank": 62
   },
   {
     "id": "united-stables",
     "symbol": "u",
     "name": "United Stables",
-    "current_price": 0.99994,
-    "market_cap": 1045019836,
+    "current_price": 0.999638,
+    "market_cap": 1045130765,
     "market_cap_rank": 63
   },
   {
@@ -508,23 +508,23 @@
     "symbol": "eutbl",
     "name": "Spiko EU T-Bills Money Market Fund",
     "current_price": 1.2,
-    "market_cap": 1039580498,
+    "market_cap": 1038686870,
     "market_cap_rank": 64
   },
   {
     "id": "pi-network",
     "symbol": "pi",
     "name": "Pi Network",
-    "current_price": 0.093123,
-    "market_cap": 1019047942,
+    "current_price": 0.092113,
+    "market_cap": 1007619141,
     "market_cap_rank": 65
   },
   {
     "id": "usdgo",
     "symbol": "usdgo",
     "name": "USDGO",
-    "current_price": 1.0,
-    "market_cap": 1003755859,
+    "current_price": 0.999925,
+    "market_cap": 1003587043,
     "market_cap_rank": 66
   },
   {
@@ -536,27 +536,27 @@
     "market_cap_rank": 67
   },
   {
-    "id": "stable-2",
-    "symbol": "stable",
-    "name": "\u200b\u200bStable",
-    "current_price": 0.03873137,
-    "market_cap": 956012131,
-    "market_cap_rank": 68
-  },
-  {
     "id": "quant-network",
     "symbol": "qnt",
     "name": "Quant",
-    "current_price": 64.49,
-    "market_cap": 937897877,
-    "market_cap_rank": 69
+    "current_price": 64.1,
+    "market_cap": 932236389,
+    "market_cap_rank": 68
   },
   {
     "id": "kucoin-shares",
     "symbol": "kcs",
     "name": "KuCoin",
-    "current_price": 6.72,
-    "market_cap": 922102004,
+    "current_price": 6.71,
+    "market_cap": 919640261,
+    "market_cap_rank": 69
+  },
+  {
+    "id": "stable-2",
+    "symbol": "stable",
+    "name": "\u200b\u200bStable",
+    "current_price": 0.03630554,
+    "market_cap": 896669880,
     "market_cap_rank": 70
   },
   {
@@ -571,64 +571,64 @@
     "id": "polygon-ecosystem-token",
     "symbol": "pol",
     "name": "POL (ex-MATIC)",
-    "current_price": 0.080378,
-    "market_cap": 858617091,
+    "current_price": 0.079997,
+    "market_cap": 854307539,
     "market_cap_rank": 72
-  },
-  {
-    "id": "adi-token",
-    "symbol": "adi",
-    "name": "ADI",
-    "current_price": 6.76,
-    "market_cap": 846938772,
-    "market_cap_rank": 73
   },
   {
     "id": "spiko-amundi-overnight-swap-fund-eur",
     "symbol": "eursafo",
     "name": "Spiko Amundi Overnight Swap Fund (EUR)",
     "current_price": 1.15,
-    "market_cap": 838386113,
-    "market_cap_rank": 74
+    "market_cap": 851053755,
+    "market_cap_rank": 73
   },
   {
-    "id": "just",
-    "symbol": "jst",
-    "name": "JUST",
-    "current_price": 0.10069,
-    "market_cap": 824504764,
-    "market_cap_rank": 76
+    "id": "adi-token",
+    "symbol": "adi",
+    "name": "ADI",
+    "current_price": 6.78,
+    "market_cap": 849260416,
+    "market_cap_rank": 74
   },
   {
     "id": "ethena",
     "symbol": "ena",
     "name": "Ethena",
-    "current_price": 0.086204,
-    "market_cap": 824195699,
+    "current_price": 0.08726,
+    "market_cap": 834133774,
     "market_cap_rank": 75
   },
   {
-    "id": "render-token",
-    "symbol": "render",
-    "name": "Render",
-    "current_price": 1.54,
-    "market_cap": 798711038,
-    "market_cap_rank": 77
+    "id": "just",
+    "symbol": "jst",
+    "name": "JUST",
+    "current_price": 0.101175,
+    "market_cap": 828687717,
+    "market_cap_rank": 76
   },
   {
     "id": "pump-fun",
     "symbol": "pump",
     "name": "Pump.fun",
-    "current_price": 0.00198502,
-    "market_cap": 793479464,
+    "current_price": 0.00207069,
+    "market_cap": 827207093,
+    "market_cap_rank": 77
+  },
+  {
+    "id": "render-token",
+    "symbol": "render",
+    "name": "Render",
+    "current_price": 1.53,
+    "market_cap": 793345448,
     "market_cap_rank": 78
   },
   {
     "id": "kaspa",
     "symbol": "kas",
     "name": "Kaspa",
-    "current_price": 0.02856519,
-    "market_cap": 785385184,
+    "current_price": 0.02854419,
+    "market_cap": 783519350,
     "market_cap_rank": 79
   },
   {
@@ -636,47 +636,47 @@
     "symbol": "atom",
     "name": "Cosmos Hub",
     "current_price": 1.49,
-    "market_cap": 776717597,
-    "market_cap_rank": 80
+    "market_cap": 773746022,
+    "market_cap_rank": 81
   },
   {
     "id": "superstate-short-duration-us-government-securities-fund-ustb",
     "symbol": "ustb",
     "name": "Invesco Short Duration US Government Securities Fund",
     "current_price": 11.15,
-    "market_cap": 770968216,
-    "market_cap_rank": 81
+    "market_cap": 772777528,
+    "market_cap_rank": 80
   },
   {
     "id": "nexo",
     "symbol": "nexo",
     "name": "NEXO",
-    "current_price": 0.766998,
-    "market_cap": 766998098,
+    "current_price": 0.767577,
+    "market_cap": 767333066,
     "market_cap_rank": 82
-  },
-  {
-    "id": "algorand",
-    "symbol": "algo",
-    "name": "Algorand",
-    "current_price": 0.084492,
-    "market_cap": 757828315,
-    "market_cap_rank": 83
   },
   {
     "id": "audiera",
     "symbol": "beat",
     "name": "Audiera",
-    "current_price": 2.38,
-    "market_cap": 735754745,
+    "current_price": 2.46,
+    "market_cap": 761644584,
+    "market_cap_rank": 83
+  },
+  {
+    "id": "algorand",
+    "symbol": "algo",
+    "name": "Algorand",
+    "current_price": 0.084187,
+    "market_cap": 755043557,
     "market_cap_rank": 84
   },
   {
     "id": "gatechain-token",
     "symbol": "gt",
     "name": "Gate",
-    "current_price": 6.76,
-    "market_cap": 719979516,
+    "current_price": 6.73,
+    "market_cap": 716771095,
     "market_cap_rank": 85
   },
   {
@@ -684,415 +684,415 @@
     "symbol": "jaaa",
     "name": "Janus Henderson Anemoy AAA CLO Fund",
     "current_price": 1.042,
-    "market_cap": 684263292,
+    "market_cap": 684263291,
     "market_cap_rank": 86
   },
   {
     "id": "jupiter-exchange-solana",
     "symbol": "jup",
     "name": "Jupiter",
-    "current_price": 0.198527,
-    "market_cap": 659185278,
+    "current_price": 0.200743,
+    "market_cap": 666222789,
     "market_cap_rank": 87
   },
   {
     "id": "beldex",
     "symbol": "bdx",
     "name": "Beldex",
-    "current_price": 0.083147,
-    "market_cap": 654311067,
+    "current_price": 0.083336,
+    "market_cap": 655763852,
     "market_cap_rank": 88
   },
   {
     "id": "gho",
     "symbol": "gho",
     "name": "GHO",
-    "current_price": 0.998859,
-    "market_cap": 648302059,
+    "current_price": 0.998891,
+    "market_cap": 648229522,
     "market_cap_rank": 89
-  },
-  {
-    "id": "bianrensheng",
-    "symbol": "\u5e01\u5b89\u4eba\u751f",
-    "name": "\u5e01\u5b89\u4eba\u751f (BinanceLife)",
-    "current_price": 0.617322,
-    "market_cap": 617322928,
-    "market_cap_rank": 90
   },
   {
     "id": "filecoin",
     "symbol": "fil",
     "name": "Filecoin",
-    "current_price": 0.75322,
-    "market_cap": 603590554,
+    "current_price": 0.774318,
+    "market_cap": 620398228,
+    "market_cap_rank": 90
+  },
+  {
+    "id": "bianrensheng",
+    "symbol": "\u5e01\u5b89\u4eba\u751f",
+    "name": "\u5e01\u5b89\u4eba\u751f (BinanceLife)",
+    "current_price": 0.606999,
+    "market_cap": 606998619,
     "market_cap_rank": 91
   },
   {
     "id": "venice-token",
     "symbol": "vvv",
     "name": "Venice Token",
-    "current_price": 12.55,
-    "market_cap": 595021553,
+    "current_price": 12.64,
+    "market_cap": 599351706,
     "market_cap_rank": 92
   },
   {
     "id": "arbitrum",
     "symbol": "arb",
     "name": "Arbitrum",
-    "current_price": 0.089372,
-    "market_cap": 591115131,
+    "current_price": 0.090035,
+    "market_cap": 595583758,
     "market_cap_rank": 93
-  },
-  {
-    "id": "xdce-crowd-sale",
-    "symbol": "xdc",
-    "name": "XDC Network",
-    "current_price": 0.0291893,
-    "market_cap": 582229789,
-    "market_cap_rank": 94
-  },
-  {
-    "id": "lighter",
-    "symbol": "lit",
-    "name": "Lighter",
-    "current_price": 2.32,
-    "market_cap": 580406903,
-    "market_cap_rank": 95
   },
   {
     "id": "flare-networks",
     "symbol": "flr",
     "name": "Flare",
-    "current_price": 0.00666615,
-    "market_cap": 579091981,
+    "current_price": 0.00677647,
+    "market_cap": 588726751,
+    "market_cap_rank": 94
+  },
+  {
+    "id": "xdce-crowd-sale",
+    "symbol": "xdc",
+    "name": "XDC Network",
+    "current_price": 0.02929788,
+    "market_cap": 584273978,
+    "market_cap_rank": 95
+  },
+  {
+    "id": "lighter",
+    "symbol": "lit",
+    "name": "Lighter",
+    "current_price": 2.31,
+    "market_cap": 577232735,
     "market_cap_rank": 96
   },
   {
     "id": "ylds",
     "symbol": "ylds",
     "name": "YLDS",
-    "current_price": 0.999937,
-    "market_cap": 563735565,
+    "current_price": 0.99993,
+    "market_cap": 564565841,
     "market_cap_rank": 97
   },
   {
     "id": "usual-usd",
     "symbol": "usd0",
     "name": "Usual USD",
-    "current_price": 0.999436,
-    "market_cap": 552863858,
+    "current_price": 0.999273,
+    "market_cap": 552773666,
     "market_cap_rank": 98
   },
   {
     "id": "injective-protocol",
     "symbol": "inj",
     "name": "Injective",
-    "current_price": 5.32,
-    "market_cap": 531543829,
+    "current_price": 5.36,
+    "market_cap": 535560961,
     "market_cap_rank": 99
   },
   {
     "id": "usx",
     "symbol": "usx",
     "name": "USX",
-    "current_price": 0.99981,
-    "market_cap": 522916186,
+    "current_price": 0.999803,
+    "market_cap": 522884814,
     "market_cap_rank": 100
-  },
-  {
-    "id": "aptos",
-    "symbol": "apt",
-    "name": "Aptos",
-    "current_price": 0.609829,
-    "market_cap": 515418793,
-    "market_cap_rank": 101
-  },
-  {
-    "id": "true-usd",
-    "symbol": "tusd",
-    "name": "TrueUSD",
-    "current_price": 0.996654,
-    "market_cap": 492801760,
-    "market_cap_rank": 102
-  },
-  {
-    "id": "a7a5",
-    "symbol": "a7a5",
-    "name": "A7A5",
-    "current_price": 0.01231331,
-    "market_cap": 482960118,
-    "market_cap_rank": 103
-  },
-  {
-    "id": "dexe",
-    "symbol": "dexe",
-    "name": "DeXe",
-    "current_price": 10.07,
-    "market_cap": 470713061,
-    "market_cap_rank": 104
   },
   {
     "id": "hash-2",
     "symbol": "hash",
     "name": "Provenance Blockchain",
-    "current_price": 0.00841282,
-    "market_cap": 467445101,
-    "market_cap_rank": 105
+    "current_price": 0.00939277,
+    "market_cap": 522013297,
+    "market_cap_rank": 101
+  },
+  {
+    "id": "aptos",
+    "symbol": "apt",
+    "name": "Aptos",
+    "current_price": 0.609729,
+    "market_cap": 514832980,
+    "market_cap_rank": 102
+  },
+  {
+    "id": "true-usd",
+    "symbol": "tusd",
+    "name": "TrueUSD",
+    "current_price": 0.996421,
+    "market_cap": 492716394,
+    "market_cap_rank": 103
+  },
+  {
+    "id": "a7a5",
+    "symbol": "a7a5",
+    "name": "A7A5",
+    "current_price": 0.01219988,
+    "market_cap": 478511247,
+    "market_cap_rank": 104
   },
   {
     "id": "pancakeswap-token",
     "symbol": "cake",
     "name": "PancakeSwap",
     "current_price": 1.4,
-    "market_cap": 452421229,
-    "market_cap_rank": 106
+    "market_cap": 451902530,
+    "market_cap_rank": 105
   },
   {
     "id": "dash",
     "symbol": "dash",
     "name": "Dash",
-    "current_price": 34.71,
-    "market_cap": 443362764,
-    "market_cap_rank": 107
-  },
-  {
-    "id": "aerodrome-finance",
-    "symbol": "aero",
-    "name": "Aerodrome Finance",
-    "current_price": 0.45712,
-    "market_cap": 443153842,
-    "market_cap_rank": 108
-  },
-  {
-    "id": "virtual-protocol",
-    "symbol": "virtual",
-    "name": "Virtuals Protocol",
-    "current_price": 0.665807,
-    "market_cap": 438002561,
-    "market_cap_rank": 109
+    "current_price": 34.72,
+    "market_cap": 443398274,
+    "market_cap_rank": 106
   },
   {
     "id": "ether-fi",
     "symbol": "ethfi",
     "name": "Ether.fi",
-    "current_price": 0.447937,
-    "market_cap": 435419512,
-    "market_cap_rank": 110
+    "current_price": 0.453228,
+    "market_cap": 440516614,
+    "market_cap_rank": 107
   },
   {
     "id": "euro-coin",
     "symbol": "eurc",
     "name": "EURC",
     "current_price": 1.14,
-    "market_cap": 429921322,
-    "market_cap_rank": 111
+    "market_cap": 437334797,
+    "market_cap_rank": 108
+  },
+  {
+    "id": "aerodrome-finance",
+    "symbol": "aero",
+    "name": "Aerodrome Finance",
+    "current_price": 0.449829,
+    "market_cap": 435936036,
+    "market_cap_rank": 109
+  },
+  {
+    "id": "virtual-protocol",
+    "symbol": "virtual",
+    "name": "Virtuals Protocol",
+    "current_price": 0.6568,
+    "market_cap": 431794852,
+    "market_cap_rank": 110
   },
   {
     "id": "vechain",
     "symbol": "vet",
     "name": "VeChain",
-    "current_price": 0.00496496,
-    "market_cap": 426894653,
-    "market_cap_rank": 112
+    "current_price": 0.00493702,
+    "market_cap": 424439715,
+    "market_cap_rank": 111
   },
   {
     "id": "hastra-prime",
     "symbol": "prime",
     "name": "Hastra PRIME",
     "current_price": 1.049,
-    "market_cap": 421645486,
-    "market_cap_rank": 113
+    "market_cap": 421600991,
+    "market_cap_rank": 112
   },
   {
     "id": "ousg",
     "symbol": "ousg",
     "name": "Ondo Short-Term U.S. Government Bond Fund",
-    "current_price": 115.96,
-    "market_cap": 405551591,
+    "current_price": 115.97,
+    "market_cap": 405587881,
+    "market_cap_rank": 113
+  },
+  {
+    "id": "midnight-3",
+    "symbol": "night",
+    "name": "Midnight",
+    "current_price": 0.02394533,
+    "market_cap": 397784986,
     "market_cap_rank": 114
   },
   {
     "id": "pudgy-penguins",
     "symbol": "pengu",
     "name": "Pudgy Penguins",
-    "current_price": 0.00641675,
-    "market_cap": 403359737,
+    "current_price": 0.00630454,
+    "market_cap": 395859875,
     "market_cap_rank": 115
   },
   {
     "id": "official-trump",
     "symbol": "trump",
     "name": "Official Trump",
-    "current_price": 1.6,
-    "market_cap": 380901232,
+    "current_price": 1.59,
+    "market_cap": 376275151,
     "market_cap_rank": 116
   },
   {
     "id": "pyth-network",
     "symbol": "pyth",
     "name": "Pyth Network",
-    "current_price": 0.04643704,
-    "market_cap": 365741523,
+    "current_price": 0.04739936,
+    "market_cap": 373192074,
     "market_cap_rank": 117
   },
   {
     "id": "sun-token",
     "symbol": "sun",
     "name": "Sun Token",
-    "current_price": 0.01860973,
-    "market_cap": 357887286,
+    "current_price": 0.01847089,
+    "market_cap": 355216671,
     "market_cap_rank": 118
-  },
-  {
-    "id": "midnight-3",
-    "symbol": "night",
-    "name": "Midnight",
-    "current_price": 0.02153905,
-    "market_cap": 357865081,
-    "market_cap_rank": 119
   },
   {
     "id": "usdtb",
     "symbol": "usdtb",
     "name": "USDtb",
     "current_price": 1.0,
-    "market_cap": 354374302,
-    "market_cap_rank": 120
+    "market_cap": 354686949,
+    "market_cap_rank": 119
   },
   {
     "id": "fetch-ai",
     "symbol": "fet",
     "name": "Artificial Superintelligence Alliance",
-    "current_price": 0.158045,
-    "market_cap": 354106423,
-    "market_cap_rank": 121
-  },
-  {
-    "id": "first-digital-usd",
-    "symbol": "fdusd",
-    "name": "First Digital USD",
-    "current_price": 0.997821,
-    "market_cap": 346400140,
-    "market_cap_rank": 122
-  },
-  {
-    "id": "celestia",
-    "symbol": "tia",
-    "name": "Celestia",
-    "current_price": 0.364099,
-    "market_cap": 344237310,
-    "market_cap_rank": 123
+    "current_price": 0.157352,
+    "market_cap": 352357264,
+    "market_cap_rank": 120
   },
   {
     "id": "spx6900",
     "symbol": "spx",
     "name": "SPX6900",
-    "current_price": 0.356114,
-    "market_cap": 331550271,
-    "market_cap_rank": 124
+    "current_price": 0.373577,
+    "market_cap": 347272819,
+    "market_cap_rank": 122
+  },
+  {
+    "id": "first-digital-usd",
+    "symbol": "fdusd",
+    "name": "First Digital USD",
+    "current_price": 0.997388,
+    "market_cap": 346215990,
+    "market_cap_rank": 121
+  },
+  {
+    "id": "celestia",
+    "symbol": "tia",
+    "name": "Celestia",
+    "current_price": 0.363432,
+    "market_cap": 343740194,
+    "market_cap_rank": 123
   },
   {
     "id": "curve-dao-token",
     "symbol": "crv",
     "name": "Curve DAO",
-    "current_price": 0.214056,
-    "market_cap": 329401805,
-    "market_cap_rank": 125
+    "current_price": 0.215368,
+    "market_cap": 331491874,
+    "market_cap_rank": 124
   },
   {
     "id": "lido-dao",
     "symbol": "ldo",
     "name": "Lido DAO",
-    "current_price": 0.390639,
-    "market_cap": 326714435,
-    "market_cap_rank": 126
+    "current_price": 0.38681,
+    "market_cap": 323428676,
+    "market_cap_rank": 125
   },
   {
     "id": "terra-luna",
     "symbol": "lunc",
     "name": "Terra Luna Classic",
-    "current_price": 5.844e-05,
-    "market_cap": 322998602,
-    "market_cap_rank": 127
-  },
-  {
-    "id": "sei-network",
-    "symbol": "sei",
-    "name": "Sei",
-    "current_price": 0.04713718,
-    "market_cap": 317392604,
-    "market_cap_rank": 128
-  },
-  {
-    "id": "blockstack",
-    "symbol": "stx",
-    "name": "Stacks",
-    "current_price": 0.168498,
-    "market_cap": 312334461,
-    "market_cap_rank": 129
+    "current_price": 5.768e-05,
+    "market_cap": 318768465,
+    "market_cap_rank": 126
   },
   {
     "id": "jito-governance-token",
     "symbol": "jto",
     "name": "Jito",
-    "current_price": 0.621878,
-    "market_cap": 311176485,
-    "market_cap_rank": 130
+    "current_price": 0.632711,
+    "market_cap": 317113392,
+    "market_cap_rank": 127
   },
   {
     "id": "kinesis-gold",
     "symbol": "kau",
     "name": "Kinesis Gold",
-    "current_price": 130.19,
-    "market_cap": 310661569,
+    "current_price": 132.14,
+    "market_cap": 315325972,
+    "market_cap_rank": 128
+  },
+  {
+    "id": "sei-network",
+    "symbol": "sei",
+    "name": "Sei",
+    "current_price": 0.04676045,
+    "market_cap": 314748132,
+    "market_cap_rank": 129
+  },
+  {
+    "id": "blockstack",
+    "symbol": "stx",
+    "name": "Stacks",
+    "current_price": 0.167068,
+    "market_cap": 309650871,
+    "market_cap_rank": 130
+  },
+  {
+    "id": "gnosis",
+    "symbol": "gno",
+    "name": "Gnosis",
+    "current_price": 112.11,
+    "market_cap": 295804474,
     "market_cap_rank": 131
   },
   {
     "id": "apxusd",
     "symbol": "apxusd",
     "name": "apxUSD",
-    "current_price": 0.870808,
-    "market_cap": 298832587,
+    "current_price": 0.861834,
+    "market_cap": 292304945,
     "market_cap_rank": 132
   },
   {
-    "id": "gnosis",
-    "symbol": "gno",
-    "name": "Gnosis",
-    "current_price": 111.7,
-    "market_cap": 295475932,
+    "id": "dexe",
+    "symbol": "dexe",
+    "name": "DeXe",
+    "current_price": 6.13,
+    "market_cap": 286104607,
     "market_cap_rank": 133
   },
   {
     "id": "layerzero",
     "symbol": "zro",
     "name": "LayerZero",
-    "current_price": 0.834724,
-    "market_cap": 294838334,
+    "current_price": 0.807779,
+    "market_cap": 285298913,
     "market_cap_rank": 134
-  },
-  {
-    "id": "pendle",
-    "symbol": "pendle",
-    "name": "Pendle",
-    "current_price": 1.64,
-    "market_cap": 281459906,
-    "market_cap_rank": 135
   },
   {
     "id": "kite-2",
     "symbol": "kite",
     "name": "Kite",
-    "current_price": 0.11689,
-    "market_cap": 279429132,
+    "current_price": 0.117881,
+    "market_cap": 281875518,
+    "market_cap_rank": 135
+  },
+  {
+    "id": "pendle",
+    "symbol": "pendle",
+    "name": "Pendle",
+    "current_price": 1.63,
+    "market_cap": 280473658,
     "market_cap_rank": 137
   },
   {
     "id": "antfun",
     "symbol": "antfun",
     "name": "AntFun",
-    "current_price": 0.04178742,
-    "market_cap": 279260522,
+    "current_price": 0.04194801,
+    "market_cap": 279993491,
     "market_cap_rank": 136
   },
   {
@@ -1100,71 +1100,71 @@
     "symbol": "bsv",
     "name": "Bitcoin SV",
     "current_price": 13.74,
-    "market_cap": 275607462,
-    "market_cap_rank": 138
+    "market_cap": 275560160,
+    "market_cap_rank": 139
   },
   {
     "id": "olympus",
     "symbol": "ohm",
     "name": "Olympus",
-    "current_price": 18.42,
-    "market_cap": 275493379,
-    "market_cap_rank": 139
-  },
-  {
-    "id": "monad",
-    "symbol": "mon",
-    "name": "Monad",
-    "current_price": 0.02289125,
-    "market_cap": 270705601,
-    "market_cap_rank": 140
-  },
-  {
-    "id": "bonk",
-    "symbol": "bonk",
-    "name": "Bonk",
-    "current_price": 3.06e-06,
-    "market_cap": 269560496,
-    "market_cap_rank": 141
+    "current_price": 18.43,
+    "market_cap": 275294806,
+    "market_cap_rank": 138
   },
   {
     "id": "bittorrent",
     "symbol": "btt",
     "name": "BitTorrent",
-    "current_price": 2.73076e-07,
-    "market_cap": 269533299,
-    "market_cap_rank": 142
+    "current_price": 2.7304e-07,
+    "market_cap": 269323795,
+    "market_cap_rank": 140
+  },
+  {
+    "id": "monad",
+    "symbol": "mon",
+    "name": "Monad",
+    "current_price": 0.02275666,
+    "market_cap": 269069050,
+    "market_cap_rank": 141
   },
   {
     "id": "apenft",
     "symbol": "nft",
     "name": "AINFT",
-    "current_price": 2.67482e-07,
-    "market_cap": 264833729,
+    "current_price": 2.6793e-07,
+    "market_cap": 265278956,
+    "market_cap_rank": 142
+  },
+  {
+    "id": "bonk",
+    "symbol": "bonk",
+    "name": "Bonk",
+    "current_price": 3e-06,
+    "market_cap": 264067577,
     "market_cap_rank": 143
   },
   {
     "id": "unibase",
     "symbol": "ub",
     "name": "Unibase",
-    "current_price": 0.103217,
-    "market_cap": 258779558,
-    "market_cap_rank": 144
+    "current_price": 0.10261,
+    "market_cap": 256524752,
+    "market_cap_rank": 145
   },
   {
     "id": "reallink",
     "symbol": "real",
     "name": "RealLink",
-    "current_price": 0.076794,
-    "market_cap": 255678829,
-    "market_cap_rank": 145
+    "current_price": 0.07681,
+    "market_cap": 255604759,
+    "market_cap_rank": 144
   },
   {
     "id": "tezos",
     "symbol": "xtz",
     "name": "Tezos",
-    "current_price": 0.229139,
-    "market_cap": 250036188,
+    "current_price": 0.227452,
+    "market_cap": 248083843,
     "market_cap_rank": 146
   },
   {
@@ -1172,56 +1172,48 @@
     "symbol": "onyc",
     "name": "OnRe Tokenized Reinsurance",
     "current_price": 1.13,
-    "market_cap": 239117956,
+    "market_cap": 240171131,
     "market_cap_rank": 148
   },
   {
     "id": "build-on",
     "symbol": "b",
     "name": "BUILDon",
-    "current_price": 0.237718,
-    "market_cap": 238142123,
+    "current_price": 0.240119,
+    "market_cap": 240144689,
     "market_cap_rank": 147
   },
   {
     "id": "conflux-token",
     "symbol": "cfx",
     "name": "Conflux",
-    "current_price": 0.04556451,
-    "market_cap": 237577779,
-    "market_cap_rank": 149
+    "current_price": 0.04605799,
+    "market_cap": 240112397,
+    "market_cap_rank": 150
   },
   {
     "id": "kaito",
     "symbol": "kaito",
     "name": "KAITO",
-    "current_price": 0.982784,
-    "market_cap": 237283283,
-    "market_cap_rank": 150
+    "current_price": 0.985444,
+    "market_cap": 237952196,
+    "market_cap_rank": 149
   },
   {
     "id": "frax",
     "symbol": "frax",
     "name": "Legacy Frax Dollar",
-    "current_price": 0.989638,
-    "market_cap": 237099348,
+    "current_price": 0.990077,
+    "market_cap": 237176379,
     "market_cap_rank": 151
   },
   {
     "id": "grass",
     "symbol": "grass",
     "name": "Grass",
-    "current_price": 0.367597,
-    "market_cap": 232350093,
+    "current_price": 0.374516,
+    "market_cap": 236529140,
     "market_cap_rank": 152
-  },
-  {
-    "id": "jasmycoin",
-    "symbol": "jasmy",
-    "name": "JasmyCoin",
-    "current_price": 0.00463286,
-    "market_cap": 229072410,
-    "market_cap_rank": 153
   },
   {
     "id": "peanut-2-2",
@@ -1229,94 +1221,102 @@
     "name": "Peanut",
     "current_price": 0.00073607,
     "market_cap": 228181317,
-    "market_cap_rank": 154
+    "market_cap_rank": 153
   },
   {
     "id": "doublezero",
     "symbol": "2z",
     "name": "DoubleZero",
-    "current_price": 0.065031,
-    "market_cap": 225639536,
+    "current_price": 0.065366,
+    "market_cap": 226799198,
+    "market_cap_rank": 154
+  },
+  {
+    "id": "jasmycoin",
+    "symbol": "jasmy",
+    "name": "JasmyCoin",
+    "current_price": 0.00457891,
+    "market_cap": 226402855,
     "market_cap_rank": 155
-  },
-  {
-    "id": "fgrs-figure-tokenized-stock",
-    "symbol": "fgrs",
-    "name": "FGRS (Figure Tokenized Stock)",
-    "current_price": 32.31,
-    "market_cap": 224262656,
-    "market_cap_rank": 156
-  },
-  {
-    "id": "plasma",
-    "symbol": "xpl",
-    "name": "Plasma",
-    "current_price": 0.086006,
-    "market_cap": 223622652,
-    "market_cap_rank": 157
-  },
-  {
-    "id": "velvet",
-    "symbol": "velvet",
-    "name": "Velvet",
-    "current_price": 0.529599,
-    "market_cap": 222929827,
-    "market_cap_rank": 158
-  },
-  {
-    "id": "optimism",
-    "symbol": "op",
-    "name": "Optimism",
-    "current_price": 0.097346,
-    "market_cap": 222114455,
-    "market_cap_rank": 159
-  },
-  {
-    "id": "decred",
-    "symbol": "dcr",
-    "name": "Decred",
-    "current_price": 12.66,
-    "market_cap": 221789156,
-    "market_cap_rank": 160
   },
   {
     "id": "kinesis-silver",
     "symbol": "kag",
     "name": "Kinesis Silver",
-    "current_price": 58.42,
-    "market_cap": 220659534,
-    "market_cap_rank": 161
+    "current_price": 59.75,
+    "market_cap": 225663141,
+    "market_cap_rank": 156
   },
   {
-    "id": "syrup",
-    "symbol": "syrup",
-    "name": "Maple Finance",
-    "current_price": 0.189105,
-    "market_cap": 220216045,
-    "market_cap_rank": 162
+    "id": "optimism",
+    "symbol": "op",
+    "name": "Optimism",
+    "current_price": 0.0981,
+    "market_cap": 223769899,
+    "market_cap_rank": 157
+  },
+  {
+    "id": "fgrs-figure-tokenized-stock",
+    "symbol": "fgrs",
+    "name": "FGRS (Figure Tokenized Stock)",
+    "current_price": 31.86,
+    "market_cap": 221187282,
+    "market_cap_rank": 158
+  },
+  {
+    "id": "decred",
+    "symbol": "dcr",
+    "name": "Decred",
+    "current_price": 12.61,
+    "market_cap": 220998185,
+    "market_cap_rank": 160
+  },
+  {
+    "id": "velvet",
+    "symbol": "velvet",
+    "name": "Velvet",
+    "current_price": 0.523904,
+    "market_cap": 220622685,
+    "market_cap_rank": 159
   },
   {
     "id": "bnb48-club-token",
     "symbol": "koge",
     "name": "KOGE",
-    "current_price": 64.31,
-    "market_cap": 217370113,
-    "market_cap_rank": 163
+    "current_price": 64.4,
+    "market_cap": 217670157,
+    "market_cap_rank": 161
+  },
+  {
+    "id": "plasma",
+    "symbol": "xpl",
+    "name": "Plasma",
+    "current_price": 0.083626,
+    "market_cap": 217426053,
+    "market_cap_rank": 162
   },
   {
     "id": "crvusd",
     "symbol": "crvusd",
     "name": "crvUSD",
-    "current_price": 0.999626,
-    "market_cap": 211729363,
+    "current_price": 0.999632,
+    "market_cap": 213269304,
+    "market_cap_rank": 163
+  },
+  {
+    "id": "syrup",
+    "symbol": "syrup",
+    "name": "Maple Finance",
+    "current_price": 0.182228,
+    "market_cap": 212110476,
     "market_cap_rank": 164
   },
   {
     "id": "floki",
     "symbol": "floki",
     "name": "FLOKI",
-    "current_price": 2.136e-05,
-    "market_cap": 206132093,
+    "current_price": 2.139e-05,
+    "market_cap": 206276229,
     "market_cap_rank": 165
   },
   {
@@ -1328,60 +1328,52 @@
     "market_cap_rank": 166
   },
   {
-    "id": "ape-and-pepe",
-    "symbol": "apepe",
-    "name": "Ape and Pepe",
-    "current_price": 9.58262e-07,
-    "market_cap": 201235226,
+    "id": "zebec-network",
+    "symbol": "zbcn",
+    "name": "Zebec Network",
+    "current_price": 0.00205186,
+    "market_cap": 200962023,
     "market_cap_rank": 167
   },
   {
-    "id": "coco-2",
-    "symbol": "coco",
-    "name": "coco",
-    "current_price": 0.200018,
-    "market_cap": 200021916,
+    "id": "ape-and-pepe",
+    "symbol": "apepe",
+    "name": "Ape and Pepe",
+    "current_price": 9.56132e-07,
+    "market_cap": 200804896,
     "market_cap_rank": 168
   },
   {
     "id": "agora-dollar",
     "symbol": "ausd",
     "name": "AUSD",
-    "current_price": 0.999886,
-    "market_cap": 199815128,
+    "current_price": 0.999899,
+    "market_cap": 200065092,
     "market_cap_rank": 169
   },
   {
-    "id": "starknet",
-    "symbol": "strk",
-    "name": "Starknet",
-    "current_price": 0.02921907,
-    "market_cap": 197129708,
+    "id": "coco-2",
+    "symbol": "coco",
+    "name": "coco",
+    "current_price": 0.199611,
+    "market_cap": 199571131,
     "market_cap_rank": 170
   },
   {
     "id": "ultima",
     "symbol": "ultima",
     "name": "Ultima",
-    "current_price": 2325.86,
-    "market_cap": 197020158,
+    "current_price": 2338.27,
+    "market_cap": 198114774,
     "market_cap_rank": 171
   },
   {
-    "id": "zebec-network",
-    "symbol": "zbcn",
-    "name": "Zebec Network",
-    "current_price": 0.00197736,
-    "market_cap": 193689751,
+    "id": "starknet",
+    "symbol": "strk",
+    "name": "Starknet",
+    "current_price": 0.02924463,
+    "market_cap": 197310078,
     "market_cap_rank": 172
-  },
-  {
-    "id": "raydium",
-    "symbol": "ray",
-    "name": "Raydium",
-    "current_price": 0.712986,
-    "market_cap": 192035690,
-    "market_cap_rank": 173
   },
   {
     "id": "vaneck-treasury-fund",
@@ -1389,95 +1381,95 @@
     "name": "VanEck Treasury Fund",
     "current_price": 1.0,
     "market_cap": 191915732,
-    "market_cap_rank": 174
+    "market_cap_rank": 173
   },
   {
     "id": "kaia",
     "symbol": "kaia",
     "name": "Kaia",
-    "current_price": 0.03276469,
-    "market_cap": 191896592,
-    "market_cap_rank": 175
+    "current_price": 0.03268616,
+    "market_cap": 191431121,
+    "market_cap_rank": 174
   },
   {
-    "id": "pieverse",
-    "symbol": "pieverse",
-    "name": "Pieverse",
-    "current_price": 0.684429,
-    "market_cap": 187970011,
-    "market_cap_rank": 176
+    "id": "raydium",
+    "symbol": "ray",
+    "name": "Raydium",
+    "current_price": 0.709968,
+    "market_cap": 191205789,
+    "market_cap_rank": 175
   },
   {
     "id": "ethereum-name-service",
     "symbol": "ens",
     "name": "Ethereum Name Service",
-    "current_price": 4.54,
-    "market_cap": 186423673,
-    "market_cap_rank": 177
+    "current_price": 4.56,
+    "market_cap": 187191548,
+    "market_cap_rank": 176
   },
   {
     "id": "usa",
     "symbol": "usat",
     "name": "USAT",
-    "current_price": 0.999043,
-    "market_cap": 185306704,
-    "market_cap_rank": 178
+    "current_price": 0.998982,
+    "market_cap": 185295362,
+    "market_cap_rank": 177
   },
   {
     "id": "wefi",
     "symbol": "wfi",
     "name": "WeFi",
     "current_price": 2.16,
-    "market_cap": 185096173,
+    "market_cap": 185027875,
+    "market_cap_rank": 178
+  },
+  {
+    "id": "bc-token",
+    "symbol": "bc",
+    "name": "BCGame Coin",
+    "current_price": 0.01845551,
+    "market_cap": 184357238,
     "market_cap_rank": 179
   },
   {
-    "id": "telcoin",
-    "symbol": "tel",
-    "name": "Telcoin",
-    "current_price": 0.00193068,
-    "market_cap": 183566498,
+    "id": "pieverse",
+    "symbol": "pieverse",
+    "name": "Pieverse",
+    "current_price": 0.669214,
+    "market_cap": 183866453,
     "market_cap_rank": 180
   },
   {
     "id": "the-graph",
     "symbol": "grt",
     "name": "The Graph",
-    "current_price": 0.01678841,
-    "market_cap": 181312811,
+    "current_price": 0.01675787,
+    "market_cap": 180932824,
     "market_cap_rank": 181
   },
   {
     "id": "falcon-finance-ff",
     "symbol": "ff",
     "name": "Falcon Finance",
-    "current_price": 0.059973,
-    "market_cap": 178095657,
+    "current_price": 0.060782,
+    "market_cap": 180523377,
     "market_cap_rank": 182
   },
   {
-    "id": "bc-token",
-    "symbol": "bc",
-    "name": "BCGame Coin",
-    "current_price": 0.01762205,
-    "market_cap": 176310290,
+    "id": "telcoin",
+    "symbol": "tel",
+    "name": "Telcoin",
+    "current_price": 0.00188142,
+    "market_cap": 178901658,
     "market_cap_rank": 183
   },
   {
     "id": "eigenlayer",
     "symbol": "eigen",
     "name": "EigenCloud (prev. EigenLayer)",
-    "current_price": 0.234232,
-    "market_cap": 173643932,
+    "current_price": 0.232758,
+    "market_cap": 172390319,
     "market_cap_rank": 184
-  },
-  {
-    "id": "iota",
-    "symbol": "iota",
-    "name": "IOTA",
-    "current_price": 0.03753043,
-    "market_cap": 170504187,
-    "market_cap_rank": 185
   },
   {
     "id": "spark-usdc",
@@ -1485,23 +1477,39 @@
     "name": "Spark USDC",
     "current_price": 1.1,
     "market_cap": 169614521,
-    "market_cap_rank": 186
+    "market_cap_rank": 185
   },
   {
     "id": "compound-governance-token",
     "symbol": "comp",
     "name": "Compound",
-    "current_price": 17.37,
-    "market_cap": 167907436,
+    "current_price": 17.41,
+    "market_cap": 168301196,
+    "market_cap_rank": 186
+  },
+  {
+    "id": "iota",
+    "symbol": "iota",
+    "name": "IOTA",
+    "current_price": 0.03659289,
+    "market_cap": 166686571,
     "market_cap_rank": 187
   },
   {
     "id": "re-protocol-reusd",
     "symbol": "reusd",
     "name": "Re Protocol reUSD",
-    "current_price": 1.089,
-    "market_cap": 164793748,
+    "current_price": 1.09,
+    "market_cap": 165578416,
     "market_cap_rank": 188
+  },
+  {
+    "id": "axie-infinity",
+    "symbol": "axs",
+    "name": "Axie Infinity",
+    "current_price": 0.935123,
+    "market_cap": 162894873,
+    "market_cap_rank": 189
   },
   {
     "id": "tradable-apac-diversified-finance-provider-sstn",
@@ -1509,23 +1517,7 @@
     "name": "Tradable APAC Diversified Finance Provider SSTN",
     "current_price": 1.0,
     "market_cap": 162500000,
-    "market_cap_rank": 189
-  },
-  {
-    "id": "axie-infinity",
-    "symbol": "axs",
-    "name": "Axie Infinity",
-    "current_price": 0.930912,
-    "market_cap": 162174173,
     "market_cap_rank": 190
-  },
-  {
-    "id": "bitway",
-    "symbol": "btw",
-    "name": "Bitway",
-    "current_price": 0.073516,
-    "market_cap": 161742126,
-    "market_cap_rank": 191
   },
   {
     "id": "spiko-us-t-bills-money-market-fund",
@@ -1533,70 +1525,78 @@
     "name": "Spiko US T-Bills Money Market Fund",
     "current_price": 1.09,
     "market_cap": 160609609,
+    "market_cap_rank": 191
+  },
+  {
+    "id": "chiliz",
+    "symbol": "chz",
+    "name": "Chiliz",
+    "current_price": 0.01513537,
+    "market_cap": 159863809,
     "market_cap_rank": 192
   },
   {
     "id": "akash-network",
     "symbol": "akt",
     "name": "Akash Network",
-    "current_price": 0.548668,
-    "market_cap": 160347217,
+    "current_price": 0.541771,
+    "market_cap": 158205896,
     "market_cap_rank": 193
   },
   {
-    "id": "chiliz",
-    "symbol": "chz",
-    "name": "Chiliz",
-    "current_price": 0.01512749,
-    "market_cap": 159794833,
+    "id": "usdai",
+    "symbol": "usdai",
+    "name": "USDai",
+    "current_price": 0.999793,
+    "market_cap": 156587352,
     "market_cap_rank": 194
   },
   {
     "id": "apyusd",
     "symbol": "apyusd",
     "name": "apyUSD",
-    "current_price": 1.21,
-    "market_cap": 157351899,
+    "current_price": 1.2,
+    "market_cap": 155222357,
     "market_cap_rank": 195
   },
   {
-    "id": "usdai",
-    "symbol": "usdai",
-    "name": "USDai",
-    "current_price": 0.999875,
-    "market_cap": 154238254,
+    "id": "thorchain",
+    "symbol": "rune",
+    "name": "THORChain",
+    "current_price": 0.454675,
+    "market_cap": 153822695,
     "market_cap_rank": 196
-  },
-  {
-    "id": "swissborg",
-    "symbol": "borg",
-    "name": "SwissBorg",
-    "current_price": 0.156831,
-    "market_cap": 153978014,
-    "market_cap_rank": 197
   },
   {
     "id": "dogwifcoin",
     "symbol": "wif",
     "name": "dogwifhat",
-    "current_price": 0.153297,
-    "market_cap": 153137585,
+    "current_price": 0.153466,
+    "market_cap": 153288769,
     "market_cap_rank": 198
   },
   {
-    "id": "btse-token",
-    "symbol": "btse",
-    "name": "BTSE Token",
-    "current_price": 0.941664,
-    "market_cap": 152607421,
-    "market_cap_rank": 199
+    "id": "bitway",
+    "symbol": "btw",
+    "name": "Bitway",
+    "current_price": 0.069639,
+    "market_cap": 153205157,
+    "market_cap_rank": 197
   },
   {
     "id": "mx-token",
     "symbol": "mx",
     "name": "MX",
-    "current_price": 1.66,
-    "market_cap": 152462784,
+    "current_price": 1.67,
+    "market_cap": 152935788,
+    "market_cap_rank": 199
+  },
+  {
+    "id": "swissborg",
+    "symbol": "borg",
+    "name": "SwissBorg",
+    "current_price": 0.155573,
+    "market_cap": 152581468,
     "market_cap_rank": 200
   }
 ]
