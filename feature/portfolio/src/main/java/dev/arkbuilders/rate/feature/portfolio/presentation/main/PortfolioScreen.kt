@@ -113,6 +113,7 @@ fun PortfolioScreen(
     val editGroupReorderSheetState = rememberModalBottomSheetState()
     val editGroupOptionsSheetState = rememberModalBottomSheetState()
     val editGroupRenameSheetState = rememberModalBottomSheetState()
+    val changeBaseCurrencyTitle = stringResource(CoreRString.change_base_currency)
 
     fun getCurrentGroup() = state.pages.getOrNull(pagerState.currentPage)?.group
 
@@ -164,10 +165,7 @@ fun PortfolioScreen(
                         onChangeBaseCurrency = {
                             navigator.navigate(
                                 SearchCurrencyScreenDestination(
-                                    title =
-                                        ctx.getString(
-                                            CoreRString.change_base_currency,
-                                        ),
+                                    title = changeBaseCurrencyTitle,
                                 ),
                             )
                         },

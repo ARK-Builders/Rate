@@ -4,6 +4,14 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(
+            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21,
+        )
+    }
+}
+
 android {
     namespace = "dev.arkbuilders.rate.core.di"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -28,9 +36,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
-    }
 }
 
 dependencies {
@@ -42,9 +47,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.androidx.room.runtime)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.logging.interceptor)
+    implementation(libs.ktor.client.core)
 
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)

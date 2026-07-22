@@ -32,7 +32,7 @@ fun AboutScreen(navigator: DestinationsNavigator) {
             modifier = Modifier.padding(it),
             appName = stringResource(id = CoreRString.app_name),
             appLogoResId = CoreRDrawable.ic_app_logo,
-            versionName = component.buildConfigFieldsProvider().provide().versionName,
+            versionName = component.buildConfigFields().versionName,
             privacyPolicyUrl = stringResource(CoreRString.privacy_policy_url),
         )
     }

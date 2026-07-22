@@ -1,7 +1,7 @@
 package dev.arkbuilders.rate.core.data.repo.currency
 
 import android.content.Context
-import com.google.gson.Gson
+import dev.arkbuilders.rate.core.data.appJson
 import dev.arkbuilders.rate.core.data.mapper.CryptoRateResponseMapper
 import dev.arkbuilders.rate.core.data.mapper.FiatRateResponseMapper
 import dev.arkbuilders.rate.core.data.network.dto.CryptoRateResponse
@@ -9,6 +9,7 @@ import dev.arkbuilders.rate.core.data.network.dto.FiatRateResponse
 import dev.arkbuilders.rate.core.domain.model.CurrencyRate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.decodeFromString
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
@@ -24,15 +25,15 @@ class FallbackRatesProvider @Inject constructor(
                 ctx.assets.open(FIAT_RATES_FILE).bufferedReader().use {
                     it.readText()
                 }
-            val fiatResp = Gson().fromJson(fiatJson, FiatRateResponse::class.java)
+            val fiatResp = appJson.decodeFromString<FiatRateResponse>(fiatJson)
             val fiatRates = fiatRateResponseMapper.map(fiatResp)
 
             val cryptoJson =
                 ctx.assets.open(CRYPTO_RATES_FILE).bufferedReader().use {
                     it.readText()
                 }
-            val cryptoResp = Gson().fromJson(cryptoJson, Array<CryptoRateResponse>::class.java)
-            val cryptoRates = cryptoRateResponseMapper.map(cryptoResp.toList())
+            val cryptoResp = appJson.decodeFromString<List<CryptoRateResponse>>(cryptoJson)
+            val cryptoRates = cryptoRateResponseMapper.map(cryptoResp)
 
             val fetchDate = ratesUpdatedAtDataSource.fetchBundled()
             val rates = cryptoRates + fiatRates

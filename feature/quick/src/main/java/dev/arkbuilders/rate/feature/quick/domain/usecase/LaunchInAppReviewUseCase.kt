@@ -1,7 +1,7 @@
 package dev.arkbuilders.rate.feature.quick.domain.usecase
 
 import android.app.Activity
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
+import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.repo.InAppReviewManager
 import dev.arkbuilders.rate.core.domain.repo.PreferenceKey
 import dev.arkbuilders.rate.core.domain.repo.Prefs
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class LaunchInAppReviewUseCase @Inject constructor(
     private val inAppReviewManager: InAppReviewManager,
     private val prefs: Prefs,
-    private val buildConfigFieldsProvider: BuildConfigFieldsProvider,
+    private val buildConfigFields: BuildConfigFields,
 ) {
     companion object {
         private const val MIN_APP_LAUNCHES_FOR_REVIEW = 5
@@ -22,8 +22,7 @@ class LaunchInAppReviewUseCase @Inject constructor(
     }
 
     suspend operator fun invoke(activity: Activity) {
-        val buildConfig = buildConfigFieldsProvider.provide()
-        if (buildConfig.isGooglePlayBuild.not()) {
+        if (buildConfigFields.isGooglePlayBuild.not()) {
             Timber.d("In-app review skipped: not Google Play build")
             return
         }

@@ -4,18 +4,18 @@ import android.content.Context
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import dev.arkbuilders.rate.core.data.network.api.UpdatedAtAPI
+import dev.arkbuilders.rate.core.data.network.remote.RatesApiClient
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 class RatesUpdatedAtDataSource(
     private val ctx: Context,
-    private val updatedAtAPI: UpdatedAtAPI,
+    private val ratesApiClient: RatesApiClient,
 ) {
     suspend fun fetchRemote(): Either<Throwable, OffsetDateTime> =
         try {
-            parseUnixTimestamp(updatedAtAPI.get().string()).right()
+            parseUnixTimestamp(ratesApiClient.getUpdatedAt()).right()
         } catch (e: Throwable) {
             e.left()
         }

@@ -134,8 +134,11 @@ fun QuickItem(
         ) {
             Text(
                 text =
-                    "${from.code} to " +
+                    stringResource(
+                        CoreRString.quick_item_currencies_to,
+                        from.code,
                         to.joinToString(", ") { it.code },
+                    ),
                 fontWeight = FontWeight.Medium,
                 color = ArkColor.TextPrimary,
             )

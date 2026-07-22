@@ -8,8 +8,8 @@ import androidx.work.ListenableWorker
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import dev.arkbuilders.rate.BuildConfig
 import dev.arkbuilders.rate.core.di.CoreComponent
 import dev.arkbuilders.rate.core.di.CoreComponentProvider
@@ -30,8 +30,12 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-        coreComponent = DaggerCoreComponent.factory().create(this, applicationContext)
-        initBuildConfigFields()
+        coreComponent =
+            DaggerCoreComponent.factory().create(
+                this,
+                applicationContext,
+                buildConfigFields(),
+            )
         instance = this
 
         initCrashlytics()
@@ -41,17 +45,14 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
         )
     }
 
-    private fun initBuildConfigFields() {
-        coreComponent.buildConfigFieldsProvider().init(
-            BuildConfigFields(
-                buildType = BuildConfig.BUILD_TYPE,
-                versionCode = BuildConfig.VERSION_CODE,
-                versionName = BuildConfig.VERSION_NAME,
-                isGooglePlayBuild = BuildConfig.GOOGLE_PLAY_BUILD,
-                availableIconCodes = BuildConfig.ICON_CODES.toSet(),
-            ),
+    private fun buildConfigFields() =
+        BuildConfigFields(
+            buildType = BuildConfig.BUILD_TYPE,
+            versionCode = BuildConfig.VERSION_CODE,
+            versionName = BuildConfig.VERSION_NAME,
+            isGooglePlayBuild = BuildConfig.GOOGLE_PLAY_BUILD,
+            availableIconCodes = BuildConfig.ICON_CODES.toSet(),
         )
-    }
 
     private fun initCrashlytics() =
         CoroutineScope(Dispatchers.IO).launch {
@@ -90,7 +91,7 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
         )
     }
 
-    override fun getWorkManagerConfiguration() =
+    override val workManagerConfiguration: Configuration =
         Configuration.Builder()
             .setMinimumLoggingLevel(android.util.Log.INFO)
             .setWorkerFactory(AppWorkerFactory())

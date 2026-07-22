@@ -1,51 +1,54 @@
 [versions]
-composeNavigation = "1.3.0"
-hilt = "2.56.2"
-kotlin = "2.1.20"
-agp = "8.1.4"
-playServicesWearable = "18.2.0"
-coreKtx = "1.15.0"
+composeNavigation = "1.6.2"
+hilt = "2.60.1"
+kotlin = "2.4.0"
+agp = "8.13.2"
+playServicesWearable = "20.0.1"
+coreKtx = "1.18.0"
 minSdk = "26"
 compileSdk = "36"
-ksp = "2.1.20-1.0.32"
+ksp = "2.3.10"
 
 arkAbout = "0.2.1"
-androidApp = "8.9.1"
-activityCompose = "1.10.1"
-composeDestinationsVersion = "2.1.0"
-arrowFxCoroutines = "1.2.1"
-arrowCore = "1.2.1"
+androidApp = "8.13.2"
+activityCompose = "1.13.0"
+composeDestinationsVersion = "2.3.0"
+arrowFxCoroutines = "2.2.3"
+arrowCore = "2.2.3"
 constraintlayoutCompose = "1.1.1"
-converterGson = "2.9.0"
-dagger = "2.50"
-datastorePreferences = "1.1.4"
-espressoCore = "3.6.1"
-firebaseBom = "33.12.0"
+concurrentFutures = "1.2.0"
+dagger = "2.58"
+datastorePreferences = "1.2.1"
+espressoCore = "3.7.0"
+firebaseBom = "34.16.0"
 glanceAppwidget = "1.1.1"
 junit = "4.13.2"
-junitVersion = "1.2.1"
-lifecycleRuntimeKtx = "2.8.7"
-loggingInterceptor = "4.12.0"
-material3 = "1.3.2"
-navigationComposeVersion = "2.8.9"
+junitVersion = "1.3.0"
+lifecycleRuntimeKtx = "2.10.0"
+ktor = "3.5.1"
+material3 = "1.4.0"
+materialIconsExtended = "1.7.8"
+navigationComposeVersion = "2.9.8"
 orbitMVI = "9.0.0"
-qrgenerator = "1.0.1"
-retrofit = "2.11.0"
-roomRuntime = "2.6.1"
+qrgenerator = "1.0.5"
+roomRuntime = "2.8.4"
 tagcloud = "1.1.0"
 timber = "5.0.1"
-composeUi = "1.7.5"
-workRuntimeKtx = "2.8.1"
+composeUi = "1.11.4"
+workRuntimeKtx = "2.11.2"
 appcompat = "1.7.1"
-material = "1.12.0"
-gson = "2.11.0"
+material = "1.14.0"
+kotlinxSerializationJson = "1.11.0"
 reorderable = "2.4.3"
 playReview = "2.0.2"
-composeBom = "2023.08.00"
-composeMaterial = "1.2.1"
-composeFoundation = "1.2.1"
-coreSplashscreen = "1.0.1"
+composeBom = "2026.06.01"
+composeMaterial = "1.6.2"
+composeFoundation = "1.6.2"
+coreSplashscreen = "1.2.0"
 watchface = "1.2.1"
+watchfaceComplicationsData = "1.3.0"
+hiltNavigationCompose = "1.3.0"
+wearComposeMaterial3 = "1.6.2"
 
 [libraries]
 androidx-compose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "composeNavigation" }
@@ -54,6 +57,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppwidget" }
+androidx-concurrent-futures-ktx = { module = "androidx.concurrent:concurrent-futures-ktx", version.ref = "concurrentFutures" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
@@ -74,28 +78,32 @@ compose-destinations-compiler = { module = "io.github.raamcosta.compose-destinat
 arrow-fx-coroutines = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "arrowFxCoroutines" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrowCore" }
 constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 play-review = { group = "com.google.android.play", name = "review", version.ref = "playReview" }
 play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "playReview" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version = "" }
-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version = "" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbitMVI" }
 orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbitMVI" }
 qrgenerator = { module = "com.github.androidmads:QRGenerator", version.ref = "qrgenerator" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 tagcloud = { module = "io.github.oleksandrbalan:tagcloud", version.ref = "tagcloud" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -107,11 +115,12 @@ play-services-wearable = { group = "com.google.android.gms", name = "play-servic
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
 androidx-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
+androidx-wear-compose-material3 = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "wearComposeMaterial3" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-wear-watchface = { module = "androidx.wear.watchface:watchface", version.ref = "watchface" }
-androidx-wear-watchface-complications-data = { module = "androidx.wear.watchface:watchface-complications-data", version.ref = "watchface" }
-androidx-wear-watchface-complications-data-source = { module = "androidx.wear.watchface:watchface-complications-data-source", version.ref = "watchface" }
-androidx-wear-watchface-complications-data-source-ktx = { module = "androidx.wear.watchface:watchface-complications-data-source-ktx", version.ref = "watchface" }
+androidx-wear-watchface-complications-data = { module = "androidx.wear.watchface:watchface-complications-data", version.ref = "watchfaceComplicationsData" }
+androidx-wear-watchface-complications-data-source = { module = "androidx.wear.watchface:watchface-complications-data-source", version.ref = "watchfaceComplicationsData" }
+androidx-wear-watchface-complications-data-source-ktx = { module = "androidx.wear.watchface:watchface-complications-data-source-ktx", version.ref = "watchfaceComplicationsData" }
 androidx-wear-watchface-complications-rendering = { module = "androidx.wear.watchface:watchface-complications-rendering", version.ref = "watchface" }
 androidx-wear-watchface-editor = { module = "androidx.wear.watchface:watchface-editor", version.ref = "watchface" }
 androidx-wear-watchface-style = { module = "androidx.wear.watchface:watchface-style", version.ref = "watchface" }
@@ -119,6 +128,7 @@ androidx-wear-watchface-style = { module = "androidx.wear.watchface:watchface-st
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 android-application = { id = "com.android.application", version.ref = "androidApp"}

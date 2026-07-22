@@ -9,9 +9,3 @@ data class BuildConfigFields(
     val isGooglePlayBuild: Boolean,
     val availableIconCodes: Set<CurrencyCode>,
 )
-
-interface BuildConfigFieldsProvider {
-    fun init(fields: BuildConfigFields)
-
-    fun provide(): BuildConfigFields
-}

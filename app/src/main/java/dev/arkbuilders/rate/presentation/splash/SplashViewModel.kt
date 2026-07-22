@@ -2,15 +2,20 @@ package dev.arkbuilders.rate.presentation.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.repo.CurrencyRepo
 import dev.arkbuilders.rate.core.domain.repo.PreferenceKey
 import dev.arkbuilders.rate.core.domain.repo.Prefs
 import dev.arkbuilders.rate.feature.portfolio.domain.repo.PortfolioRepo
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withTimeoutOrNull
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
+
+private const val UPDATE_RATES_TIMEOUT_MS = 1_500L
 
 sealed class SplashScreenEffect {
     data object NavigateOnboarding : SplashScreenEffect()
@@ -30,6 +35,7 @@ class SplashViewModel(
     init {
         intent {
             currencyRepo.initialize()
+            val updateRates = updateRatesAsync()
 
             val currentVersionCode = buildConfigFields.versionCode
             val previousVersionCode = prefs.get(PreferenceKey.CurrentVersionCode)
@@ -49,12 +55,22 @@ class SplashViewModel(
             prefs.set(PreferenceKey.CurrentVersionCode, currentVersionCode)
 
             val needToShowOnboarding = prefs.get(PreferenceKey.IsOnboardingCompleted).not()
+
+            updateRates.await()
+
             if (needToShowOnboarding)
                 postSideEffect(SplashScreenEffect.NavigateOnboarding)
             else
                 postSideEffect(SplashScreenEffect.NavigateQuick)
         }
     }
+
+    private fun updateRatesAsync() =
+        viewModelScope.async {
+            withTimeoutOrNull(UPDATE_RATES_TIMEOUT_MS) {
+                currencyRepo.updateRates()
+            }
+        }
 
     private suspend fun skipOnboardingIfUserHasData() {
         if (quickRepo.getAll().isNotEmpty() || portfolioRepo.allAssets().isNotEmpty()) {

@@ -37,6 +37,7 @@ import dev.arkbuilders.rate.core.domain.CurrUtils
 import dev.arkbuilders.rate.core.domain.model.CurrencyInfo
 import dev.arkbuilders.rate.core.presentation.CoreRString
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import dev.arkbuilders.rate.core.presentation.ui.AmountInputVisualTransformation
 import dev.arkbuilders.rate.core.presentation.ui.AppHorDiv
 import dev.arkbuilders.rate.core.presentation.ui.AppTopBarBack
 import dev.arkbuilders.rate.core.presentation.ui.ArkCursorLargeTextField
@@ -168,6 +169,7 @@ private fun Content(
                         },
                 value = value,
                 onValueChange = { onValueChange(it) },
+                visualTransformation = AmountInputVisualTransformation,
             )
             Text(
                 modifier =

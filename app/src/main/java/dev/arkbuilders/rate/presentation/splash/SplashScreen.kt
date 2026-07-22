@@ -40,7 +40,7 @@ fun SplashScreen(navigator: DestinationsNavigator) {
                     quickComponent.quickRepo(),
                     portfolioComponent.assetsRepo(),
                     coreComponent.prefs(),
-                    coreComponent.buildConfigFieldsProvider().provide(),
+                    coreComponent.buildConfigFields(),
                     coreComponent.currencyRepo(),
                 ),
         )

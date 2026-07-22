@@ -9,11 +9,9 @@ import dagger.hilt.components.SingletonComponent
 import dev.arkbuilders.rate.core.data.mapper.CryptoRateResponseMapper
 import dev.arkbuilders.rate.core.data.mapper.FiatRateResponseMapper
 import dev.arkbuilders.rate.core.data.network.NetworkStatusImpl
-import dev.arkbuilders.rate.core.data.network.api.CryptoAPI
-import dev.arkbuilders.rate.core.data.network.api.UpdatedAtAPI
+import dev.arkbuilders.rate.core.data.network.remote.RatesApiClient
 import dev.arkbuilders.rate.core.data.preferences.PrefsImpl
 import dev.arkbuilders.rate.core.data.repo.AnalyticsManagerImpl
-import dev.arkbuilders.rate.core.data.repo.BuildConfigFieldsProviderImpl
 import dev.arkbuilders.rate.core.data.repo.CodeUseStatRepoImpl
 import dev.arkbuilders.rate.core.data.repo.GooglePlayInAppReviewManagerImpl
 import dev.arkbuilders.rate.core.data.repo.GroupRepoImpl
@@ -30,7 +28,7 @@ import dev.arkbuilders.rate.core.db.dao.CurrencyRateDao
 import dev.arkbuilders.rate.core.db.dao.GroupDao
 import dev.arkbuilders.rate.core.db.dao.QuickCalculationDao
 import dev.arkbuilders.rate.core.db.dao.TimestampDao
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
+import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
 import dev.arkbuilders.rate.core.domain.repo.CurrencyRepo
@@ -43,6 +41,7 @@ import dev.arkbuilders.rate.core.domain.usecase.DefaultGroupNameProvider
 import dev.arkbuilders.rate.core.presentation.utils.DefaultGroupNameProviderImpl
 import dev.arkbuilders.rate.feature.quick.data.QuickRepoImpl
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
+import dev.arkbuilders.rate.watchapp.BuildConfig
 import javax.inject.Singleton
 
 @Module
@@ -50,7 +49,15 @@ import javax.inject.Singleton
 class RepoModule {
     @Singleton
     @Provides
-    fun buildConfigFieldsProvider(): BuildConfigFieldsProvider = BuildConfigFieldsProviderImpl()
+    fun buildConfigFields(): BuildConfigFields =
+        BuildConfigFields(
+            buildType = BuildConfig.BUILD_TYPE,
+            versionCode = BuildConfig.VERSION_CODE,
+            versionName = BuildConfig.VERSION_NAME,
+            // Default to false for watch app for now
+            isGooglePlayBuild = false,
+            availableIconCodes = BuildConfig.ICON_CODES.toSet(),
+        )
 
     @Singleton
     @Provides
@@ -91,10 +98,10 @@ class RepoModule {
     @Singleton
     @Provides
     fun provideCryptoCurrencyDataSource(
-        cryptoAPI: CryptoAPI,
+        ratesApiClient: RatesApiClient,
         cryptoRateResponseMapper: CryptoRateResponseMapper,
     ): CryptoCurrencyDataSource {
-        return CryptoCurrencyDataSource(cryptoAPI, cryptoRateResponseMapper)
+        return CryptoCurrencyDataSource(ratesApiClient, cryptoRateResponseMapper)
     }
 
     @Singleton
@@ -130,9 +137,9 @@ class RepoModule {
     @Provides
     fun ratesUpdatedAtDataSource(
         @ApplicationContext context: Context,
-        updatedAtAPI: UpdatedAtAPI,
+        ratesApiClient: RatesApiClient,
     ): RatesUpdatedAtDataSource {
-        return RatesUpdatedAtDataSource(context, updatedAtAPI)
+        return RatesUpdatedAtDataSource(context, ratesApiClient)
     }
 
     @Singleton
@@ -152,7 +159,7 @@ class RepoModule {
 
     @Singleton
     @Provides
-    fun analyticsManager(prefs: Prefs): AnalyticsManager = AnalyticsManagerImpl(prefs)
+    fun analyticsManager(): AnalyticsManager = AnalyticsManagerImpl()
 
     @Singleton
     @Provides
@@ -174,11 +181,11 @@ class RepoModule {
     @Provides
     fun inAppReviewManager(
         analyticsManager: AnalyticsManager,
-        buildConfigFieldsProvider: BuildConfigFieldsProvider,
+        buildConfigFields: BuildConfigFields,
     ): InAppReviewManager =
         GooglePlayInAppReviewManagerImpl(
             analyticsManager,
-            buildConfigFieldsProvider.provide(),
+            buildConfigFields,
         )
 
     @Singleton

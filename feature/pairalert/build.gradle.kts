@@ -5,6 +5,14 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(
+            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21,
+        )
+    }
+}
+
 android {
     namespace = "dev.arkbuilders.rate.feature.pairalert"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -32,9 +40,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
-    }
 }
 
 dependencies {
@@ -49,6 +54,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.navigation.compose)
     implementation(libs.material3)
+    implementation(libs.material.icons.extended)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

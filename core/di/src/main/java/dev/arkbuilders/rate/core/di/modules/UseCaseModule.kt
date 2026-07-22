@@ -2,7 +2,7 @@ package dev.arkbuilders.rate.core.di.modules
 
 import dagger.Module
 import dagger.Provides
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
+import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
 import dev.arkbuilders.rate.core.domain.repo.CurrencyRepo
 import dev.arkbuilders.rate.core.domain.repo.GroupRepo
@@ -43,6 +43,5 @@ class UseCaseModule {
 
     @Singleton
     @Provides
-    fun searchUseCase(buildConfigFieldsProvider: BuildConfigFieldsProvider) =
-        SearchUseCase(buildConfigFieldsProvider.provide())
+    fun searchUseCase(buildConfigFields: BuildConfigFields) = SearchUseCase(buildConfigFields)
 }

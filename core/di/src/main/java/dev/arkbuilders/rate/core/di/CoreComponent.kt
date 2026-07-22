@@ -7,7 +7,7 @@ import dagger.Component
 import dev.arkbuilders.rate.core.db.dao.PairAlertDao
 import dev.arkbuilders.rate.core.db.dao.PortfolioDao
 import dev.arkbuilders.rate.core.db.dao.QuickCalculationDao
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
+import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
 import dev.arkbuilders.rate.core.domain.repo.CurrencyRepo
@@ -44,7 +44,7 @@ interface CoreComponent {
 
     fun appContext(): Context
 
-    fun buildConfigFieldsProvider(): BuildConfigFieldsProvider
+    fun buildConfigFields(): BuildConfigFields
 
     fun currencyRepo(): CurrencyRepo
 
@@ -77,6 +77,7 @@ interface CoreComponent {
         fun create(
             @BindsInstance application: Application,
             @BindsInstance context: Context,
+            @BindsInstance buildConfigFields: BuildConfigFields,
         ): CoreComponent
     }
 }

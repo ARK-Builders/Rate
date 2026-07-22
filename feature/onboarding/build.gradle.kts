@@ -5,6 +5,14 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(
+            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17,
+        )
+    }
+}
+
 android {
     namespace = "dev.arkbuilders.rate.feature.onboarding"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -32,9 +40,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 dependencies {
@@ -47,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.navigation.compose)
     implementation(libs.material3)
+    implementation(libs.material.icons.extended)
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.lifecycle.runtime.ktx)

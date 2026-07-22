@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,16 +45,18 @@ fun OptionsScreen(
     val showPinLimitDialog by viewModel.showPinLimitDialog.collectAsStateWithLifecycle()
     val listState = rememberScalingLazyListState()
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val deletedSuccessfully = stringResource(R.string.deleted_successfully)
+    val pinnedSuccessfully = stringResource(R.string.pinned_successfully)
+    val unpinnedSuccessfully = stringResource(R.string.unpinned_successfully)
 
     if (showDeleteDialog) {
-        val context = LocalContext.current
         WearConfirmationDialog(
             title = stringResource(R.string.delete_pair),
             message = stringResource(R.string.are_you_sure_you_want_to_delete_this_pair),
             onConfirm = {
                 showDeleteDialog = false
                 viewModel.deletePair(onDeleted = {
-                    onDeleteSuccess(context.getString(R.string.deleted_successfully))
+                    onDeleteSuccess(deletedSuccessfully)
                 })
             },
             onDismiss = {
@@ -117,7 +118,6 @@ fun OptionsScreen(
 
             item {
                 val isPinned = quickPair?.isPinned() == true
-                val context = LocalContext.current
                 WearOptionButton(
                     text =
                         if (isPinned)
@@ -130,9 +130,9 @@ fun OptionsScreen(
                     onClick = {
                         viewModel.togglePin(onSuccess = { pinned ->
                             if (pinned) {
-                                onPinClick(context.getString(R.string.pinned_successfully))
+                                onPinClick(pinnedSuccessfully)
                             } else {
-                                onPinClick(context.getString(R.string.unpinned_successfully))
+                                onPinClick(unpinnedSuccessfully)
                             }
                         })
                     },

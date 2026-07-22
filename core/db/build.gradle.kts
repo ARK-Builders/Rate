@@ -1,7 +1,16 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(
+            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21,
+        )
+    }
 }
 
 android {
@@ -32,9 +41,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
-    }
     sourceSets {
         // Adds exported schema location as test app assets.
         getByName("androidTest").assets.srcDir("$projectDir/schemas")
@@ -45,7 +51,7 @@ dependencies {
     implementation(project(":core:domain"))
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.gson)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

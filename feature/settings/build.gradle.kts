@@ -5,6 +5,14 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(
+            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21,
+        )
+    }
+}
+
 android {
     namespace = "dev.arkbuilders.rate.feature.settings"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -31,9 +39,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
-    }
-    kotlinOptions {
-        jvmTarget = "21"
     }
 }
 

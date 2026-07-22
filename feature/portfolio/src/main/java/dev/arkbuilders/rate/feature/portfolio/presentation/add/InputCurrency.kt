@@ -28,6 +28,7 @@ import dev.arkbuilders.rate.core.presentation.CoreRDrawable
 import dev.arkbuilders.rate.core.presentation.CoreRString
 import dev.arkbuilders.rate.core.presentation.R
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+import dev.arkbuilders.rate.core.presentation.ui.AmountInputVisualTransformation
 import dev.arkbuilders.rate.core.presentation.ui.ArkBasicTextField
 
 @Composable
@@ -88,6 +89,7 @@ fun InputCurrency(
                 keyboardOptions =
                     KeyboardOptions.Default
                         .copy(keyboardType = KeyboardType.Number),
+                visualTransformation = AmountInputVisualTransformation,
                 placeholder = {
                     Text(
                         text = stringResource(CoreRString.input_value),

@@ -3,11 +3,10 @@ package dev.arkbuilders.rate.feature.settings.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
+import com.google.firebase.crashlytics.crashlytics
 import dev.arkbuilders.rate.core.domain.BuildConfigFields
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
 import dev.arkbuilders.rate.core.domain.model.TimestampType
 import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.PreferenceKey
@@ -146,7 +145,7 @@ class SettingsViewModelFactory @Inject constructor(
     private val prefs: Prefs,
     private val timestampRepo: TimestampRepo,
     private val analyticsManager: AnalyticsManager,
-    private val buildConfigFieldsProvider: BuildConfigFieldsProvider,
+    private val buildConfigFields: BuildConfigFields,
     private val languageRepo: AppLanguageRepo,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -154,7 +153,7 @@ class SettingsViewModelFactory @Inject constructor(
             prefs,
             timestampRepo,
             analyticsManager,
-            buildConfigFieldsProvider.provide(),
+            buildConfigFields,
             languageRepo,
         ) as T
     }
