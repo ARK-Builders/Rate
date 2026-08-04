@@ -218,7 +218,14 @@ class AddQuickViewModel(
 
     fun onAddQuickCalculation() =
         intent {
-            val from = state.currencies.first()
+            val currencies = state.currencies
+            val from = currencies.firstOrNull() ?: return@intent
+            val to = currencies.drop(1)
+
+            if (to.isEmpty() || from.value.toDoubleArk() == 0.0) {
+                return@intent
+            }
+
             val id =
                 if (quickCalculationId != null) {
                     if (reuseNotEdit) 0 else quickCalculationId
@@ -247,7 +254,7 @@ class AddQuickViewModel(
                     id = id,
                     from = from.code,
                     amount = from.value.toBigDecimalArk(),
-                    to = state.currencies.drop(1).map { it.toAmount() },
+                    to = to.map { it.toAmount() },
                     calculatedDate = OffsetDateTime.now(),
                     pinnedDate = pinnedDate,
                     group = group,
