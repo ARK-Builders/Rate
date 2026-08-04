@@ -172,7 +172,7 @@ fun OnboardingQuickCalculationScreen(navigator: DestinationsNavigator) {
                     },
             ) {
                 if (state.stepIndex <= 1) {
-                    ListHeader(text = stringResource(CoreRString.quick_calculations))
+                    ListHeader(text = stringResource(CoreRString.quick_history))
                 } else {
                     ListHeader(text = stringResource(CoreRString.quick_pinned_calculations))
                 }
