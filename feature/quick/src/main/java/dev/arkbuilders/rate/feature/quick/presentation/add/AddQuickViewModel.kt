@@ -15,11 +15,11 @@ import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
 import dev.arkbuilders.rate.core.domain.repo.GroupRepo
 import dev.arkbuilders.rate.core.domain.toBigDecimalArk
-import dev.arkbuilders.rate.core.domain.toDoubleArk
 import dev.arkbuilders.rate.core.domain.usecase.ConvertWithRateUseCase
 import dev.arkbuilders.rate.core.domain.usecase.GetGroupByIdOrCreateDefaultUseCase
 import dev.arkbuilders.rate.feature.quick.domain.model.QuickCalculation
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
+import dev.arkbuilders.rate.feature.quick.domain.usecase.ValidateQuickCalculationUseCase
 import dev.arkbuilders.rate.feature.search.presentation.SearchNavResult
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -62,6 +62,7 @@ class AddQuickViewModel(
     private val convertUseCase: ConvertWithRateUseCase,
     private val getGroupByIdOrCreateDefaultUseCase: GetGroupByIdOrCreateDefaultUseCase,
     private val codeUseStatRepo: CodeUseStatRepo,
+    private val validateQuickCalculationUseCase: ValidateQuickCalculationUseCase,
     private val analyticsManager: AnalyticsManager,
 ) : ViewModel(), ContainerHost<AddQuickScreenState, AddQuickScreenEffect> {
     override val container: Container<AddQuickScreenState, AddQuickScreenEffect> =
@@ -219,12 +220,16 @@ class AddQuickViewModel(
     fun onAddQuickCalculation() =
         intent {
             val currencies = state.currencies
-            val from = currencies.firstOrNull() ?: return@intent
-            val to = currencies.drop(1)
-
-            if (to.isEmpty() || from.value.toDoubleArk() == 0.0) {
+            if (
+                validateQuickCalculationUseCase(
+                    currencies = currencies,
+                    sendAnalyticsEvent = true,
+                ).not()
+            ) {
                 return@intent
             }
+            val from = currencies.first()
+            val to = currencies.drop(1)
 
             val id =
                 if (quickCalculationId != null) {
@@ -285,19 +290,10 @@ class AddQuickViewModel(
 
     private fun checkFinishEnabled() =
         intent {
-            val from = state.currencies.first()
-            val to = state.currencies.drop(1)
-
-            var finishEnabled = true
-
-            if (from.value.toDoubleArk() == 0.0)
-                finishEnabled = false
-
-            if (to.isEmpty())
-                finishEnabled = false
-
             reduce {
-                state.copy(finishEnabled = finishEnabled)
+                state.copy(
+                    finishEnabled = validateQuickCalculationUseCase(state.currencies),
+                )
             }
         }
 
@@ -335,6 +331,7 @@ class AddQuickViewModelFactory @AssistedInject constructor(
     private val codeUseStatRepo: CodeUseStatRepo,
     private val getGroupByIdOrCreateDefaultUseCase: GetGroupByIdOrCreateDefaultUseCase,
     private val convertUseCase: ConvertWithRateUseCase,
+    private val validateQuickCalculationUseCase: ValidateQuickCalculationUseCase,
     private val analyticsManager: AnalyticsManager,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -348,6 +345,7 @@ class AddQuickViewModelFactory @AssistedInject constructor(
             convertUseCase,
             getGroupByIdOrCreateDefaultUseCase,
             codeUseStatRepo,
+            validateQuickCalculationUseCase,
             analyticsManager,
         ) as T
     }
