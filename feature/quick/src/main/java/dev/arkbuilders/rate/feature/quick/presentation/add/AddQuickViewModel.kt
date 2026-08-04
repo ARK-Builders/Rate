@@ -88,10 +88,10 @@ class AddQuickViewModel(
                         currencies = calc,
                         group = quickCalculation.group,
                         availableGroups = groups,
+                        finishEnabled = validateQuickCalculationUseCase(calc),
                         initialized = true,
                     )
                 }
-                checkFinishEnabled()
             } ?: let {
                 val group = getGroupByIdOrCreateDefaultUseCase(groupId, GroupFeatureType.Quick)
                 val currencies =
@@ -122,8 +122,12 @@ class AddQuickViewModel(
         intent {
             val newAmounts = state.currencies + AmountStr(code, "")
             val calc = calcToResult(newAmounts)
-            reduce { state.copy(currencies = calc) }
-            checkFinishEnabled()
+            reduce {
+                state.copy(
+                    currencies = calc,
+                    finishEnabled = validateQuickCalculationUseCase(calc),
+                )
+            }
         }
 
     private fun handleNavResSetCode(
@@ -140,14 +144,15 @@ class AddQuickViewModel(
     fun onCurrencyRemove(removeIndex: Int) =
         intent {
             analyticsManager.logEvent("add_quick_currency_removed")
+            val currencies =
+                state.currencies
+                    .filterIndexed { index, _ -> index != removeIndex }
             reduce {
                 state.copy(
-                    currencies =
-                        state.currencies
-                            .filterIndexed { index, _ -> index != removeIndex },
+                    currencies = currencies,
+                    finishEnabled = validateQuickCalculationUseCase(currencies),
                 )
             }
-            checkFinishEnabled()
         }
 
     fun onGroupSelect(group: Group) =
@@ -180,8 +185,12 @@ class AddQuickViewModel(
             val from = state.currencies.first()
             val new = from.copy(value = CurrUtils.validateInput(from.value, input))
             val calc = calcToResult(listOf(new) + state.currencies.drop(1))
-            reduce { state.copy(currencies = calc) }
-            checkFinishEnabled()
+            reduce {
+                state.copy(
+                    currencies = calc,
+                    finishEnabled = validateQuickCalculationUseCase(calc),
+                )
+            }
         }
 
     fun onSwapClick() =
@@ -287,15 +296,6 @@ class AddQuickViewModel(
             }
         return listOf(from) + new
     }
-
-    private fun checkFinishEnabled() =
-        intent {
-            reduce {
-                state.copy(
-                    finishEnabled = validateQuickCalculationUseCase(state.currencies),
-                )
-            }
-        }
 
     fun onSetCode(index: Int) =
         intent {
