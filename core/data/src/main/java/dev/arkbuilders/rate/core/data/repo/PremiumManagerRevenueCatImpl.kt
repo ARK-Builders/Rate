@@ -12,7 +12,7 @@ import com.revenuecat.purchases.awaitCustomerInfo
 import com.revenuecat.purchases.awaitGetProducts
 import com.revenuecat.purchases.awaitPurchase
 import com.revenuecat.purchases.interfaces.UpdatedCustomerInfoListener
-import dev.arkbuilders.rate.core.domain.BuildConfigFieldsProvider
+import dev.arkbuilders.rate.core.domain.BuildConfigFields
 import dev.arkbuilders.rate.core.domain.repo.PremiumManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,7 @@ import timber.log.Timber
 
 class PremiumManagerRevenueCatImpl(
     private val context: Context,
-    private val buildConfigFieldsProvider: BuildConfigFieldsProvider,
+    private val buildConfigFields: BuildConfigFields,
 ) : PremiumManager {
     private val _premiumState = MutableStateFlow(false)
 
@@ -84,7 +84,6 @@ class PremiumManagerRevenueCatImpl(
         if (Purchases.isConfigured)
             return
 
-        val buildConfigFields = buildConfigFieldsProvider.provide()
         val apiKey = buildConfigFields.revenueCatApiKey
         if (apiKey.isBlank()) {
             Timber.d("RevenueCat configure skipped: API key is empty")

@@ -36,7 +36,6 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
                 applicationContext,
                 buildConfigFields(),
             )
-        initBuildConfigFields()
         initPremiumManager()
         instance = this
 
@@ -53,6 +52,7 @@ class App : Application(), Configuration.Provider, CoreComponentProvider {
             versionCode = BuildConfig.VERSION_CODE,
             versionName = BuildConfig.VERSION_NAME,
             isGooglePlayBuild = BuildConfig.GOOGLE_PLAY_BUILD,
+            revenueCatApiKey = BuildConfig.REVENUECAT_API_KEY,
             availableIconCodes = BuildConfig.ICON_CODES.toSet(),
         )
 

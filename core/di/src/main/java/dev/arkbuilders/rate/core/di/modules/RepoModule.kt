@@ -125,19 +125,17 @@ class RepoModule {
         ratesApiClient: RatesApiClient,
         fiatRateResponseMapper: FiatRateResponseMapper,
     ): FiatCurrencyDataSource = FiatCurrencyDataSource(ratesApiClient, fiatRateResponseMapper)
-    fun premiumManager(
-        context: Context,
-        buildConfigFieldsProvider: BuildConfigFieldsProvider,
-    ): PremiumManager =
-        PremiumManagerRevenueCatImpl(
-            context,
-            buildConfigFieldsProvider,
-        )
 
     @Singleton
     @Provides
-    fun defaultGroupNameProvider(context: Context): DefaultGroupNameProvider =
-        DefaultGroupNameProviderImpl(context)
+    fun premiumManager(
+        context: Context,
+        buildConfigFields: BuildConfigFields,
+    ): PremiumManager =
+        PremiumManagerRevenueCatImpl(
+            context,
+            buildConfigFields,
+        )
 
     @Singleton
     @Provides
