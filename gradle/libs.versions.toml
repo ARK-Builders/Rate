@@ -41,6 +41,7 @@ material = "1.14.0"
 kotlinxSerializationJson = "1.11.0"
 reorderable = "2.4.3"
 playReview = "2.0.2"
+revenueCat = "10.10.0"
 composeBom = "2026.06.01"
 composeMaterial = "1.6.2"
 composeFoundation = "1.6.2"
@@ -87,6 +88,7 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt"
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 play-review = { group = "com.google.android.play", name = "review", version.ref = "playReview" }
 play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "playReview" }
+revenuecat-purchases = { module = "com.revenuecat.purchases:purchases", version.ref = "revenueCat" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }

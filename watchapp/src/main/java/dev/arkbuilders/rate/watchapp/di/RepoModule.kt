@@ -56,6 +56,8 @@ class RepoModule {
             versionName = BuildConfig.VERSION_NAME,
             // Default to false for watch app for now
             isGooglePlayBuild = false,
+            // RevenueCat subscriptions are only available in the phone app.
+            revenueCatApiKey = "",
             availableIconCodes = BuildConfig.ICON_CODES.toSet(),
         )
 

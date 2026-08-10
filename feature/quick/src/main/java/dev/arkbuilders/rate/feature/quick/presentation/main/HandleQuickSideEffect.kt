@@ -146,6 +146,8 @@ suspend fun handleQuickSideEffect(
 
         QuickScreenEffect.NavigateBack -> ctx.findActivity()?.finish()
 
+        QuickScreenEffect.NavigateToPaywall -> externalNavigator.navigateToPaywall()
+
         QuickScreenEffect.LaunchInAppReview -> {
             CoroutineScope(coroutineContext).launch {
                 val launchInAppReview = QuickComponentHolder.provide(ctx).launchInAppReview()

@@ -1,33 +1,53 @@
 package dev.arkbuilders.rate.feature.quick.presentation.main
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
@@ -60,6 +80,7 @@ import dev.arkbuilders.rate.feature.quick.presentation.ui.QuickOptionsBottomShee
 import dev.arkbuilders.rate.feature.quick.presentation.ui.QuickSwipeItem
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import dev.arkbuilders.rate.core.presentation.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination<ExternalModuleGraph>
@@ -102,6 +123,13 @@ fun QuickScreen(
     val editGroupRenameSheetState = rememberModalBottomSheetState()
 
     fun getCurrentGroup() = state.pages.getOrNull(pagerState.currentPage)?.group
+
+    if (state.showUnlimitedPinDialog) {
+        UnlimitedPinPremiumDialog(
+            onDismiss = viewModel::onDismissUnlimitedPinDialog,
+            onTryPremiumClick = viewModel::onTryPremiumClick,
+        )
+    }
 
     HandleQuickSideEffects(
         viewModel = viewModel,
@@ -157,7 +185,7 @@ fun QuickScreen(
                         onLongClick = {
                             viewModel.onShowGroupOptions(it)
                         },
-                        onPin = viewModel::onPin,
+                        onPinRequested = viewModel::onPinRequested,
                         onUnpin = viewModel::onUnpin,
                         onNewCode = {
                             navigator
@@ -175,7 +203,7 @@ fun QuickScreen(
             QuickOptionsBottomSheet(
                 calculationOptionsSheetState,
                 calculation = it.calculation,
-                onPin = viewModel::onPin,
+                onPin = { calculation -> viewModel.onPinRequested(calculation) },
                 onUnpin = viewModel::onUnpin,
                 onEdit = viewModel::onEdit,
                 onReuse = viewModel::onReuse,
@@ -246,7 +274,7 @@ private fun Content(
     onDelete: (QuickCalculation) -> Unit,
     onClick: (QuickCalculation) -> Unit,
     onLongClick: (QuickCalculation) -> Unit = {},
-    onPin: (QuickCalculation) -> Unit,
+    onPinRequested: (QuickCalculation) -> Boolean,
     onUnpin: (QuickCalculation) -> Unit,
     onNewCode: (CurrencyCode) -> Unit,
 ) {
@@ -279,7 +307,7 @@ private fun Content(
                     onDelete = onDelete,
                     onClick = onClick,
                     onLongClick = onLongClick,
-                    onPin = onPin,
+                    onPinRequested = onPinRequested,
                     onUnpin = onUnpin,
                     onNewCode = onNewCode,
                 )
@@ -297,7 +325,7 @@ private fun Content(
                         onDelete = onDelete,
                         onClick = onClick,
                         onLongClick = onLongClick,
-                        onPin = onPin,
+                        onPinRequested = onPinRequested,
                         onUnpin = onUnpin,
                         onNewCode = onNewCode,
                     )
@@ -314,7 +342,7 @@ private fun GroupPage(
     pinned: List<PinnedQuickCalculation>,
     notPinned: List<QuickCalculation>,
     onDelete: (QuickCalculation) -> Unit,
-    onPin: (QuickCalculation) -> Unit,
+    onPinRequested: (QuickCalculation) -> Boolean,
     onUnpin: (QuickCalculation) -> Unit,
     onClick: (QuickCalculation) -> Unit = {},
     onLongClick: (QuickCalculation) -> Unit = {},
@@ -369,7 +397,7 @@ private fun GroupPage(
                     },
                     calculation = it,
                     onDelete = { onDelete(it) },
-                    onPin = onPin,
+                    onPinRequested = onPinRequested,
                 )
                 AppHorDiv16()
             }
@@ -387,6 +415,124 @@ private fun GroupPage(
         }
         items(currencies, key = { it.code }) { name ->
             CurrencyInfoItem(name) { onNewCode(it.code) }
+        }
+    }
+}
+
+@Composable
+private fun UnlimitedPinPremiumDialog(
+    onDismiss: () -> Unit,
+    onTryPremiumClick: () -> Unit,
+) {
+    val dialogShape = RoundedCornerShape(28.dp)
+
+    Dialog(onDismissRequest = onDismiss) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clip(dialogShape)
+                    .background(Color.White)
+                    .border(
+                        border = BorderStroke(1.dp, ArkColor.BorderSecondary),
+                        shape = dialogShape,
+                    )
+                    .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center)
+                            .size(84.dp)
+                            .clip(CircleShape)
+                            .background(
+                                Brush.linearGradient(
+                                    listOf(
+                                        ArkColor.BrandSecondary.copy(alpha = 0.16f),
+                                        ArkColor.Teal500.copy(alpha = 0.16f),
+                                    ),
+                                ),
+                            ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Box(
+                        modifier =
+                            Modifier
+                                .size(60.dp)
+                                .clip(CircleShape)
+                                .background(Color.White)
+                                .border(
+                                    border =
+                                        BorderStroke(
+                                            width = 1.dp,
+                                            color = ArkColor.BorderSecondary,
+                                        ),
+                                    shape = CircleShape,
+                                ),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(32.dp),
+                            painter = painterResource(CoreR.drawable.ic_premium),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                        )
+                    }
+                }
+
+                IconButton(
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .size(40.dp),
+                    onClick = onDismiss,
+                ) {
+                    Icon(
+                        modifier = Modifier.size(14.dp),
+                        painter = painterResource(CoreR.drawable.ic_close),
+                        contentDescription = stringResource(CoreRString.close),
+                        tint = ArkColor.FGQuinary,
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(20.dp))
+            Text(
+                text = "Unlimited pin in Premium",
+                color = ArkColor.TextPrimary,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp),
+                text =
+                    "Pin as many quick calculations as you " +
+                        "need and keep your favorites one tap away.",
+                color = ArkColor.TextTertiary,
+                fontSize = 15.sp,
+                lineHeight = 22.sp,
+                textAlign = TextAlign.Center,
+            )
+            Button(
+                modifier =
+                    Modifier
+                        .padding(top = 24.dp)
+                        .fillMaxWidth()
+                        .height(48.dp),
+                onClick = onTryPremiumClick,
+                colors = ButtonDefaults.buttonColors(containerColor = ArkColor.Primary),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text(
+                    text = "Try Premium",
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
         }
     }
 }

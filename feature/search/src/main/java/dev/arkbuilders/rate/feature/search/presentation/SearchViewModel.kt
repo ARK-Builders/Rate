@@ -30,6 +30,8 @@ sealed class SearchScreenEffect {
     data class NavigateBackWithResult(val result: SearchNavResult) : SearchScreenEffect()
 
     data object NavigateBack : SearchScreenEffect()
+
+    data object NavigateToPaywall : SearchScreenEffect()
 }
 
 class SearchViewModel(
@@ -94,6 +96,12 @@ class SearchViewModel(
     fun onCodeProhibitedDialogDismiss() =
         intent {
             reduce { state.copy(showCodeProhibitedDialog = false) }
+        }
+
+    fun onTryPremiumClick() =
+        intent {
+            analyticsManager.logEvent("search_crypto_banner_try_premium_clicked")
+            postSideEffect(SearchScreenEffect.NavigateToPaywall)
         }
 
     fun onBackClick() =

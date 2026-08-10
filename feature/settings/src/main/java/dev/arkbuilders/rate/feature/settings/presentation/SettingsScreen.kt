@@ -2,6 +2,7 @@ package dev.arkbuilders.rate.feature.settings.presentation
 
 import android.content.Context
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
@@ -37,6 +41,7 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.ramcosta.composedestinations.generated.paywall.destinations.PaywallScreenDestination
 import com.ramcosta.composedestinations.generated.settings.destinations.AboutScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.arkbuilders.rate.core.presentation.CoreRDrawable
@@ -74,6 +79,9 @@ fun SettingsScreen(navigator: DestinationsNavigator) {
             SettingsScreenEffect.NavigateToAbout ->
                 navigator.navigate(AboutScreenDestination)
 
+            SettingsScreenEffect.NavigateToPaywall ->
+                navigator.navigate(PaywallScreenDestination)
+
             SettingsScreenEffect.NavigateBack -> navigator.popBackStack()
         }
     }
@@ -88,6 +96,7 @@ fun SettingsScreen(navigator: DestinationsNavigator) {
                 onToggleLanguagePopup = viewModel::onToggleLanguagePopup,
                 onChangeLanguage = viewModel::onChangeLanguage,
                 onAboutClick = viewModel::onAboutClick,
+                onPaywallClick = viewModel::onPaywallClick,
             )
         }
     }
@@ -102,6 +111,7 @@ private fun Content(
     onToggleLanguagePopup: (Boolean) -> Unit,
     onChangeLanguage: (AppLanguage) -> Unit,
     onAboutClick: () -> Unit,
+    onPaywallClick: () -> Unit,
 ) {
     val ctx = LocalContext.current
     val resources = LocalResources.current
@@ -216,6 +226,38 @@ private fun Content(
                 }
             }
         }
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { onPaywallClick() }
+                    .padding(horizontal = 16.dp, vertical = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier =
+                    Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(ArkColor.BrandSecondary.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(CoreRDrawable.ic_premium),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                )
+            }
+            Text(
+                modifier = Modifier.padding(start = 10.dp),
+                text = "Premium",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                color = ArkColor.TextTertiary,
+            )
+        }
+        AppHorDiv16(modifier = Modifier)
         Row(
             modifier =
                 Modifier

@@ -1,8 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
+    id("kotlin-parcelize")
 }
 
 kotlin {
@@ -14,7 +15,7 @@ kotlin {
 }
 
 android {
-    namespace = "dev.arkbuilders.rate.core.data"
+    namespace = "dev.arkbuilders.rate.feature.paywall"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -22,6 +23,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        ksp {
+            arg("compose-destinations.moduleName", "paywall")
+        }
     }
 
     buildTypes {
@@ -40,44 +44,36 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
+    implementation(project(":core:di"))
     implementation(project(":core:db"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:presentation"))
 
     implementation(libs.androidx.core.ktx)
 
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.ui)
+    implementation(libs.navigation.compose)
+    implementation(libs.material3)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.constraintlayout.compose)
+
+    implementation(libs.timber)
 
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
 
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-
-    implementation(libs.timber)
-
-    implementation(libs.play.review)
-    implementation(libs.play.review.ktx)
-    implementation(libs.revenuecat.purchases)
+    implementation(libs.orbit.compose)
+    implementation(libs.orbit.viewmodel)
 
     implementation(libs.arrow.core)
     implementation(libs.arrow.fx.coroutines)
 
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.okhttp)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.ktor.client.logging)
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.compose.destinations.core)
+    ksp(libs.compose.destinations.compiler)
 
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
-
+    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
-
-tasks.getByPath(":core:data:preBuild").dependsOn("ktlintCheck")
-
-tasks.getByPath(":core:data:preBuild").dependsOn("ktlintFormat")
