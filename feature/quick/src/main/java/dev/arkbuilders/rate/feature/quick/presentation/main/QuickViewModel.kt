@@ -25,6 +25,7 @@ import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupReorderSheetStat
 import dev.arkbuilders.rate.feature.quick.domain.model.PinnedQuickCalculation
 import dev.arkbuilders.rate.feature.quick.domain.model.QuickCalculation
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
+import dev.arkbuilders.rate.feature.quick.domain.usecase.CleanupInvalidQuickCalculationsUseCase
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -85,6 +86,7 @@ class QuickViewModel(
     private val searchUseCase: SearchUseCase,
     private val analyticsManager: AnalyticsManager,
     private val prefs: Prefs,
+    private val cleanupInvalidQuickCalculationsUseCase: CleanupInvalidQuickCalculationsUseCase,
 ) : ViewModel(), ContainerHost<QuickScreenState, QuickScreenEffect> {
     override val container: Container<QuickScreenState, QuickScreenEffect> =
         container(QuickScreenState())
@@ -95,6 +97,8 @@ class QuickViewModel(
 
     private fun init() =
         intent {
+            cleanupInvalidQuickCalculationsUseCase()
+
             quickRepo.allFlow().drop(1).onEach {
                 intent {
                     val pages = buildPages()
@@ -423,6 +427,7 @@ class QuickViewModelFactory @AssistedInject constructor(
     private val searchUseCase: SearchUseCase,
     private val analyticsManager: AnalyticsManager,
     private val prefs: Prefs,
+    private val cleanupInvalidQuickCalculationsUseCase: CleanupInvalidQuickCalculationsUseCase,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return QuickViewModel(
@@ -436,6 +441,7 @@ class QuickViewModelFactory @AssistedInject constructor(
             searchUseCase,
             analyticsManager,
             prefs,
+            cleanupInvalidQuickCalculationsUseCase,
         ) as T
     }
 
