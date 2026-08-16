@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,7 +50,6 @@ import dev.arkbuilders.rate.core.presentation.ui.AppTopBarBack
 import dev.arkbuilders.rate.core.presentation.ui.ArkCursorLargeTextField
 import dev.arkbuilders.rate.core.presentation.ui.InfoDialog
 import dev.arkbuilders.rate.core.presentation.ui.LoadingScreen
-import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
 import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
 import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.feature.portfolio.di.PortfolioComponentHolder
@@ -91,7 +92,7 @@ fun EditAssetScreen(
                 onBackClick = { viewModel.onBackClick() },
             )
         },
-        contentWindowInsets = appScaffoldContentWindowInsets(),
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { contentPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             if (state.initialized) {

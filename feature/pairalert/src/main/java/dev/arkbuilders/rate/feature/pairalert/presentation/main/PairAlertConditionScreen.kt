@@ -9,9 +9,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.PagerState
@@ -51,7 +53,6 @@ import dev.arkbuilders.rate.core.presentation.ui.AppTopBarCenterTitle
 import dev.arkbuilders.rate.core.presentation.ui.GroupViewPager
 import dev.arkbuilders.rate.core.presentation.ui.LoadingScreen
 import dev.arkbuilders.rate.core.presentation.ui.RateSnackbarHost
-import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
 import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
 import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupOptionsBottomSheet
@@ -137,7 +138,7 @@ fun PairAlertConditionScreen(
         snackbarHost = {
             RateSnackbarHost(snackState)
         },
-        contentWindowInsets = appScaffoldContentWindowInsets(),
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { contentPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             when {
