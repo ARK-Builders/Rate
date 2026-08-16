@@ -7,11 +7,14 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -39,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -67,6 +71,9 @@ import dev.arkbuilders.rate.core.presentation.ui.LoadingScreen
 import dev.arkbuilders.rate.core.presentation.ui.NoResult
 import dev.arkbuilders.rate.core.presentation.ui.RateSnackbarHost
 import dev.arkbuilders.rate.core.presentation.ui.SearchTextField
+import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupOptionsBottomSheet
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupRenameBottomSheet
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupReorderBottomSheet
@@ -148,14 +155,30 @@ fun PortfolioScreen(
         snackbarHost = {
             RateSnackbarHost(snackState)
         },
-    ) {
-        Box(modifier = Modifier.padding(it)) {
+        contentWindowInsets = appScaffoldContentWindowInsets(),
+    ) { contentPadding ->
+        Box(modifier = Modifier.fillMaxSize()) {
             when {
-                state.initialized.not() -> LoadingScreen()
-                isEmpty -> PortfolioEmpty(navigator)
+                state.initialized.not() ->
+                    LoadingScreen(
+                        Modifier
+                            .padding(contentPadding)
+                            .consumeWindowInsets(contentPadding),
+                    )
+
+                isEmpty ->
+                    PortfolioEmpty(
+                        navigator = navigator,
+                        modifier =
+                            Modifier
+                                .padding(contentPadding)
+                                .consumeWindowInsets(contentPadding),
+                    )
+
                 else ->
                     Content(
                         state = state,
+                        contentPadding = contentPadding,
                         pagerState = pagerState,
                         onEditGroups = viewModel::onShowGroupsReorder,
                         onClick = { display ->
@@ -226,6 +249,7 @@ fun PortfolioScreen(
 @Composable
 private fun Content(
     state: PortfolioScreenState,
+    contentPadding: PaddingValues,
     pagerState: PagerState,
     onEditGroups: () -> Unit,
     onClick: (PortfolioDisplayAsset) -> Unit,
@@ -234,11 +258,22 @@ private fun Content(
     onDelete: (Asset) -> Unit,
 ) {
     val groups = state.pages.map { it.group }
-    Column {
+    val layoutDirection = LocalLayoutDirection.current
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .consumeWindowInsets(contentPadding)
+                .imePadding()
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection),
+                ),
+    ) {
         SearchTextField(
             modifier =
                 Modifier.padding(
-                    top = 16.dp,
+                    top = contentPadding.calculateTopPadding() + 16.dp,
                     start = 16.dp,
                     end = 16.dp,
                     bottom = 16.dp,
@@ -254,6 +289,10 @@ private fun Content(
                 onClick = onClick,
                 onChangeBaseCurrency = onChangeBaseCurrency,
                 onDelete = onDelete,
+                contentPadding =
+                    PaddingValues(
+                        bottom = contentPadding.calculateBottomPadding(),
+                    ),
             )
         } else {
             GroupViewPager(
@@ -268,6 +307,10 @@ private fun Content(
                     onClick = onClick,
                     onChangeBaseCurrency = onChangeBaseCurrency,
                     onDelete = onDelete,
+                    contentPadding =
+                        PaddingValues(
+                            bottom = contentPadding.calculateBottomPadding(),
+                        ),
                 )
             }
         }
@@ -282,6 +325,7 @@ private fun GroupPage(
     onClick: (PortfolioDisplayAsset) -> Unit = {},
     onChangeBaseCurrency: () -> Unit,
     onDelete: (Asset) -> Unit,
+    contentPadding: PaddingValues,
 ) {
     val total =
         amounts.fold(BigDecimal.ZERO) { acc, amount ->
@@ -292,6 +336,7 @@ private fun GroupPage(
     if (filtered.isNotEmpty()) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            contentPadding = contentPadding,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (filter.isEmpty()) {
@@ -373,6 +418,10 @@ private fun GroupPage(
             }
         }
     } else {
-        NoResult()
+        NoResult(
+            Modifier
+                .padding(contentPadding)
+                .consumeWindowInsets(contentPadding),
+        )
     }
 }

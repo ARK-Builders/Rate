@@ -5,8 +5,11 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,6 +48,9 @@ import dev.arkbuilders.rate.core.presentation.CoreRString
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.core.presentation.ui.AppHorDiv
 import dev.arkbuilders.rate.core.presentation.ui.AppHorDiv16
+import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.core.presentation.utils.DateFormatUtils
 import dev.arkbuilders.rate.feature.settings.di.SettingsComponentHolder
 import dev.arkbuilders.rate.feature.settings.domain.model.AppLanguage
@@ -78,24 +85,26 @@ fun SettingsScreen(navigator: DestinationsNavigator) {
         }
     }
 
-    Scaffold {
-        Box(modifier = Modifier.padding(it)) {
-            Content(
-                state = state,
-                navigator = navigator,
-                onCrashReportsToggle = viewModel::onCrashReportToggle,
-                onAnalyticsToggle = viewModel::onAnalyticsToggle,
-                onToggleLanguagePopup = viewModel::onToggleLanguagePopup,
-                onChangeLanguage = viewModel::onChangeLanguage,
-                onAboutClick = viewModel::onAboutClick,
-            )
-        }
+    Scaffold(
+        contentWindowInsets = appScaffoldContentWindowInsets(),
+    ) { contentPadding ->
+        Content(
+            state = state,
+            contentPadding = contentPadding,
+            navigator = navigator,
+            onCrashReportsToggle = viewModel::onCrashReportToggle,
+            onAnalyticsToggle = viewModel::onAnalyticsToggle,
+            onToggleLanguagePopup = viewModel::onToggleLanguagePopup,
+            onChangeLanguage = viewModel::onChangeLanguage,
+            onAboutClick = viewModel::onAboutClick,
+        )
     }
 }
 
 @Composable
 private fun Content(
     state: SettingsScreenState,
+    contentPadding: PaddingValues,
     navigator: DestinationsNavigator,
     onCrashReportsToggle: (Boolean) -> Unit,
     onAnalyticsToggle: (Boolean) -> Unit,
@@ -105,11 +114,19 @@ private fun Content(
 ) {
     val ctx = LocalContext.current
     val resources = LocalResources.current
+    val layoutDirection = LocalLayoutDirection.current
     Column(
         modifier =
             Modifier
-                .padding(vertical = 32.dp)
-                .verticalScroll(rememberScrollState()),
+                .fillMaxSize()
+                .consumeWindowInsets(contentPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    top = contentPadding.calculateTopPadding() + 32.dp,
+                    end = contentPadding.calculateEndPadding(layoutDirection),
+                    bottom = contentPadding.calculateBottomPadding() + 32.dp,
+                ),
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),

@@ -3,7 +3,10 @@ package dev.arkbuilders.rate.feature.quick.presentation.main
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +51,9 @@ import dev.arkbuilders.rate.core.presentation.ui.ListHeader
 import dev.arkbuilders.rate.core.presentation.ui.LoadingScreen
 import dev.arkbuilders.rate.core.presentation.ui.RateSnackbarHost
 import dev.arkbuilders.rate.core.presentation.ui.SearchTextField
+import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupOptionsBottomSheet
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupRenameBottomSheet
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupReorderBottomSheet
@@ -139,14 +146,30 @@ fun QuickScreen(
         snackbarHost = {
             RateSnackbarHost(snackState)
         },
-    ) {
-        Box(modifier = Modifier.padding(it)) {
+        contentWindowInsets = appScaffoldContentWindowInsets(),
+    ) { contentPadding ->
+        Box(modifier = Modifier.fillMaxSize()) {
             when {
-                state.initialized.not() -> LoadingScreen()
-                isEmpty -> QuickEmpty(navigator)
+                state.initialized.not() ->
+                    LoadingScreen(
+                        Modifier
+                            .padding(contentPadding)
+                            .consumeWindowInsets(contentPadding),
+                    )
+
+                isEmpty ->
+                    QuickEmpty(
+                        navigator = navigator,
+                        modifier =
+                            Modifier
+                                .padding(contentPadding)
+                                .consumeWindowInsets(contentPadding),
+                    )
+
                 else ->
                     Content(
                         state = state,
+                        contentPadding = contentPadding,
                         pagerState = pagerState,
                         onEditGroups = viewModel::onShowGroupsReorder,
                         onFilterChanged = viewModel::onFilterChanged,
@@ -240,6 +263,7 @@ fun QuickScreen(
 @Composable
 private fun Content(
     state: QuickScreenState,
+    contentPadding: PaddingValues,
     pagerState: PagerState,
     onEditGroups: () -> Unit,
     onFilterChanged: (String) -> Unit,
@@ -251,11 +275,22 @@ private fun Content(
     onNewCode: (CurrencyCode) -> Unit,
 ) {
     val groups = state.pages.map { it.group }
-    Column {
+    val layoutDirection = LocalLayoutDirection.current
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .consumeWindowInsets(contentPadding)
+                .imePadding()
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection),
+                ),
+    ) {
         SearchTextField(
             modifier =
                 Modifier.padding(
-                    top = 16.dp,
+                    top = contentPadding.calculateTopPadding() + 16.dp,
                     start = 16.dp,
                     end = 16.dp,
                     bottom = 16.dp,
@@ -268,6 +303,10 @@ private fun Content(
             QuickSearchPage(
                 topResultsFiltered = state.topResultsFiltered,
                 onNewCode = onNewCode,
+                contentPadding =
+                    PaddingValues(
+                        bottom = contentPadding.calculateBottomPadding(),
+                    ),
             )
         } else {
             if (state.pages.size == 1) {
@@ -282,6 +321,10 @@ private fun Content(
                     onPin = onPin,
                     onUnpin = onUnpin,
                     onNewCode = onNewCode,
+                    contentPadding =
+                        PaddingValues(
+                            bottom = contentPadding.calculateBottomPadding(),
+                        ),
                 )
             } else {
                 GroupViewPager(
@@ -300,6 +343,10 @@ private fun Content(
                         onPin = onPin,
                         onUnpin = onUnpin,
                         onNewCode = onNewCode,
+                        contentPadding =
+                            PaddingValues(
+                                bottom = contentPadding.calculateBottomPadding(),
+                            ),
                     )
                 }
             }
@@ -319,9 +366,13 @@ private fun GroupPage(
     onClick: (QuickCalculation) -> Unit = {},
     onLongClick: (QuickCalculation) -> Unit = {},
     onNewCode: (CurrencyCode) -> Unit,
+    contentPadding: PaddingValues,
 ) {
     val ctx = LocalContext.current
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+    ) {
         if (pinned.isNotEmpty()) {
             item {
                 ListHeader(text = stringResource(CoreRString.quick_pinned_calculations))

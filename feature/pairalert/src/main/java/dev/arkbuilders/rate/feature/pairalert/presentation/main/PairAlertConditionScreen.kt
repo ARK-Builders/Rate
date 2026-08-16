@@ -8,6 +8,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -48,6 +51,9 @@ import dev.arkbuilders.rate.core.presentation.ui.AppTopBarCenterTitle
 import dev.arkbuilders.rate.core.presentation.ui.GroupViewPager
 import dev.arkbuilders.rate.core.presentation.ui.LoadingScreen
 import dev.arkbuilders.rate.core.presentation.ui.RateSnackbarHost
+import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupOptionsBottomSheet
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupRenameBottomSheet
 import dev.arkbuilders.rate.core.presentation.ui.group.EditGroupReorderBottomSheet
@@ -131,15 +137,31 @@ fun PairAlertConditionScreen(
         snackbarHost = {
             RateSnackbarHost(snackState)
         },
-    ) {
-        Box(modifier = Modifier.padding(it)) {
+        contentWindowInsets = appScaffoldContentWindowInsets(),
+    ) { contentPadding ->
+        Box(modifier = Modifier.fillMaxSize()) {
             when {
-                state.initialized.not() -> LoadingScreen()
-                isEmpty -> PairAlertEmpty(onNewPair = viewModel::onNewPair)
+                state.initialized.not() ->
+                    LoadingScreen(
+                        Modifier
+                            .padding(contentPadding)
+                            .consumeWindowInsets(contentPadding),
+                    )
+
+                isEmpty ->
+                    PairAlertEmpty(
+                        modifier =
+                            Modifier
+                                .padding(contentPadding)
+                                .consumeWindowInsets(contentPadding),
+                        onNewPair = viewModel::onNewPair,
+                    )
+
                 else ->
                     Content(
                         component = component,
                         state = state,
+                        contentPadding = contentPadding,
                         pagerState = pagerState,
                         onEditGroups = viewModel::onShowGroupsReorder,
                         onDelete = viewModel::onDelete,
@@ -204,13 +226,24 @@ fun PairAlertConditionScreen(
 private fun Content(
     component: PairAlertComponent,
     state: PairAlertScreenState,
+    contentPadding: PaddingValues,
     pagerState: PagerState,
     onEditGroups: () -> Unit,
     onDelete: (PairAlert) -> Unit,
     onClick: (PairAlert) -> Unit,
     onEnableToggle: (PairAlert, Boolean) -> Unit,
 ) {
-    Column {
+    val layoutDirection = LocalLayoutDirection.current
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .consumeWindowInsets(contentPadding)
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection),
+                ),
+    ) {
         if (state.pages.size == 1) {
             GroupPage(
                 component = component,
@@ -218,9 +251,15 @@ private fun Content(
                 onDelete = { onDelete(it) },
                 onClick = onClick,
                 onEnableToggle = onEnableToggle,
+                contentPadding =
+                    PaddingValues(
+                        top = contentPadding.calculateTopPadding(),
+                        bottom = contentPadding.calculateBottomPadding(),
+                    ),
             )
         } else {
             GroupViewPager(
+                modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
                 pagerState = pagerState,
                 groups = state.pages.map { it.group },
                 onEditGroups = onEditGroups,
@@ -231,6 +270,10 @@ private fun Content(
                     onDelete = { onDelete(it) },
                     onClick = onClick,
                     onEnableToggle = onEnableToggle,
+                    contentPadding =
+                        PaddingValues(
+                            bottom = contentPadding.calculateBottomPadding(),
+                        ),
                 )
             }
         }
@@ -244,8 +287,12 @@ private fun GroupPage(
     onDelete: (PairAlert) -> Unit,
     onClick: (PairAlert) -> Unit,
     onEnableToggle: (PairAlert, Boolean) -> Unit,
+    contentPadding: PaddingValues,
 ) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+    ) {
         if (page.created.isNotEmpty()) {
             item {
                 Text(

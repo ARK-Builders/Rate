@@ -27,6 +27,7 @@ fun SearchTextField(
     modifier: Modifier = Modifier,
     text: String = "",
     placeHolderText: String = stringResource(R.string.search),
+    readOnly: Boolean = false,
     onValueChange: (String) -> Unit = {},
 ) {
     Row(
@@ -49,6 +50,7 @@ fun SearchTextField(
                     .padding(end = 12.dp),
             value = text,
             onValueChange = onValueChange,
+            readOnly = readOnly,
             textStyle =
                 TextStyle.Default.copy(
                     color = ArkColor.TextPrimary,

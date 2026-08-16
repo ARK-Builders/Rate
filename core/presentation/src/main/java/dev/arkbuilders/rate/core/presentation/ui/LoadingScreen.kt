@@ -37,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 
 @Composable
-fun LoadingScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+fun LoadingScreen(modifier: Modifier = Modifier) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         InstaSpinner(
             size = 60.dp,
             color = dev.arkbuilders.rate.core.presentation.theme.ArkColor.Secondary,
