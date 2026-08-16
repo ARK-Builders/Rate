@@ -1,6 +1,9 @@
 package dev.arkbuilders.rate.feature.quick.presentation.main
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -17,9 +20,13 @@ import dev.arkbuilders.rate.core.presentation.ui.NoResult
 fun QuickSearchPage(
     topResultsFiltered: List<CurrencyInfo>,
     onNewCode: (CurrencyCode) -> Unit,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     if (topResultsFiltered.isNotEmpty()) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = contentPadding,
+        ) {
             item {
                 ListHeader(text = stringResource(CoreRString.top_results))
             }
@@ -28,6 +35,10 @@ fun QuickSearchPage(
             }
         }
     } else {
-        NoResult()
+        NoResult(
+            Modifier
+                .padding(contentPadding)
+                .consumeWindowInsets(contentPadding),
+        )
     }
 }

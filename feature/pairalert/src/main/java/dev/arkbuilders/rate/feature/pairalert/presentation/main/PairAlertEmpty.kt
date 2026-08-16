@@ -22,8 +22,11 @@ import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.core.presentation.ui.AppButton
 
 @Composable
-fun PairAlertEmpty(onNewPair: () -> Unit) {
-    Box(modifier = Modifier.fillMaxSize()) {
+fun PairAlertEmpty(
+    modifier: Modifier = Modifier,
+    onNewPair: () -> Unit,
+) {
+    Box(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,

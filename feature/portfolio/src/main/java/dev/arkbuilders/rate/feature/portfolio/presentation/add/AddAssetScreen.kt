@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,6 +56,9 @@ import dev.arkbuilders.rate.core.presentation.ui.AppTopBarBack
 import dev.arkbuilders.rate.core.presentation.ui.DropDownWithIcon
 import dev.arkbuilders.rate.core.presentation.ui.GroupCreateDialog
 import dev.arkbuilders.rate.core.presentation.ui.GroupSelectPopup
+import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.feature.portfolio.di.PortfolioComponentHolder
 import dev.arkbuilders.rate.feature.portfolio.presentation.model.AddAssetsNavResult
 import dev.arkbuilders.rate.feature.search.presentation.SearchNavResult
@@ -102,25 +108,26 @@ fun AddAssetScreen(
                 onBackClick = { viewModel.onBackClick() },
             )
         },
-    ) {
-        Box(modifier = Modifier.padding(it)) {
-            Content(
-                state = state,
-                onAssetValueChanged = viewModel::onAssetValueChange,
-                onNewCurrencyClick = viewModel::onAddCode,
-                onAssetRemove = viewModel::onAssetRemove,
-                onGroupSelect = viewModel::onGroupSelect,
-                onGroupCreate = viewModel::onGroupCreate,
-                onCodeChange = viewModel::onSetCode,
-                onAddAsset = viewModel::onAddAsset,
-            )
-        }
+        contentWindowInsets = appScaffoldContentWindowInsets(),
+    ) { contentPadding ->
+        Content(
+            state = state,
+            contentPadding = contentPadding,
+            onAssetValueChanged = viewModel::onAssetValueChange,
+            onNewCurrencyClick = viewModel::onAddCode,
+            onAssetRemove = viewModel::onAssetRemove,
+            onGroupSelect = viewModel::onGroupSelect,
+            onGroupCreate = viewModel::onGroupCreate,
+            onCodeChange = viewModel::onSetCode,
+            onAddAsset = viewModel::onAddAsset,
+        )
     }
 }
 
 @Composable
 private fun Content(
     state: AddAssetState,
+    contentPadding: PaddingValues,
     onAssetValueChanged: (Int, String) -> Unit,
     onNewCurrencyClick: () -> Unit,
     onAssetRemove: (Int) -> Unit,
@@ -130,6 +137,7 @@ private fun Content(
     onAddAsset: () -> Unit,
 ) {
     val ctx = LocalContext.current
+    val layoutDirection = LocalLayoutDirection.current
     var showNewGroupDialog by remember { mutableStateOf(false) }
     var showGroupsPopup by remember { mutableStateOf(false) }
     var addGroupBtnWidth by remember { mutableStateOf(0) }
@@ -148,12 +156,23 @@ private fun Content(
         )
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .consumeWindowInsets(contentPadding)
+                .imePadding()
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection),
+                ),
+    ) {
         Column(
             modifier =
                 Modifier
                     .weight(1f)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState())
+                    .padding(top = contentPadding.calculateTopPadding()),
         ) {
             Currencies(state, onAssetValueChanged, onAssetRemove, onCodeChange)
             Button(
@@ -230,7 +249,12 @@ private fun Content(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(
+                            start = 16.dp,
+                            top = 16.dp,
+                            end = 16.dp,
+                            bottom = contentPadding.calculateBottomPadding() + 16.dp,
+                        ),
                 onClick = {
                     onAddAsset()
                 },

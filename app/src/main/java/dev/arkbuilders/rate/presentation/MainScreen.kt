@@ -6,12 +6,13 @@ package dev.arkbuilders.rate.presentation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,7 +29,6 @@ import com.ramcosta.composedestinations.generated.NavGraphs
 import com.ramcosta.composedestinations.generated.destinations.SplashScreenDestination
 import com.ramcosta.composedestinations.generated.onboarding.destinations.OnboardingQuickCalculationScreenDestination
 import com.ramcosta.composedestinations.generated.onboarding.destinations.OnboardingQuickScreenDestination
-import com.ramcosta.composedestinations.generated.onboarding.destinations.OnboardingScreenDestination
 import com.ramcosta.composedestinations.generated.portfolio.destinations.PortfolioScreenDestination
 import com.ramcosta.composedestinations.generated.quick.destinations.AddQuickScreenDestination
 import com.ramcosta.composedestinations.generated.quick.destinations.QuickScreenDestination
@@ -44,6 +44,7 @@ import dev.arkbuilders.rate.core.presentation.ui.ConnectivityOfflineSnackbar
 import dev.arkbuilders.rate.core.presentation.ui.ConnectivityOfflineSnackbarVisuals
 import dev.arkbuilders.rate.core.presentation.ui.ConnectivityOnlineSnackbar
 import dev.arkbuilders.rate.core.presentation.ui.ConnectivityOnlineSnackbarVisuals
+import dev.arkbuilders.rate.core.presentation.ui.LocalAppScaffoldPadding
 import dev.arkbuilders.rate.core.presentation.utils.findActivity
 import dev.arkbuilders.rate.core.presentation.utils.keyboardAsState
 import dev.arkbuilders.rate.feature.onboarding.OnboardingExternalNavigator
@@ -54,13 +55,6 @@ import dev.arkbuilders.rate.feature.quickwidget.presentation.action.AddNewCalcul
 import dev.arkbuilders.rate.feature.quickwidget.presentation.action.AddNewCalculationAction.Companion.ADD_NEW_CALCULATION_GROUP_KEY
 import dev.arkbuilders.rate.presentation.navigation.AnimatedRateBottomNavigation
 import kotlinx.coroutines.flow.drop
-
-private val dontApplySafeDrawingPaddingRoutes =
-    listOf(
-        OnboardingScreenDestination.route,
-        OnboardingQuickScreenDestination.route,
-        OnboardingQuickCalculationScreenDestination.route,
-    )
 
 private val showBottomBarRoutes =
     listOf(
@@ -90,7 +84,6 @@ fun MainScreen() {
 
     val isKeyboardOpen by keyboardAsState()
     val bottomBarVisible = rememberSaveable { mutableStateOf(false) }
-    val applySafeDrawingPadding = remember { mutableStateOf(true) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: NavGraphs.main.startRoute.route
@@ -100,20 +93,10 @@ fun MainScreen() {
             currentRoute.startsWith(it)
         }
 
-    applySafeDrawingPadding.value =
-        !dontApplySafeDrawingPaddingRoutes.any {
-            currentRoute.startsWith(it)
-        }
-
     if (isKeyboardOpen)
         bottomBarVisible.value = false
 
     Scaffold(
-        modifier =
-            Modifier
-                .let {
-                    if (applySafeDrawingPadding.value) it.safeDrawingPadding() else it
-                },
         snackbarHost = {
             SnackbarHost(
                 hostState = snackState,
@@ -149,50 +132,52 @@ fun MainScreen() {
                 bottomBarVisible = bottomBarVisible,
             )
         },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-    ) {
-        DestinationsNavHost(
-            engine = engine,
-            navController = navController,
-            start = SplashScreenDestination,
-            navGraph = NavGraphs.main,
-            modifier = Modifier.padding(it),
-        ) {
-            composable(OnboardingQuickScreenDestination) {
-                val externalNavigator =
-                    remember {
-                        object : OnboardingExternalNavigator {
-                            override fun navigateOnFinish() {
-                                destinationsNavigator.navigate(QuickScreenDestination) {
-                                    popUpTo(NavGraphs.main.startDestination) {
-                                        inclusive = true
+        contentWindowInsets = WindowInsets.safeDrawing,
+    ) { appScaffoldPadding ->
+        CompositionLocalProvider(LocalAppScaffoldPadding provides appScaffoldPadding) {
+            DestinationsNavHost(
+                engine = engine,
+                navController = navController,
+                start = SplashScreenDestination,
+                navGraph = NavGraphs.main,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                composable(OnboardingQuickScreenDestination) {
+                    val externalNavigator =
+                        remember {
+                            object : OnboardingExternalNavigator {
+                                override fun navigateOnFinish() {
+                                    destinationsNavigator.navigate(QuickScreenDestination) {
+                                        popUpTo(NavGraphs.main.startDestination) {
+                                            inclusive = true
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                OnboardingQuickScreen(
-                    navigator = destinationsNavigator,
-                    externalNavigator = externalNavigator,
-                )
-            }
+                    OnboardingQuickScreen(
+                        navigator = destinationsNavigator,
+                        externalNavigator = externalNavigator,
+                    )
+                }
 
-            composable(QuickScreenDestination) {
-                val externalNavigator =
-                    remember {
-                        object : QuickExternalNavigator {
-                            override fun navigateToCalcOnboarding() {
-                                destinationsNavigator.navigate(
-                                    OnboardingQuickCalculationScreenDestination,
-                                )
+                composable(QuickScreenDestination) {
+                    val externalNavigator =
+                        remember {
+                            object : QuickExternalNavigator {
+                                override fun navigateToCalcOnboarding() {
+                                    destinationsNavigator.navigate(
+                                        OnboardingQuickCalculationScreenDestination,
+                                    )
+                                }
                             }
                         }
-                    }
-                QuickScreen(
-                    navigator = destinationsNavigator,
-                    resultRecipient = resultRecipient(longNavType),
-                    externalNavigator = externalNavigator,
-                )
+                    QuickScreen(
+                        navigator = destinationsNavigator,
+                        resultRecipient = resultRecipient(longNavType),
+                        externalNavigator = externalNavigator,
+                    )
+                }
             }
         }
     }

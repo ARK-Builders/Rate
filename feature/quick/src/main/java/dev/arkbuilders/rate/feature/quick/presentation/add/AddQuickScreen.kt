@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +61,9 @@ import dev.arkbuilders.rate.core.presentation.ui.AppTopBarBack
 import dev.arkbuilders.rate.core.presentation.ui.DropDownWithIcon
 import dev.arkbuilders.rate.core.presentation.ui.GroupCreateDialog
 import dev.arkbuilders.rate.core.presentation.ui.GroupSelectPopup
+import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.core.presentation.utils.ReorderHapticFeedbackType
 import dev.arkbuilders.rate.core.presentation.utils.rememberReorderHapticFeedback
 import dev.arkbuilders.rate.feature.quick.di.QuickComponentHolder
@@ -120,27 +126,28 @@ fun AddQuickScreen(
                 onBackClick = { viewModel.onBackClick() },
             )
         },
-    ) {
-        Box(modifier = Modifier.padding(it)) {
-            Content(
-                state = state,
-                onAmountChanged = viewModel::onAssetAmountChange,
-                onNewCurrencyClick = viewModel::onAddCode,
-                onCurrencyRemove = viewModel::onCurrencyRemove,
-                onGroupSelect = viewModel::onGroupSelect,
-                onGroupCreate = viewModel::onGroupCreate,
-                onCodeChange = viewModel::onSetCode,
-                onSwapClick = viewModel::onSwapClick,
-                onCurrenciesSwap = viewModel::onCurrenciesSwap,
-                onAddAsset = viewModel::onAddQuickCalculation,
-            )
-        }
+        contentWindowInsets = appScaffoldContentWindowInsets(),
+    ) { contentPadding ->
+        Content(
+            state = state,
+            contentPadding = contentPadding,
+            onAmountChanged = viewModel::onAssetAmountChange,
+            onNewCurrencyClick = viewModel::onAddCode,
+            onCurrencyRemove = viewModel::onCurrencyRemove,
+            onGroupSelect = viewModel::onGroupSelect,
+            onGroupCreate = viewModel::onGroupCreate,
+            onCodeChange = viewModel::onSetCode,
+            onSwapClick = viewModel::onSwapClick,
+            onCurrenciesSwap = viewModel::onCurrenciesSwap,
+            onAddAsset = viewModel::onAddQuickCalculation,
+        )
     }
 }
 
 @Composable
 private fun Content(
     state: AddQuickScreenState,
+    contentPadding: PaddingValues,
     onAmountChanged: (String) -> Unit,
     onNewCurrencyClick: () -> Unit,
     onCurrencyRemove: (Int) -> Unit,
@@ -152,6 +159,7 @@ private fun Content(
     onAddAsset: () -> Unit,
 ) {
     val ctx = LocalContext.current
+    val layoutDirection = LocalLayoutDirection.current
     var showNewGroupDialog by remember { mutableStateOf(false) }
     var showGroupsPopup by remember { mutableStateOf(false) }
     var addGroupBtnWidth by remember { mutableStateOf(0) }
@@ -177,12 +185,26 @@ private fun Content(
             haptic.performHapticFeedback(ReorderHapticFeedbackType.MOVE)
         }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .consumeWindowInsets(contentPadding)
+                .imePadding()
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection),
+                ),
+    ) {
         LazyColumn(
             modifier =
                 Modifier
                     .weight(1f),
             state = lazyListState,
+            contentPadding =
+                PaddingValues(
+                    top = contentPadding.calculateTopPadding(),
+                ),
         ) {
             currencies(
                 state,
@@ -270,7 +292,12 @@ private fun Content(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(
+                            start = 16.dp,
+                            top = 16.dp,
+                            end = 16.dp,
+                            bottom = contentPadding.calculateBottomPadding() + 16.dp,
+                        ),
                 onClick = {
                     onAddAsset()
                 },
@@ -287,6 +314,7 @@ private fun Content(
 fun Preview() {
     Content(
         state = AddQuickScreenState(),
+        contentPadding = PaddingValues(),
         onAmountChanged = {},
         onNewCurrencyClick = {},
         onCurrencyRemove = {},

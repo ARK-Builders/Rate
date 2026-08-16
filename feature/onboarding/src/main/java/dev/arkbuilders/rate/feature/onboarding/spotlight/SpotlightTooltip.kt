@@ -4,10 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -25,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -34,6 +38,8 @@ import androidx.compose.ui.unit.sp
 import dev.arkbuilders.rate.core.presentation.CoreRString
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.core.presentation.ui.AppButton
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.core.presentation.ui.group.ArkOutlinedButton
 import kotlin.math.roundToInt
 
@@ -52,8 +58,14 @@ fun SpotlightTooltip(
     onSkip: (() -> Unit)? = null,
 ) {
     val density = LocalDensity.current
+    val layoutDirection = LocalLayoutDirection.current
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val screenHeightPx = with(density) { screenHeight.toPx() }
+    val safeDrawingPadding = WindowInsets.safeDrawing.asPaddingValues()
+    val safeTopPx = with(density) { safeDrawingPadding.calculateTopPadding().toPx() }
+    val safeBottomBoundary =
+        screenHeightPx -
+            with(density) { safeDrawingPadding.calculateBottomPadding().toPx() }
     val paddingPx = with(density) { targetPadding.toPx() }
 
     var tooltipHeightPx by remember { mutableStateOf(0f) }
@@ -63,21 +75,32 @@ fun SpotlightTooltip(
             val aboveY = targetRect.top - tooltipHeightPx - paddingPx
             val belowY = targetRect.bottom + paddingPx
 
-            when (position) {
-                TooltipPosition.Above -> {
-                    if (aboveY > 0) aboveY else belowY
+            val preferredY =
+                when (position) {
+                    TooltipPosition.Above -> {
+                        if (aboveY >= safeTopPx) aboveY else belowY
+                    }
+                    TooltipPosition.Below -> {
+                        if (belowY + tooltipHeightPx <= safeBottomBoundary) belowY else aboveY
+                    }
                 }
-                TooltipPosition.Below -> {
-                    if (belowY + tooltipHeightPx < screenHeightPx) belowY else aboveY
-                }
-            }
+
+            preferredY.coerceIn(
+                minimumValue = safeTopPx,
+                maximumValue =
+                    (safeBottomBoundary - tooltipHeightPx)
+                        .coerceAtLeast(safeTopPx),
+            )
         }
 
     Box(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(
+                    start = safeDrawingPadding.calculateStartPadding(layoutDirection) + 16.dp,
+                    end = safeDrawingPadding.calculateEndPadding(layoutDirection) + 16.dp,
+                )
                 .absoluteOffset { IntOffset(0, tooltipOffsetY.roundToInt()) },
     ) {
         Card(

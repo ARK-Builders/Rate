@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -39,6 +41,7 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +57,9 @@ import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.core.presentation.ui.CurrencyInfoItem
 import dev.arkbuilders.rate.core.presentation.ui.ListHeader
 import dev.arkbuilders.rate.core.presentation.ui.SearchTextField
+import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.feature.onboarding.di.OnboardingComponentHolder
 import dev.arkbuilders.rate.feature.onboarding.quick.MockBottomNavigation
 import dev.arkbuilders.rate.feature.onboarding.quick.MockQuickItem
@@ -136,7 +142,6 @@ fun OnboardingQuickCalculationScreen(navigator: DestinationsNavigator) {
         return
 
     Scaffold(
-        modifier = Modifier.safeDrawingPadding(),
         floatingActionButton = {
             FloatingActionButton(
                 contentColor = Color.White,
@@ -153,17 +158,28 @@ fun OnboardingQuickCalculationScreen(navigator: DestinationsNavigator) {
                 pairAlertModifier = Modifier,
             )
         },
-    ) {
-        Column(Modifier.padding(it)) {
+        contentWindowInsets = appScaffoldContentWindowInsets(),
+    ) { contentPadding ->
+        val layoutDirection = LocalLayoutDirection.current
+        Column(
+            Modifier
+                .fillMaxSize()
+                .consumeWindowInsets(contentPadding)
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection),
+                ),
+        ) {
             SearchTextField(
                 modifier =
                     Modifier.padding(
-                        top = 16.dp,
+                        top = contentPadding.calculateTopPadding() + 16.dp,
                         start = 16.dp,
                         end = 16.dp,
                         bottom = 16.dp,
                     ),
                 text = "",
+                readOnly = true,
             ) {}
             Column(
                 modifier =
@@ -196,7 +212,16 @@ fun OnboardingQuickCalculationScreen(navigator: DestinationsNavigator) {
                 }
             }
             ListHeader(text = stringResource(CoreRString.all_currencies))
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            LazyColumn(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                contentPadding =
+                    PaddingValues(
+                        bottom = contentPadding.calculateBottomPadding(),
+                    ),
+            ) {
                 items(state.currencies, key = { it.code }) { name ->
                     CurrencyInfoItem(name) { }
                 }

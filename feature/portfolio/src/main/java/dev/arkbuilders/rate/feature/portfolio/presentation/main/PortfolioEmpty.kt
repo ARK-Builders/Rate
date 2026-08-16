@@ -24,8 +24,11 @@ import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.core.presentation.ui.AppButton
 
 @Composable
-fun PortfolioEmpty(navigator: DestinationsNavigator) {
-    Box(modifier = Modifier.fillMaxSize()) {
+fun PortfolioEmpty(
+    navigator: DestinationsNavigator,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,

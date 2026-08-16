@@ -5,7 +5,11 @@ package dev.arkbuilders.rate.feature.portfolio.presentation.edit
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,6 +28,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +48,9 @@ import dev.arkbuilders.rate.core.presentation.ui.AppTopBarBack
 import dev.arkbuilders.rate.core.presentation.ui.ArkCursorLargeTextField
 import dev.arkbuilders.rate.core.presentation.ui.InfoDialog
 import dev.arkbuilders.rate.core.presentation.ui.LoadingScreen
+import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.feature.portfolio.di.PortfolioComponentHolder
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -83,17 +91,23 @@ fun EditAssetScreen(
                 onBackClick = { viewModel.onBackClick() },
             )
         },
-    ) {
-        Box(modifier = Modifier.padding(it)) {
+        contentWindowInsets = appScaffoldContentWindowInsets(),
+    ) { contentPadding ->
+        Box(modifier = Modifier.fillMaxSize()) {
             if (state.initialized) {
                 Content(
                     navigator = navigator,
                     info = state.info,
                     value = state.value,
+                    contentPadding = contentPadding,
                     onValueChange = viewModel::onValueChange,
                 )
             } else {
-                LoadingScreen()
+                LoadingScreen(
+                    Modifier
+                        .padding(contentPadding)
+                        .consumeWindowInsets(contentPadding),
+                )
             }
         }
     }
@@ -104,6 +118,7 @@ private fun Content(
     navigator: DestinationsNavigator,
     info: CurrencyInfo,
     value: String,
+    contentPadding: PaddingValues,
     onValueChange: (String) -> Unit,
 ) {
     var showMarketCapitalizationDialog by remember { mutableStateOf(false) }
@@ -111,6 +126,7 @@ private fun Content(
 
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val layoutDirection = LocalLayoutDirection.current
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -135,8 +151,16 @@ private fun Content(
     Column(
         modifier =
             Modifier
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
+                .fillMaxSize()
+                .consumeWindowInsets(contentPadding)
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection) + 16.dp,
+                    top = contentPadding.calculateTopPadding(),
+                    end = contentPadding.calculateEndPadding(layoutDirection) + 16.dp,
+                    bottom = contentPadding.calculateBottomPadding(),
+                ),
     ) {
         val title =
             if (info.name.isNotEmpty()) {

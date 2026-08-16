@@ -4,9 +4,13 @@ package dev.arkbuilders.rate.feature.pairalert.presentation.add
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
@@ -44,6 +49,9 @@ import dev.arkbuilders.rate.core.presentation.ui.AppTopBarBack
 import dev.arkbuilders.rate.core.presentation.ui.DropDownWithIcon
 import dev.arkbuilders.rate.core.presentation.ui.GroupCreateDialog
 import dev.arkbuilders.rate.core.presentation.ui.GroupSelectPopup
+import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
+import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
+import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.feature.pairalert.di.PairAlertComponentHolder
 import dev.arkbuilders.rate.feature.search.presentation.SearchNavResult
 import org.orbitmvi.orbit.compose.collectAsState
@@ -96,27 +104,28 @@ fun AddPairAlertScreen(
                 onBackClick = { navigator.popBackStack() },
             )
         },
-    ) {
-        Box(modifier = Modifier.padding(it)) {
-            Content(
-                state = state,
-                navigateSearchBase = viewModel::onNavigateSearchBase,
-                navigateSearchTarget = viewModel::onNavigateSearchTarget,
-                onGroupSelect = viewModel::onGroupSelect,
-                onGroupCreate = viewModel::onGroupCreate,
-                onPriceOrPercentChanged = viewModel::onPriceOrPercentChanged,
-                onOneTimeChanged = viewModel::onOneTimeChanged,
-                onPriceOrPercentInputChanged = viewModel::onPriceOrPercentInputChanged,
-                onIncreaseToggle = viewModel::onIncreaseToggle,
-                onSaveClick = viewModel::onSaveClick,
-            )
-        }
+        contentWindowInsets = appScaffoldContentWindowInsets(),
+    ) { contentPadding ->
+        Content(
+            state = state,
+            contentPadding = contentPadding,
+            navigateSearchBase = viewModel::onNavigateSearchBase,
+            navigateSearchTarget = viewModel::onNavigateSearchTarget,
+            onGroupSelect = viewModel::onGroupSelect,
+            onGroupCreate = viewModel::onGroupCreate,
+            onPriceOrPercentChanged = viewModel::onPriceOrPercentChanged,
+            onOneTimeChanged = viewModel::onOneTimeChanged,
+            onPriceOrPercentInputChanged = viewModel::onPriceOrPercentInputChanged,
+            onIncreaseToggle = viewModel::onIncreaseToggle,
+            onSaveClick = viewModel::onSaveClick,
+        )
     }
 }
 
 @Composable
 private fun Content(
     state: AddPairAlertScreenState,
+    contentPadding: PaddingValues,
     navigateSearchBase: () -> Unit,
     navigateSearchTarget: () -> Unit,
     onGroupSelect: (Group) -> Unit,
@@ -128,6 +137,7 @@ private fun Content(
     onSaveClick: () -> Unit,
 ) {
     val ctx = LocalContext.current
+    val layoutDirection = LocalLayoutDirection.current
     var showNewGroupDialog by remember { mutableStateOf(false) }
     var showGroupsPopup by remember { mutableStateOf(false) }
     var addGroupBtnWidth by remember { mutableStateOf(0) }
@@ -143,12 +153,23 @@ private fun Content(
         }
     }
 
-    Column {
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .consumeWindowInsets(contentPadding)
+                .imePadding()
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection),
+                ),
+    ) {
         Column(
             modifier =
                 Modifier
                     .weight(1f)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState())
+                    .padding(top = contentPadding.calculateTopPadding()),
         ) {
             PriceOrPercent(state, onPriceOrPercentChanged)
             EditCondition(
@@ -206,7 +227,12 @@ private fun Content(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(
+                            start = 16.dp,
+                            top = 16.dp,
+                            end = 16.dp,
+                            bottom = contentPadding.calculateBottomPadding() + 16.dp,
+                        ),
                 onClick = onSaveClick,
                 enabled = state.finishEnabled,
             ) {
