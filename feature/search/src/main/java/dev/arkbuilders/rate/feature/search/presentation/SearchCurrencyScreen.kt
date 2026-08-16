@@ -6,11 +6,13 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,7 +40,6 @@ import dev.arkbuilders.rate.core.presentation.ui.ListHeader
 import dev.arkbuilders.rate.core.presentation.ui.LoadingScreen
 import dev.arkbuilders.rate.core.presentation.ui.NoResult
 import dev.arkbuilders.rate.core.presentation.ui.SearchTextField
-import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
 import dev.arkbuilders.rate.core.presentation.ui.calculateEndPadding
 import dev.arkbuilders.rate.core.presentation.ui.calculateStartPadding
 import dev.arkbuilders.rate.feature.search.di.SearchComponentHolder
@@ -95,7 +96,7 @@ fun SearchCurrencyScreen(
                 onBackClick = { viewModel.onBackClick() },
             )
         },
-        contentWindowInsets = appScaffoldContentWindowInsets(),
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { contentPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             if (state.initialized) {

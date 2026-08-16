@@ -1,7 +1,9 @@
 package dev.arkbuilders.rate.feature.settings.presentation
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,7 +16,6 @@ import dev.arkbuilders.components.about.presentation.ArkAbout
 import dev.arkbuilders.rate.core.presentation.CoreRDrawable
 import dev.arkbuilders.rate.core.presentation.CoreRString
 import dev.arkbuilders.rate.core.presentation.ui.AppTopBarBack
-import dev.arkbuilders.rate.core.presentation.ui.appScaffoldContentWindowInsets
 import dev.arkbuilders.rate.feature.settings.di.SettingsComponentHolder
 
 @Destination<ExternalModuleGraph>
@@ -29,7 +30,7 @@ fun AboutScreen(navigator: DestinationsNavigator) {
                 onBackClick = { navigator.popBackStack() },
             )
         },
-        contentWindowInsets = appScaffoldContentWindowInsets(),
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { contentPadding ->
         ArkAbout(
             modifier =

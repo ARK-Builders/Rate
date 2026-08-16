@@ -3,7 +3,7 @@ package dev.arkbuilders.rate.core.presentation.ui
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
  * Insets produced by the app-level Scaffold. Screens use these values instead of padding the
  * navigation host, allowing scrollable content and backgrounds to remain edge-to-edge.
  */
-val LocalAppScaffoldPadding = staticCompositionLocalOf { PaddingValues(0.dp) }
+val LocalAppScaffoldPadding = compositionLocalOf { PaddingValues(0.dp) }
 
 @Composable
 fun appScaffoldContentWindowInsets(): WindowInsets {

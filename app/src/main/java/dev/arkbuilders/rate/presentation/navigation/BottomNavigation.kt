@@ -5,11 +5,20 @@ package dev.arkbuilders.rate.presentation.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -19,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +41,8 @@ import com.ramcosta.composedestinations.generated.settings.destinations.Settings
 import dev.arkbuilders.rate.core.presentation.CoreRDrawable
 import dev.arkbuilders.rate.core.presentation.CoreRString
 import dev.arkbuilders.rate.core.presentation.theme.ArkColor
+
+private const val BOTTOM_BAR_ANIMATION_DURATION_MILLIS = 300
 
 sealed class BottomNavItem(
     @StringRes val title: Int,
@@ -68,14 +80,48 @@ fun AnimatedRateBottomNavigation(
 ) {
     AnimatedContent(
         targetState = bottomBarVisible.value,
-        transitionSpec = {
-            slideInVertically { height -> height } with
-                slideOutVertically { height -> height }
-        },
-    ) { expanded ->
-        if (expanded)
+        transitionSpec = { bottomBarTransition() },
+    ) { visible ->
+        if (visible) {
             RateBottomNavigation(currentRoute, onBottomBarItemClick)
+        } else {
+            BottomNavigationInsetSpacer()
+        }
     }
+}
+
+private fun AnimatedContentTransitionScope<Boolean>.bottomBarTransition(): ContentTransform =
+    (
+        slideInVertically(
+            animationSpec =
+                tween(
+                    durationMillis = BOTTOM_BAR_ANIMATION_DURATION_MILLIS,
+                    easing = FastOutSlowInEasing,
+                ),
+            initialOffsetY = { height -> height },
+        ) togetherWith
+            slideOutVertically(
+                animationSpec =
+                    tween(
+                        durationMillis = BOTTOM_BAR_ANIMATION_DURATION_MILLIS,
+                        easing = FastOutSlowInEasing,
+                    ),
+                targetOffsetY = { height -> height },
+            )
+    ).using(
+        SizeTransform(clip = false) { _, _ ->
+            tween(
+                durationMillis = BOTTOM_BAR_ANIMATION_DURATION_MILLIS,
+                easing = FastOutSlowInEasing,
+            )
+        },
+    )
+
+@Composable
+private fun BottomNavigationInsetSpacer() {
+    Spacer(
+        Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing),
+    )
 }
 
 @Composable
