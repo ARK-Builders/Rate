@@ -350,7 +350,7 @@ private fun GroupPage(
         }
         if (notPinned.isNotEmpty()) {
             item {
-                ListHeader(text = stringResource(CoreRString.quick_calculations))
+                ListHeader(text = stringResource(CoreRString.quick_history))
             }
             items(notPinned, key = { it.id }) {
                 QuickSwipeItem(

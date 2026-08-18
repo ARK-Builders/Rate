@@ -15,11 +15,11 @@ import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.CodeUseStatRepo
 import dev.arkbuilders.rate.core.domain.repo.GroupRepo
 import dev.arkbuilders.rate.core.domain.toBigDecimalArk
-import dev.arkbuilders.rate.core.domain.toDoubleArk
 import dev.arkbuilders.rate.core.domain.usecase.ConvertWithRateUseCase
 import dev.arkbuilders.rate.core.domain.usecase.GetGroupByIdOrCreateDefaultUseCase
 import dev.arkbuilders.rate.feature.quick.domain.model.QuickCalculation
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
+import dev.arkbuilders.rate.feature.quick.domain.usecase.ValidateQuickCalculationUseCase
 import dev.arkbuilders.rate.feature.search.presentation.SearchNavResult
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -62,6 +62,7 @@ class AddQuickViewModel(
     private val convertUseCase: ConvertWithRateUseCase,
     private val getGroupByIdOrCreateDefaultUseCase: GetGroupByIdOrCreateDefaultUseCase,
     private val codeUseStatRepo: CodeUseStatRepo,
+    private val validateQuickCalculationUseCase: ValidateQuickCalculationUseCase,
     private val analyticsManager: AnalyticsManager,
 ) : ViewModel(), ContainerHost<AddQuickScreenState, AddQuickScreenEffect> {
     override val container: Container<AddQuickScreenState, AddQuickScreenEffect> =
@@ -87,10 +88,10 @@ class AddQuickViewModel(
                         currencies = calc,
                         group = quickCalculation.group,
                         availableGroups = groups,
+                        finishEnabled = validateQuickCalculationUseCase(calc),
                         initialized = true,
                     )
                 }
-                checkFinishEnabled()
             } ?: let {
                 val group = getGroupByIdOrCreateDefaultUseCase(groupId, GroupFeatureType.Quick)
                 val currencies =
@@ -121,8 +122,12 @@ class AddQuickViewModel(
         intent {
             val newAmounts = state.currencies + AmountStr(code, "")
             val calc = calcToResult(newAmounts)
-            reduce { state.copy(currencies = calc) }
-            checkFinishEnabled()
+            reduce {
+                state.copy(
+                    currencies = calc,
+                    finishEnabled = validateQuickCalculationUseCase(calc),
+                )
+            }
         }
 
     private fun handleNavResSetCode(
@@ -139,14 +144,15 @@ class AddQuickViewModel(
     fun onCurrencyRemove(removeIndex: Int) =
         intent {
             analyticsManager.logEvent("add_quick_currency_removed")
+            val currencies =
+                state.currencies
+                    .filterIndexed { index, _ -> index != removeIndex }
             reduce {
                 state.copy(
-                    currencies =
-                        state.currencies
-                            .filterIndexed { index, _ -> index != removeIndex },
+                    currencies = currencies,
+                    finishEnabled = validateQuickCalculationUseCase(currencies),
                 )
             }
-            checkFinishEnabled()
         }
 
     fun onGroupSelect(group: Group) =
@@ -179,8 +185,12 @@ class AddQuickViewModel(
             val from = state.currencies.first()
             val new = from.copy(value = CurrUtils.validateInput(from.value, input))
             val calc = calcToResult(listOf(new) + state.currencies.drop(1))
-            reduce { state.copy(currencies = calc) }
-            checkFinishEnabled()
+            reduce {
+                state.copy(
+                    currencies = calc,
+                    finishEnabled = validateQuickCalculationUseCase(calc),
+                )
+            }
         }
 
     fun onSwapClick() =
@@ -218,7 +228,18 @@ class AddQuickViewModel(
 
     fun onAddQuickCalculation() =
         intent {
-            val from = state.currencies.first()
+            val currencies = state.currencies
+            if (
+                validateQuickCalculationUseCase(
+                    currencies = currencies,
+                    sendAnalyticsEvent = true,
+                ).not()
+            ) {
+                return@intent
+            }
+            val from = currencies.first()
+            val to = currencies.drop(1)
+
             val id =
                 if (quickCalculationId != null) {
                     if (reuseNotEdit) 0 else quickCalculationId
@@ -247,7 +268,7 @@ class AddQuickViewModel(
                     id = id,
                     from = from.code,
                     amount = from.value.toBigDecimalArk(),
-                    to = state.currencies.drop(1).map { it.toAmount() },
+                    to = to.map { it.toAmount() },
                     calculatedDate = OffsetDateTime.now(),
                     pinnedDate = pinnedDate,
                     group = group,
@@ -275,24 +296,6 @@ class AddQuickViewModel(
             }
         return listOf(from) + new
     }
-
-    private fun checkFinishEnabled() =
-        intent {
-            val from = state.currencies.first()
-            val to = state.currencies.drop(1)
-
-            var finishEnabled = true
-
-            if (from.value.toDoubleArk() == 0.0)
-                finishEnabled = false
-
-            if (to.isEmpty())
-                finishEnabled = false
-
-            reduce {
-                state.copy(finishEnabled = finishEnabled)
-            }
-        }
 
     fun onSetCode(index: Int) =
         intent {
@@ -328,6 +331,7 @@ class AddQuickViewModelFactory @AssistedInject constructor(
     private val codeUseStatRepo: CodeUseStatRepo,
     private val getGroupByIdOrCreateDefaultUseCase: GetGroupByIdOrCreateDefaultUseCase,
     private val convertUseCase: ConvertWithRateUseCase,
+    private val validateQuickCalculationUseCase: ValidateQuickCalculationUseCase,
     private val analyticsManager: AnalyticsManager,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -341,6 +345,7 @@ class AddQuickViewModelFactory @AssistedInject constructor(
             convertUseCase,
             getGroupByIdOrCreateDefaultUseCase,
             codeUseStatRepo,
+            validateQuickCalculationUseCase,
             analyticsManager,
         ) as T
     }
