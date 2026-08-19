@@ -24,8 +24,11 @@ import dev.arkbuilders.rate.core.presentation.theme.ArkColor
 import dev.arkbuilders.rate.core.presentation.ui.AppButton
 
 @Composable
-fun QuickEmpty(navigator: DestinationsNavigator) {
-    Box(modifier = Modifier.fillMaxSize()) {
+fun QuickEmpty(
+    navigator: DestinationsNavigator,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,

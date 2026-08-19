@@ -26,6 +26,7 @@ fun ArkBasicTextField(
     leadingIcon: (@Composable () -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    readOnly: Boolean = false,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     BasicTextField(
@@ -35,6 +36,7 @@ fun ArkBasicTextField(
         textStyle = textStyle,
         keyboardOptions = keyboardOptions,
         visualTransformation = visualTransformation,
+        readOnly = readOnly,
         interactionSource = interactionSource,
         singleLine = true,
     ) { innerTextField ->

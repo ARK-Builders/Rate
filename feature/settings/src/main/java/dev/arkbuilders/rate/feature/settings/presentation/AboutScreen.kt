@@ -1,6 +1,9 @@
 package dev.arkbuilders.rate.feature.settings.presentation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,9 +30,13 @@ fun AboutScreen(navigator: DestinationsNavigator) {
                 onBackClick = { navigator.popBackStack() },
             )
         },
-    ) {
+        contentWindowInsets = WindowInsets.safeDrawing,
+    ) { contentPadding ->
         ArkAbout(
-            modifier = Modifier.padding(it),
+            modifier =
+                Modifier
+                    .padding(contentPadding)
+                    .consumeWindowInsets(contentPadding),
             appName = stringResource(id = CoreRString.app_name),
             appLogoResId = CoreRDrawable.ic_app_logo,
             versionName = component.buildConfigFields().versionName,
