@@ -94,14 +94,19 @@ def fetch_with_retry(url: str, label: str = "") -> bytes:
     raise RuntimeError(f"Failed after {MAX_RETRIES} attempts: {url}")
 
 
+def is_supported_crypto_symbol(symbol: object) -> bool:
+    return isinstance(symbol, str) and re.fullmatch(r"[A-Za-z0-9]+", symbol) is not None
+
+
 def fetch_coin_list(total: int | None) -> list[dict]:
     coins: list[dict] = []
+    symbols: set[str] = set()
     page = 1
+    # Keep the page size fixed so filtering does not shift subsequent page offsets.
+    per_page = PER_PAGE if total is None else min(PER_PAGE, total)
     while True:
-        remaining = None if total is None else (total - len(coins))
-        if remaining is not None and remaining <= 0:
+        if total is not None and len(coins) >= total:
             break
-        per_page = PER_PAGE if remaining is None else min(PER_PAGE, remaining)
         url = COINGECKO_MARKETS_URL.format(per_page=per_page, page=page)
         print(f"  📄 Fetching page {page} ({per_page} coins/page) …", end=" ", flush=True)
         try:
@@ -113,8 +118,25 @@ def fetch_coin_list(total: int | None) -> list[dict]:
         if not batch:
             print("empty — done paginating.")
             break
-        coins.extend(batch)
-        print(f"got {len(batch)} coins (total so far: {len(coins)})")
+        print(f"got {len(batch)} coins")
+        for coin in batch:
+            symbol = coin.get("symbol")
+            if not is_supported_crypto_symbol(symbol):
+                print(f"  ⚠️  Skipping id={coin.get('id')!r}, symbol={symbol!r}: "
+                      "ticker must contain only ASCII letters and digits", flush=True)
+                continue
+            symbol_key = symbol.upper()
+            if symbol_key in symbols:
+                print(f"  ⚠️  Skipping id={coin.get('id')!r}, symbol={symbol!r}: "
+                      "duplicate ticker", flush=True)
+                continue
+            symbols.add(symbol_key)
+            coins.append(coin)
+            if total is not None and len(coins) >= total:
+                break
+        print(f"  ✅ Selected {len(coins)} assets so far.")
+        if total is not None and len(coins) >= total:
+            break
         if len(batch) < per_page:
             break
         page += 1
