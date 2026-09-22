@@ -54,7 +54,6 @@ class QuickCalculationsWidget : GlanceAppWidget() {
             val groupId = prefs[QuickCalculationsWidgetReceiver.currentGroupIdKey]
             val quickCalculationsList = pinned.filter { it.calculation.group.id == groupId }
             val displayGroup = groups.find { it.id == groupId }
-            displayGroup ?: return@provideContent
             Column(
                 modifier =
                     GlanceModifier.fillMaxSize().background(Color.White)
@@ -80,30 +79,32 @@ class QuickCalculationsWidget : GlanceAppWidget() {
                                 fontWeight = FontWeight.Medium,
                             ),
                     )
-                    Text(
-                        modifier = GlanceModifier.defaultWeight(),
-                        text = displayGroup.name,
-                        style =
-                            TextStyle(
-                                color = ColorProvider(ArkColor.TextTertiary),
-                                fontWeight = FontWeight.Medium,
-                            ),
-                    )
-                    Image(
-                        modifier =
-                            GlanceModifier.size(24.dp).padding(4.dp)
-                                .clickable(actionRunCallback<PreviousPageAction>()),
-                        provider = ImageProvider(CoreRDrawable.ic_chevron_left),
-                        contentDescription = null,
-                    )
+                    displayGroup?.let { group ->
+                        Text(
+                            modifier = GlanceModifier.defaultWeight(),
+                            text = group.name,
+                            style =
+                                TextStyle(
+                                    color = ColorProvider(ArkColor.TextTertiary),
+                                    fontWeight = FontWeight.Medium,
+                                ),
+                        )
+                        Image(
+                            modifier =
+                                GlanceModifier.size(24.dp).padding(4.dp)
+                                    .clickable(actionRunCallback<PreviousPageAction>()),
+                            provider = ImageProvider(CoreRDrawable.ic_chevron_left),
+                            contentDescription = null,
+                        )
 
-                    Image(
-                        modifier =
-                            GlanceModifier.size(24.dp).padding(4.dp)
-                                .clickable(actionRunCallback<NextPageAction>()),
-                        provider = ImageProvider(CoreRDrawable.ic_chevron_right),
-                        contentDescription = null,
-                    )
+                        Image(
+                            modifier =
+                                GlanceModifier.size(24.dp).padding(4.dp)
+                                    .clickable(actionRunCallback<NextPageAction>()),
+                            provider = ImageProvider(CoreRDrawable.ic_chevron_right),
+                            contentDescription = null,
+                        )
+                    }
                     Image(
                         modifier =
                             GlanceModifier.size(24.dp).padding(4.dp)
