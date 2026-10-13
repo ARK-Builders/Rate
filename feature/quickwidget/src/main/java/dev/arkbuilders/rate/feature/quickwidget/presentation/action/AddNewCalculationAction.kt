@@ -23,7 +23,7 @@ class AddNewCalculationAction : ActionCallback {
             Intent().apply {
                 setClassName(context, "dev.arkbuilders.rate.presentation.MainActivity")
                 putExtra(ADD_NEW_CALCULATION, "ADD_NEW_CALCULATION")
-                putExtra(ADD_NEW_CALCULATION_GROUP_KEY, groupId)
+                groupId?.let { putExtra(ADD_NEW_CALCULATION_GROUP_KEY, it) }
                 setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             },
         )
