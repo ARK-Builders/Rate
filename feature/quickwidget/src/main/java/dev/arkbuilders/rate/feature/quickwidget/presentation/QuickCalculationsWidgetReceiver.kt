@@ -41,6 +41,18 @@ class QuickCalculationsWidgetReceiver : GlanceAppWidgetReceiver() {
         updateAll(context)
     }
 
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+        QuickWidgetComponentHolder.provide(context).analyticsManager()
+            .logEvent("quick_widget_enabled")
+    }
+
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+        QuickWidgetComponentHolder.provide(context).analyticsManager()
+            .logEvent("quick_widget_disabled")
+    }
+
     private fun updateAll(context: Context) {
         coroutineScope.launch {
             GlanceAppWidgetManager(context)

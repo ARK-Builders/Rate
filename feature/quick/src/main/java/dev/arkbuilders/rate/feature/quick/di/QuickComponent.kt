@@ -2,6 +2,7 @@ package dev.arkbuilders.rate.feature.quick.di
 
 import dagger.Component
 import dev.arkbuilders.rate.core.di.CoreComponent
+import dev.arkbuilders.rate.core.domain.repo.AnalyticsManager
 import dev.arkbuilders.rate.core.domain.repo.GroupRepo
 import dev.arkbuilders.rate.core.domain.usecase.ValidateGroupNameUseCase
 import dev.arkbuilders.rate.feature.quick.domain.repo.QuickRepo
@@ -26,4 +27,6 @@ interface QuickComponent {
     fun validateGroupNameUseCase(): ValidateGroupNameUseCase
 
     fun launchInAppReview(): LaunchInAppReviewUseCase
+
+    fun analyticsManager(): AnalyticsManager
 }
