@@ -6,6 +6,7 @@ import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.state.updateAppWidgetState
+import dev.arkbuilders.rate.feature.quickwidget.di.QuickWidgetComponentHolder
 import dev.arkbuilders.rate.feature.quickwidget.presentation.QuickCalculationsWidgetReceiver
 
 class AddNewCalculationAction : ActionCallback {
@@ -14,6 +15,9 @@ class AddNewCalculationAction : ActionCallback {
         glanceId: GlanceId,
         parameters: ActionParameters,
     ) {
+        QuickWidgetComponentHolder.provide(context).analyticsManager()
+            .logEvent("quick_widget_add_calculation_clicked")
+
         var groupId: Long? = null
 
         updateAppWidgetState(context, glanceId) { pref ->
